@@ -47,9 +47,9 @@ const AppSidebar = () => {
       <SidebarHeader>
         <Link
           href="/"
-          className="flex mt-8 items-center scale-125 justify-center font-bold"
+          className="flex mt-8 items-center justify-center font-bold text-xl"
         >
-          <span className="text-blue-600 ">Dash</span>Stack
+          <span className="text-blue-600 text-xl">Dash</span>Stack
         </Link>
       </SidebarHeader>
       <SidebarContent>

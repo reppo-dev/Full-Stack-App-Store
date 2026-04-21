@@ -1,24 +1,19 @@
 "use client";
 
-import { useState } from "react";
-import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
+import { useTheme } from "next-themes";
 import { MoonIcon, SunIcon } from "lucide-react";
 
-const LightDarkToggle = () => {
-  const [isDarkMode, setIsDarkMode] = useState(true);
-  return (
-    <Tooltip>
-      <TooltipTrigger
-        className="fixed top-1/2 right-2"
-        onClick={() => setIsDarkMode((prevValue) => !prevValue)}
-      >
-        {isDarkMode ? <MoonIcon /> : <SunIcon />}
-      </TooltipTrigger>
-      <TooltipContent>
-        {isDarkMode ? `${(<MoonIcon />)},dark` : `${(<SunIcon />)},light`}
-      </TooltipContent>
-    </Tooltip>
-  );
-};
+export default function LightDarkToggle() {
+  const { theme, setTheme } = useTheme();
 
-export default LightDarkToggle;
+  return (
+    <button
+      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+      className="p-2 rounded-md hover:bg-accent"
+    >
+      {/* این الگو هیچ Hydration Error تولید نمی‌کند */}
+      <SunIcon className="size-5 dark:hidden" />
+      <MoonIcon className="size-5 hidden dark:block" />
+    </button>
+  );
+}
