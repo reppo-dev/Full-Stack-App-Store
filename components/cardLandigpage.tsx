@@ -21,21 +21,22 @@ const items: LandingCard[] = [
 
 export default function CardLandingPage() {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 m-10 mx-20 gap-6">
+    <div className="grid grid-cols-2 md:grid-cols-3 m-10 mx-20 gap-6">
       {items.map((item) => (
         <Card
           key={item.content}
           className="rounded-3xl bg-[#7c4848] text-white h-80 p-4"
         >
           <CardHeader>
-            <CardTitle> Start From ${item.price}</CardTitle>
+            <CardTitle className="font-normal">
+              Start From ${item.price}
+            </CardTitle>
             <CardAction>
               <Button className="rounded-full">
                 <Heart />
               </Button>
             </CardAction>
           </CardHeader>
-
           <CardContent className="flex items-center justify-center h-full">
             <span className="text-xl font-semibold">{item.content}</span>
           </CardContent>
