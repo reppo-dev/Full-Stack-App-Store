@@ -18,13 +18,8 @@ const HeaderDashboard = () => {
   return (
     <header className="border-b">
       <div className="flex mx-13 my-3 items-center justify-between gap-10 ">
-        <div className="flex items-center justify-center gap-5">
-          <SidebarToggle />
-          <div className="items-center font-bold text-xl">
-            <span className="text-blue-600 text-xl">Dash</span>Stack
-          </div>
-        </div>
-        <div className="relative w-[42%]">
+        <SidebarToggle />
+        <div className="relative hidden md:block w-[42%]">
           <Input className="w-full p-6" placeholder="Search product, item" />
           <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
         </div>

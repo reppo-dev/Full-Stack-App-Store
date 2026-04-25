@@ -84,12 +84,12 @@ const SidebarDash = () => {
                     <SidebarMenuButton asChild tooltip={item.title}>
                       <Link
                         href={item.url}
-                        className={`flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors
-  ${
-    isActive
-      ? "bg-blue-600 text-white"
-      : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-  }`}
+                        className={`flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors 
+                            ${
+                              isActive
+                                ? "bg-blue-600 text-white"
+                                : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                            }`}
                       >
                         <item.icon className="h-4 w-4 shrink-0" />
                         <span className="truncate">{item.title}</span>
@@ -102,7 +102,7 @@ const SidebarDash = () => {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <SidebarSeparator />
+        <SidebarSeparator className="mx-0 p-0" />
 
         <SidebarGroup>
           <SidebarGroupLabel className="group-data-[collapsible=icon]:hidden">
@@ -117,12 +117,12 @@ const SidebarDash = () => {
                     <SidebarMenuButton asChild>
                       <Link
                         href={item.url}
-                        className={`flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors
-  ${
-    isActive
-      ? "bg-blue-600 text-white"
-      : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-  }`}
+                        className={`flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors 
+                            ${
+                              isActive
+                                ? "bg-blue-600 text-white"
+                                : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                            }`}
                       >
                         <item.icon className="h-4 w-4 shrink-0" />
                         <span className="truncate">{item.title}</span>
@@ -135,10 +135,8 @@ const SidebarDash = () => {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {/* جداکننده‌ی خطی */}
-        <SidebarSeparator className="my-3" />
+        <SidebarSeparator className="my-3 mx-0 p-0" />
 
-        {/* بخش Settings / Logout */}
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu className="gap-1">
@@ -149,12 +147,12 @@ const SidebarDash = () => {
                     <SidebarMenuButton asChild>
                       <Link
                         href={item.url}
-                        className={`flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors
-  ${
-    isActive
-      ? "bg-blue-600 text-white"
-      : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-  }`}
+                        className={`flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors 
+                            ${
+                              isActive
+                                ? "bg-blue-600 text-white"
+                                : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                            }`}
                       >
                         <item.icon className="h-4 w-4 shrink-0" />
                         <span className="truncate">{item.title}</span>
