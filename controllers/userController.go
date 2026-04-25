@@ -15,3 +15,7 @@ func AllUsers(c *fiber.Ctx) error {
 
 	return c.JSON(models.Paginate(databases.DB,&models.User{},page))
 }
+
+func GetUser(c *fiber.Ctx) error {
+	
+}

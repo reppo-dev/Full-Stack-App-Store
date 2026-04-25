@@ -1,6 +1,9 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
+)
 
 type User struct {
 	gorm.Model
@@ -9,6 +12,21 @@ type User struct {
 	Email string `json:"email" gorm:"uniqueIndex;not null"`
 	Password string `json:"-" gorm:"not null"`
 }
+
+type RegisterRequest struct {
+    FirstName       string `json:"first_name"`
+    LastName        string `json:"last_name"`
+    Email           string `json:"email"`
+    Password        string `json:"password"`
+    PasswordConfirm string `json:"password_confirm"`
+}
+
+func (user User) SetPassword(password string) {
+	hashpassword,_ := bcrypt.GenerateFromPassword([]byte(password),14)
+
+	user.Password = string(hashpassword)
+}
+
 
 func (user User) Count(db *gorm.DB) int64 {
 	var total int64
