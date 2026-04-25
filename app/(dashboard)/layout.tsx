@@ -3,9 +3,7 @@ import {
   SidebarInset,
   SidebarProvider,
   SidebarRail,
-  SidebarTrigger,
 } from "@/components/ui/sidebar";
-import AppSidebar from "@/components/appSidebar";
 import HeaderDashboard from "./components/HeaderDashboard";
 import SidebarDash from "./components/SidebarDash";
 
