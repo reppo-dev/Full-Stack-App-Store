@@ -27,7 +27,7 @@ import {
 import Link from "next/link";
 
 const menuItems = [
-  { title: "Dashboard", url: "/", icon: Home },
+  { title: "Dashboard", url: "/dashboard", icon: Home },
   { title: "Products", url: "/products", icon: Package },
   { title: "Favorites", url: "/favorites", icon: Heart },
   { title: "Inbox", url: "/inbox", icon: Inbox },
