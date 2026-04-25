@@ -14,4 +14,6 @@ func main() {
 		AllowOrigins: "http://localhost:5173",
 		AllowCredentials: true,
 	}))
+
+	
 }
