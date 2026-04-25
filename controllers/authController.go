@@ -53,3 +53,44 @@ func Register(c *fiber.Ctx) error {
 		"message":"success",
 	})
 }
+
+func Login(c *fiber.Ctx) error {
+	var data models.LoginRequest
+
+	if err := c.BodyParser(&data); err != nil {
+		return err
+	}
+
+	var user models.User
+
+	databases.DB.Where("email = ?",data.Email).First(&user)
+
+	if user.ID ==0 {
+		return c.Status(404).JSON(fiber.Map{
+			"message":"user not found",
+		})
+	}
+
+	err := user.ComperPassword(data.Password)
+
+	if err !=nil {
+		return c.Status(404).JSON(fiber.Map{
+			"message":"incorect password",
+		})
+	}
+
+	token , err := util.GenerateJwt(user.ID)
+
+	cookie := fiber.Cookie{
+		Name: "jwt",
+		Value: token,
+		Expires: time.Now().Add(time.Hour * 24),
+		HTTPOnly: true,
+	}
+
+	c.Cookie(&cookie)
+
+	return c.JSON(fiber.Map{
+		"message":"success",
+	})
+}

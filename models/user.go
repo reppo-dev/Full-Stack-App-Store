@@ -21,14 +21,23 @@ type RegisterRequest struct {
     PasswordConfirm string `json:"password_confirm"`
 }
 
-func (user User) SetPassword(password string) {
+type LoginRequest struct {
+    Email           string `json:"email"`
+    Password        string `json:"password"`
+}
+
+func (user *User) SetPassword(password string) {
 	hashpassword,_ := bcrypt.GenerateFromPassword([]byte(password),14)
 
 	user.Password = string(hashpassword)
 }
 
+func (user *User) ComperPassword(password string) error {
+	return 	bcrypt.CompareHashAndPassword([]byte(user.Password),[]byte(password))
+}
 
-func (user User) Count(db *gorm.DB) int64 {
+
+func (user *User) Count(db *gorm.DB) int64 {
 	var total int64
 	db.Model(&User{}).Count(&total)
 
