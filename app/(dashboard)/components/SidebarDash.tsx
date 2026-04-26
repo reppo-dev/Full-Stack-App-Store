@@ -35,7 +35,7 @@ import {
 
 const menuItems = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
-  { title: "Products", url: "/products", icon: Package },
+  { title: "Products", url: "/product", icon: Package },
   { title: "Favorites", url: "/favorites", icon: Heart },
   { title: "Inbox", url: "/inbox", icon: Inbox },
   { title: "Order Lists", url: "/orderlists", icon: ListOrdered },
