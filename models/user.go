@@ -7,10 +7,12 @@ import (
 
 type User struct {
 	gorm.Model
-	FirstName string `json:"first_name" gorm:"size:50" `
-	LastName string `json:"last_name" gorm:"size:50"`
-	Email string `json:"email" gorm:"uniqueIndex;not null"`
-	Password string `json:"-" gorm:"not null"`
+	FirstName string		`json:"first_name" gorm:"size:50" `
+	LastName string 		`json:"last_name" gorm:"size:50"`
+	Email string 		    `json:"email" gorm:"uniqueIndex;not null"`
+	Password string 	    `json:"-" gorm:"not null"`
+	RoleID          uint    `json:"role_id"`
+    Role            Role    `json:"role" gorm:"foreignKey:RoleId"`
 }
 
 type RegisterRequest struct {
@@ -36,6 +38,14 @@ type UpdatePassword struct{
 	Password        string `json:"password"`
     PasswordConfirm string `json:"password_confirm"`
 }
+
+type UpdateRequest struct {
+    FirstName       string `json:"first_name"`
+    LastName        string `json:"last_name"`
+    Email           string `json:"email"`
+    RoleID          uint   `json:"role_id"`
+}
+
 
 func (user *User) SetPassword(password string) {
 	hashpassword,_ := bcrypt.GenerateFromPassword([]byte(password),14)
