@@ -1,7 +1,6 @@
-import BannerProduct from "../components/product/banner";
 import CardProduct from "../components/product/cardProduct";
 
-type pro = {
+type favorite = {
   id: string;
   title: string;
   brand: string;
@@ -13,7 +12,7 @@ type pro = {
   images: string[];
 };
 
-const product: pro[] = [
+const favorites: favorite[] = [
   {
     id: "TEST-1001",
     title: "Wireless Bluetooth Headphones",
@@ -158,15 +157,12 @@ const product: pro[] = [
   },
 ];
 
-const Product = () => {
+const Favorites = () => {
   return (
     <div>
-      <p className="text-2xl ml-7 my-8">Product</p>
-      <div className="mx-5">
-        <BannerProduct />
-      </div>
+      <p className="text-2xl ml-7 my-8">Favorites</p>
       <div className="grid gap-6 grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 mx-6 my-10">
-        {product.map((p) => (
+        {favorites.map((p) => (
           <CardProduct key={p.id} props={p} />
         ))}
       </div>
@@ -174,4 +170,4 @@ const Product = () => {
   );
 };
 
-export default Product;
+export default Favorites;
