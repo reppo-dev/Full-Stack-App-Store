@@ -24,8 +24,7 @@ func Register(c *fiber.Ctx) error {
 
 	var user models.User
 
-	user.FirstName = data.FirstName
-	user.LastName = data.LastName
+	user.UserName = data.UserName
 	user.Email = data.Email
 
 
@@ -156,6 +155,8 @@ func UpdateInfo(c *fiber.Ctx) error {
 
 	user.FirstName = data.FirstName
 	user.LastName = data.LastName
+	user.Image = data.Image
+	user.PhoneNumber = data.PhoneNumber
 	user.Email = data.Email
 
 	databases.DB.Save(&user)

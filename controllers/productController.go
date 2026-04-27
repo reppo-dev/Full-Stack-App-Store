@@ -36,26 +36,71 @@ func GetProduct(c *fiber.Ctx) error {
 }
 
 func UpdateProduct(c *fiber.Ctx) error {
-	id,_ := strconv.Atoi(c.Params("id"))
 
-	var product models.UpdateProduct
+	id, err := strconv.Atoi(c.Params("id"))
+	if err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, "invalid id")
+	}
 
-	c.BodyParser(&product)
-
-	var productDb models.Product
-
-	databases.DB.First(&productDb,id)
-
-	productDb.Title = product.Title
-	productDb.Description = product.Description
-	productDb.Price = product.Price
-	productDb.Image = product.Image
+	var data models.UpdateProduct
+	c.BodyParser(&data)
 
 
-	databases.DB.Save(&productDb)
+	var product models.Product
+	databases.DB.First(&product, id)
 
-	return c.JSON(productDb)
+	if data.Title != nil {
+		product.Title = *data.Title
+	}
+
+	if data.Slug != nil {
+		product.Slug = *data.Slug
+	}
+
+	if data.Description != nil {
+		product.Description = *data.Description
+	}
+
+	if data.Price != nil {
+		product.Price = *data.Price
+	}
+
+	if data.Stock != nil {
+		product.Stock = *data.Stock
+	}
+
+	if data.Images != nil {
+		product.Images = *data.Images
+	}
+
+	if data.Colors != nil {
+		product.Colors = *data.Colors
+	}
+
+	if data.Attributes != nil {
+		product.Attributes = *data.Attributes
+	}
+
+	if data.CategoryID != nil {
+		product.CategoryID = *data.CategoryID
+	}
+
+	if data.SKU != nil {
+		product.SKU = *data.SKU
+	}
+
+	if data.IsActive != nil {
+		product.IsActive = *data.IsActive
+	}
+
+	if err := databases.DB.Model(&product).Updates(product).Error; err != nil {
+	return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 }
+
+	return c.JSON(product)
+}
+
+
 
 func DeleteProduct(c *fiber.Ctx) error {
 	id,_:=strconv.Atoi(c.Params("id"))

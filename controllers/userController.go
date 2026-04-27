@@ -60,6 +60,8 @@ func UpadeUser(c *fiber.Ctx) error {
 
 	user.FirstName = data.FirstName
 	user.LastName = data.LastName
+	user.Image = data.Image
+	user.PhoneNumber = data.PhoneNumber
 	user.Email = data.Email
 	
 	databases.DB.Save(&user)
