@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,6 +15,14 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { registerAction } from "@/app/actions/register";
+
+type formdata = {
+  user_name: string;
+  email: string;
+  password: string;
+  password_confirm: string;
+};
 
 export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
   return (
@@ -26,25 +36,42 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
           <FieldGroup>
             <Field>
               <FieldLabel htmlFor="email">Email</FieldLabel>
-              <Input id="email" type="email" placeholder="Email" required />
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="Email"
+                required
+              />
             </Field>
             <Field>
-              <FieldLabel htmlFor="name">Username</FieldLabel>
-              <Input id="name" type="text" placeholder="username" required />
+              <FieldLabel htmlFor="user_name">Username</FieldLabel>
+              <Input
+                id="user_name"
+                name="user_name"
+                type="text"
+                placeholder="username"
+                required
+              />
             </Field>
             <Field>
               <FieldLabel htmlFor="password">Password</FieldLabel>
-              <Input id="password" type="password" required />
+              <Input id="password" name="password" type="password" required />
             </Field>
             <Field>
-              <FieldLabel htmlFor="confirm-password">
+              <FieldLabel htmlFor="password_confirm">
                 Confirm Password
               </FieldLabel>
-              <Input id="confirm-password" type="password" required />
+              <Input
+                id="password_confirm"
+                name="password_confirm"
+                type="password"
+                required
+              />
             </Field>
             <FieldGroup>
               <Field>
-                <Button type="submit">Create Account</Button>
+                <Button type="submit">Sign up</Button>
                 <Button variant="outline" type="button">
                   Sign up with Google
                 </Button>

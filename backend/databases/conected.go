@@ -10,7 +10,7 @@ var DB *gorm.DB
 
 func Conect() {
 
-	dsn := "host=localhots user=postgres password=13802002 dbname=myapp port=5432 sslmode=disable"
+	dsn := "host=localhost user=postgres password=13802002 dbname=mygoapp port=5432 sslmode=disable"
 	db , err := gorm.Open(postgres.Open(dsn),&gorm.Config{})
 
 	if err != nil {
@@ -19,5 +19,5 @@ func Conect() {
 
 	DB = db
 
-	db.AutoMigrate(&models.User{})
+	db.AutoMigrate(&models.User{},&models.Category{},&models.Tag{},&models.Role{},&models.Product{},&models.Permission{},&models.Order{},&models.OrderItem{},&models.Color{})
 }
