@@ -26,6 +26,7 @@ func Register(c *fiber.Ctx) error {
 
 	user.UserName = data.UserName
 	user.Email = data.Email
+	user.RoleID = 1
 
 
 	user.SetPassword(data.Password)

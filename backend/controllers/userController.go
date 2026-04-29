@@ -43,7 +43,7 @@ func GetUser(c *fiber.Ctx) error {
 	return c.JSON(user)
 }
 
-func UpadeUser(c *fiber.Ctx) error {
+func UpdateUser(c *fiber.Ctx) error {
 	
 	id ,_ := strconv.Atoi(c.Params("id"))
 
@@ -70,7 +70,7 @@ func UpadeUser(c *fiber.Ctx) error {
 
 }
 
-func Delete(c *fiber.Ctx) error {
+func DeleteUser(c *fiber.Ctx) error {
 	
 	id,_ := strconv.Atoi(c.Params("id"))
 
