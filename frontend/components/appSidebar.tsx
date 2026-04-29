@@ -22,9 +22,9 @@ import {
   CheckSquare,
   Phone,
   Settings,
-  LogOut,
 } from "lucide-react";
 import Link from "next/link";
+import Logout from "./logout";
 
 const menuItems = [
   { title: "Dashboard", url: "/dashboard", icon: Home },
@@ -38,7 +38,6 @@ const menuItems = [
   { title: "To-Do", url: "/todo", icon: CheckSquare },
   { title: "Contact", url: "/contact", icon: Phone },
   { title: "Settings", url: "/settings", icon: Settings },
-  { title: "Log Out", url: "/logout", icon: LogOut },
 ];
 
 const AppSidebar = () => {
@@ -67,6 +66,11 @@ const AppSidebar = () => {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Logout />
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

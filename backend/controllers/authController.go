@@ -78,7 +78,10 @@ func Login(c *fiber.Ctx) error {
 	}
 
 	token , err := util.GenerateJwt(user.ID)
-
+	
+	if err != nil {
+		return  c.SendStatus(fiber.StatusInternalServerError)
+	}
 	cookie := fiber.Cookie{
 		Name: "jwt",
 		Value: token,
@@ -126,7 +129,7 @@ func Logout(c *fiber.Ctx) error {
 	cookie := fiber.Cookie{
 		Name: "jwt",
 		Value: "",
-		Expires: time.Now().Add(time.Hour * 24),
+		Expires: time.Now().Add(-time.Hour),
 		HTTPOnly: true,
 	}
 

@@ -1,11 +1,17 @@
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   images: {
     domains: ["sibche.com", "www.webpouya.com", "http://localhost:8000"],
   },
-  env: {
-    GOLANG_API_URL: process.env.GOLANG_API_URL || "http://localhost:8000",
+  async rewrites() {
+    return [
+      {
+        source: "/api/:path*",
+        destination: "http://localhost:8000/api/:path*",
+      },
+    ];
   },
 };
 

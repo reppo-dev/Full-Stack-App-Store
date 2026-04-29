@@ -1,7 +1,6 @@
 "use client";
 
-import { useActionState, useEffect } from "react";
-import { useFormStatus } from "react-dom";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,37 +17,65 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { loginAction, LoginActionResponse } from "@/app/actions/login";
 
 export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
   const router = useRouter();
-  const initialState: LoginActionResponse = {};
-  const [state, formAction] = useActionState(loginAction, initialState);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (state.success) {
-      if (state.token) {
-        document.cookie = `jwt=${state.token};path=/;max-age=86400;SameSite=Lax`;
-      }
-      router.push("/dashboard");
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setLoading(true);
+    setErrorMessage("");
+
+    const form = event.currentTarget;
+    const email = (form.elements.namedItem("email") as HTMLInputElement).value;
+    const password = (form.elements.namedItem("password") as HTMLInputElement)
+      .value;
+
+    if (!email || !password) {
+      setErrorMessage("لطفاً ایمیل و رمز عبور را وارد کنید");
+      setLoading(false);
+      return;
     }
-  }, [state.success, state.token, router]);
 
-  const errorMessage = state.error || "";
+    try {
+      const res = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setErrorMessage(data.message || data.error || "خطا در ورود");
+        setLoading(false);
+        return;
+      }
+
+      // موفقیت - کوکی jwt خودکار توسط مرورگر ذخیره شده
+      router.push("/dashboard");
+    } catch (error) {
+      setErrorMessage("خطای اتصال به سرور");
+      setLoading(false);
+    }
+  }
 
   return (
     <Card {...props}>
       <CardHeader>
-        <CardTitle>Login to Account</CardTitle>
+        <CardTitle>ورود به حساب کاربری</CardTitle>
         <CardDescription>
-          Please enter your email and password to continue
+          لطفاً ایمیل و رمز عبور خود را وارد کنید
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form action={formAction}>
+        <form onSubmit={handleSubmit}>
           <FieldGroup>
             <Field>
-              <FieldLabel htmlFor="email">Email</FieldLabel>
+              <FieldLabel htmlFor="email">ایمیل</FieldLabel>
               <Input
                 id="email"
                 name="email"
@@ -58,15 +85,21 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
               />
             </Field>
             <Field>
-              <FieldLabel htmlFor="password">Password</FieldLabel>
-              <Input id="password" name="password" type="password" required />
+              <FieldLabel htmlFor="password">رمز عبور</FieldLabel>
+              <Input
+                id="password"
+                name="password"
+                type="password"
+                placeholder="Password"
+                required
+              />
             </Field>
             {errorMessage && (
               <div className="text-red-500 text-sm text-center">
                 {errorMessage}
               </div>
             )}
-            <SubmitButton />
+            <SubmitButton loading={loading} />
           </FieldGroup>
         </form>
       </CardContent>
@@ -74,18 +107,17 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
   );
 }
 
-function SubmitButton() {
-  const { pending } = useFormStatus();
+function SubmitButton({ loading }: { loading: boolean }) {
   return (
     <div className="space-y-4">
-      <Button type="submit" disabled={pending}>
-        {pending ? "در حال ورود..." : "Login"}
+      <Button type="submit" disabled={loading}>
+        {loading ? "در حال ورود..." : "ورود"}
       </Button>
       <Button variant="outline" type="button">
-        Sign up with Google
+        ورود با گوگل
       </Button>
       <FieldDescription className="px-6 text-center">
-        Already have an account? <a href="/signup">Sign Up</a>
+        حساب کاربری ندارید؟ <a href="/signup">ثبت‌نام</a>
       </FieldDescription>
     </div>
   );
