@@ -1,8 +1,9 @@
-import { Input } from "./ui/input";
+import { Input } from "../ui/input";
 import { Bell, Search, User } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import LightDarkToggle from "./light-dark";
-import { SidebarToggle } from "./sidebarToggle";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import LightDarkToggle from "../light-dark";
+import { SidebarToggle } from "../sidebarToggle";
+import AuthButtons from "./AuthButtons";
 
 const Header = () => {
   return (
@@ -20,13 +21,7 @@ const Header = () => {
         </div>
         <div className="flex items-center justify-center gap-8">
           <LightDarkToggle />
-          <Bell size={30} />
-          <Avatar size="lg">
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>
-              <User size={20} />
-            </AvatarFallback>
-          </Avatar>
+          <AuthButtons />
         </div>
       </div>
     </header>

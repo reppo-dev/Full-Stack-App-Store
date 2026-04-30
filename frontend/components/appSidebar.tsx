@@ -25,22 +25,41 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import Logout from "./logout";
+import { cookies } from "next/headers";
 
 const menuItems = [
-  { title: "Dashboard", url: "/dashboard", icon: Home },
-  { title: "Products", url: "/products", icon: Package },
-  { title: "Favorites", url: "/favorites", icon: Heart },
-  { title: "Inbox", url: "/inbox", icon: Inbox },
-  { title: "Order Lists", url: "/orderlists", icon: ShoppingCart },
-  { title: "Product Stock", url: "/productstock", icon: Layers },
-  { title: "Pricing", url: "/pricing", icon: CreditCard },
-  { title: "Calendar", url: "/calendar", icon: Calendar },
-  { title: "To-Do", url: "/todo", icon: CheckSquare },
-  { title: "Contact", url: "/contact", icon: Phone },
-  { title: "Settings", url: "/settings", icon: Settings },
+  { title: "Dashboard", url: "/dashboard", icon: Home, requiresAuth: true },
+  { title: "Products", url: "/products", icon: Package, requiresAuth: true },
+  { title: "Favorites", url: "/favorites", icon: Heart, requiresAuth: true },
+  { title: "Inbox", url: "/inbox", icon: Inbox, requiresAuth: true },
+  {
+    title: "Order Lists",
+    url: "/orderlists",
+    icon: ShoppingCart,
+    requiresAuth: true,
+  },
+  {
+    title: "Product Stock",
+    url: "/productstock",
+    icon: Layers,
+    requiresAuth: true,
+  },
+  { title: "Pricing", url: "/pricing", icon: CreditCard, requiresAuth: false },
+  { title: "Calendar", url: "/calendar", icon: Calendar, requiresAuth: true },
+  { title: "To-Do", url: "/todo", icon: CheckSquare, requiresAuth: true },
+  { title: "Contact", url: "/contact", icon: Phone, requiresAuth: false },
+  { title: "Settings", url: "/settings", icon: Settings, requiresAuth: true },
 ];
 
-const AppSidebar = () => {
+const AppSidebar = async () => {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("jwt")?.value;
+  const isLogedin = !!token;
+
+  const filteredMenuItems = isLogedin
+    ? menuItems
+    : menuItems.filter((item) => !item.requiresAuth);
+
   return (
     <Sidebar>
       <SidebarHeader>
@@ -56,7 +75,7 @@ const AppSidebar = () => {
           <SidebarGroupLabel>Menu</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="gap-2">
-              {menuItems.map((item) => (
+              {filteredMenuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
                     <a href={item.url}>
@@ -66,11 +85,22 @@ const AppSidebar = () => {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <Logout />
-                </SidebarMenuButton>
-              </SidebarMenuItem>
+              {isLogedin ? (
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild>
+                    <Logout />
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ) : (
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild>
+                    <Link href="/login">
+                      <Settings />
+                      <span>Login</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
