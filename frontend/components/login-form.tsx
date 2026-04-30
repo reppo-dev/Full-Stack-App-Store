@@ -2,6 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import axios from "axios";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -18,47 +22,54 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 
+const loginSchema = z.object({
+  email: z.string().min(1, "Email is required").email("Invalid email format"),
+  password: z
+    .string()
+    .min(1, "Password is required")
+    .min(8, "Password must be at least 6 characters"),
+});
+
+type LoginFormValues = z.infer<typeof loginSchema>;
+
 export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
   const router = useRouter();
-  const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setError,
+  } = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  async function onSubmit(data: LoginFormValues) {
     setLoading(true);
-    setErrorMessage("");
-
-    const form = event.currentTarget;
-    const email = (form.elements.namedItem("email") as HTMLInputElement).value;
-    const password = (form.elements.namedItem("password") as HTMLInputElement)
-      .value;
-
-    if (!email || !password) {
-      setErrorMessage("لطفاً ایمیل و رمز عبور را وارد کنید");
-      setLoading(false);
-      return;
-    }
 
     try {
-      const res = await fetch("/api/login", {
-        method: "POST",
+      const response = await axios.post("/api/login", data, {
         headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ email, password }),
+        withCredentials: true,
       });
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        setErrorMessage(data.message || data.error || "خطا در ورود");
-        setLoading(false);
-        return;
-      }
-
-      // موفقیت - کوکی jwt خودکار توسط مرورگر ذخیره شده
       router.push("/dashboard");
     } catch (error) {
-      setErrorMessage("خطای اتصال به سرور");
+      if (axios.isAxiosError(error) && error.response) {
+        const message =
+          error.response.data?.message ||
+          error.response.data?.error ||
+          "Login failed";
+        setError("root", { message });
+      } else {
+        setError("root", { message: "Connection error" });
+      }
+    } finally {
       setLoading(false);
     }
   }
@@ -66,59 +77,58 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
   return (
     <Card {...props}>
       <CardHeader>
-        <CardTitle>ورود به حساب کاربری</CardTitle>
-        <CardDescription>
-          لطفاً ایمیل و رمز عبور خود را وارد کنید
-        </CardDescription>
+        <CardTitle>Login to your account</CardTitle>
+        <CardDescription>Enter your email and password below.</CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <FieldGroup>
             <Field>
-              <FieldLabel htmlFor="email">ایمیل</FieldLabel>
+              <FieldLabel htmlFor="email">Email</FieldLabel>
               <Input
                 id="email"
-                name="email"
                 type="email"
                 placeholder="Email"
-                required
+                {...register("email")}
               />
+              {errors.email && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.email.message}
+                </p>
+              )}
             </Field>
             <Field>
-              <FieldLabel htmlFor="password">رمز عبور</FieldLabel>
+              <FieldLabel htmlFor="password">Password</FieldLabel>
               <Input
                 id="password"
-                name="password"
                 type="password"
                 placeholder="Password"
-                required
+                {...register("password")}
               />
+              {errors.password && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.password.message}
+                </p>
+              )}
             </Field>
-            {errorMessage && (
+            {errors.root && (
               <div className="text-red-500 text-sm text-center">
-                {errorMessage}
+                {errors.root.message}
               </div>
             )}
-            <SubmitButton loading={loading} />
+
+            <Button type="submit" disabled={loading}>
+              {loading ? "Logging in..." : "Login"}
+            </Button>
+            <Button variant="outline" type="button">
+              Sign in with Google
+            </Button>
+            <FieldDescription className="px-6 text-center">
+              Don’t have an account? <a href="/signup">Sign up</a>
+            </FieldDescription>
           </FieldGroup>
         </form>
       </CardContent>
     </Card>
-  );
-}
-
-function SubmitButton({ loading }: { loading: boolean }) {
-  return (
-    <div className="space-y-4">
-      <Button type="submit" disabled={loading}>
-        {loading ? "در حال ورود..." : "ورود"}
-      </Button>
-      <Button variant="outline" type="button">
-        ورود با گوگل
-      </Button>
-      <FieldDescription className="px-6 text-center">
-        حساب کاربری ندارید؟ <a href="/signup">ثبت‌نام</a>
-      </FieldDescription>
-    </div>
   );
 }

@@ -31,6 +31,7 @@ import {
   Settings,
   LogOut,
 } from "lucide-react";
+import Logout from "@/components/logout";
 
 const menuItems = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
@@ -52,10 +53,7 @@ const bodySide = [
   { title: "Table", url: "/table", icon: Table },
 ];
 
-const buttonside = [
-  { title: "Settings", url: "/settings", icon: Settings },
-  { title: "Log Out", url: "/logout", icon: LogOut },
-];
+const buttonside = [{ title: "Settings", url: "/settings", icon: Settings }];
 
 const SidebarDash = () => {
   const pathname = usePathname();
@@ -159,6 +157,11 @@ const SidebarDash = () => {
                   </SidebarMenuItem>
                 );
               })}
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Logout />
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

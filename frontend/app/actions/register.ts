@@ -18,7 +18,7 @@ export async function registerAction(
   const password_confirm = formData.get("password_confirm") as string;
 
   if (password !== password_confirm) {
-    return { error: "رمز عبور و تکرار آن یکسان نیستند" };
+    return { error: "Password and repeat are not the same" };
   }
 
   const apiUrl = process.env.GOLANG_API_URL || "http://localhost:8000";
@@ -31,16 +31,7 @@ export async function registerAction(
   });
 
   const data = await res.data;
+  console.log("Login response:", data);
 
-  const setCookie = res.headers["set-cookie"];
-  let token: string | undefined;
-  if (setCookie) {
-    const cookieStr = Array.isArray(setCookie)
-      ? setCookie.join(";")
-      : setCookie;
-    const match = cookieStr.match(/jwt=([^;]+)/);
-    token = match ? match[1] : undefined;
-  }
-
-  return { success: true, token };
+  return { success: true };
 }
