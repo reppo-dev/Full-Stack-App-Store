@@ -1,6 +1,5 @@
 import { Input } from "../ui/input";
 import { Bell, Search, User } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import LightDarkToggle from "../light-dark";
 import { SidebarToggle } from "../sidebarToggle";
 import AuthButtons from "./AuthButtons";

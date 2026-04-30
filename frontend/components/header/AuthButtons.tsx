@@ -12,7 +12,7 @@ export default async function AuthButtons() {
   const isLoggedIn = !!token;
 
   if (isLoggedIn && token) {
-    const res = await axios.get(`/api/user`, {
+    const res = await axios.get(`http://localhost:3000/api/user`, {
       headers: {
         Cookie: `jwt=${token}`,
       },
@@ -23,7 +23,7 @@ export default async function AuthButtons() {
       <>
         <Bell size={30} />
         <Avatar size="lg">
-          <AvatarImage src={data.image || "https://github.com/shadcn.png"} />
+          <AvatarImage src={data.image} />
           <AvatarFallback>
             <User size={20} />
           </AvatarFallback>

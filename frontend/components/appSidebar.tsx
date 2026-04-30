@@ -26,9 +26,9 @@ import {
 import Link from "next/link";
 import Logout from "./logout";
 import { cookies } from "next/headers";
+import axios from "axios";
 
 const menuItems = [
-  { title: "Dashboard", url: "/dashboard", icon: Home, requiresAuth: true },
   { title: "Products", url: "/products", icon: Package, requiresAuth: true },
   { title: "Favorites", url: "/favorites", icon: Heart, requiresAuth: true },
   { title: "Inbox", url: "/inbox", icon: Inbox, requiresAuth: true },
@@ -56,6 +56,24 @@ const AppSidebar = async () => {
   const token = cookieStore.get("jwt")?.value;
   const isLogedin = !!token;
 
+  // تعریف data بیرون از if با مقدار پیش‌فرض
+  let userData = null;
+
+  if (isLogedin && token) {
+    try {
+      const res = await axios.get(`http://localhost:3000/api/user`, {
+        headers: {
+          Cookie: `jwt=${token}`,
+        },
+      });
+      userData = res.data;
+    } catch (error) {
+      console.error("Failed to fetch user:", error);
+    }
+  }
+  // role id 2 is admin
+  const isAdmin = userData?.role_id === 2;
+
   const filteredMenuItems = isLogedin
     ? menuItems
     : menuItems.filter((item) => !item.requiresAuth);
@@ -75,6 +93,17 @@ const AppSidebar = async () => {
           <SidebarGroupLabel>Menu</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="gap-2">
+              {isLogedin && isAdmin && (
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild>
+                    <a href="/dashboard">
+                      <Home />
+                      <span>Dashboard</span>
+                    </a>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              )}
+
               {filteredMenuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
@@ -85,6 +114,7 @@ const AppSidebar = async () => {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+
               {isLogedin ? (
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild>

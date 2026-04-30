@@ -21,7 +21,7 @@ export async function registerAction(
     return { error: "Password and repeat are not the same" };
   }
 
-  const apiUrl = process.env.GOLANG_API_URL || "http://localhost:8000";
+  const apiUrl = "http://localhost:3000";
 
   const res = await axios.post(`${apiUrl}/api/register`, {
     user_name,

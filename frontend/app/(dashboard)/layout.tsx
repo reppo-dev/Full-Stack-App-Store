@@ -8,6 +8,7 @@ import HeaderDashboard from "./components/HeaderDashboard";
 import SidebarDash from "./components/SidebarDash";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import axios from "axios";
 
 export default async function RootLayout({
   children,
@@ -21,7 +22,23 @@ export default async function RootLayout({
     redirect("/login");
   }
 
-  console.log(token);
+  let userData = null;
+
+  try {
+    const res = await axios.get(`http://localhost:3000/api/user`, {
+      headers: { Cookie: `jwt=${token}` },
+    });
+    userData = res.data;
+  } catch (error) {
+    console.error("Failed to fetch user:", error);
+    redirect("/login");
+  }
+
+  const isAdmin = userData?.role_id === 2;
+
+  if (!isAdmin) {
+    redirect("/");
+  }
   return (
     <SidebarProvider>
       <Sidebar className="resize-none" collapsible="icon">
