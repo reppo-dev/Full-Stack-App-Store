@@ -14,6 +14,13 @@ func AllProduct(c *fiber.Ctx) error {
 	return c.JSON(models.Paginate(databases.DB,&models.Product{},page))
 }
 
+func AllProducts(c *fiber.Ctx) error {
+	var products []models.Product
+
+	databases.DB.Find(&products)
+	return c.JSON(products)
+}
+
 func CreateProduct(c *fiber.Ctx) error {
 	var product models.Product
 

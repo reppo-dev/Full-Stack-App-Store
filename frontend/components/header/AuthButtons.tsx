@@ -1,4 +1,3 @@
-// components/AuthButtons.tsx
 import { cookies } from "next/headers";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";

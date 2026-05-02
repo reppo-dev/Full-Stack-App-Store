@@ -3,7 +3,12 @@ import type { NextConfig } from "next";
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["sibche.com", "www.webpouya.com", "localhost"],
+    domains: [
+      "sibche.com",
+      "www.webpouya.com",
+      "localhost",
+      "dkstatics-public.digikala.com",
+    ],
   },
   async rewrites() {
     return [

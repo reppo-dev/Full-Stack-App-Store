@@ -17,17 +17,12 @@ import { Heart } from "lucide-react";
 import Image from "next/image";
 
 type Product = {
-  id: string;
+  ID: string;
   title: string;
-  brand: string;
-  category: string;
   price: number;
-  currency: string;
   rating: number;
-  description: string;
   images: string[];
 };
-
 type CardProductProps = {
   props: Product;
 };

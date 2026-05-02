@@ -11,8 +11,10 @@ type Product struct {
 	Slug        string  `gorm:"type:varchar(200);uniqueIndex"`
 	Description string  `gorm:"type:text"`
 
-	Price       float64 `gorm:"type:decimal(10,2);not null"`
+	Price       float64 `gorm:"type:decimal(10,2);not null" json:"price"`
 	Stock       int
+
+	Rating		float64 `json:"rating"`
 
 	Images     []string `gorm:"serializer:json" json:"images"`
 	Colors     []string `gorm:"serializer:json" json:"colors"`
