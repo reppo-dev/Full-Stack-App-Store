@@ -19,6 +19,7 @@ type User struct {
 	Password 		string 		`json:"-" gorm:"not null"`
 	RoleID          uint    	`json:"role_id"`
     Role            Role    	`json:"role" gorm:"foreignKey:RoleId"`
+	Favorites 		[]Favorite  `gorm:"foreignKey:UserID" json:"-"`
 }
 
 type RegisterRequest struct {

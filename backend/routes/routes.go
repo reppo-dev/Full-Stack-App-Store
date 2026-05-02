@@ -38,4 +38,8 @@ func Setup(app *fiber.App) {
 	app.Get("/api/orders", controllers.AllOrder)
 	app.Get("/api/orders/export", controllers.Export)
 	app.Get("/api/orders/chart", controllers.Chart)
+
+	app.Get("/api/favorites/:id", controllers.AllFavorite)
+	app.Delete("/favorites", controllers.RemoveFavorite)
+	app.Get("/favorites/:id", controllers.AllFavorite)
 }
