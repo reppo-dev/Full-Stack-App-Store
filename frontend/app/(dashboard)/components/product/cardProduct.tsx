@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/carousel";
 import { Heart } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 type Product = {
   ID: string;
@@ -61,7 +62,11 @@ const CardProduct = ({ props }: CardProductProps) => {
           <span>${props.price}</span>
           {props.rating}
         </div>
-        <Button className="mt-2">Edit Product</Button>
+        <Button className="mt-2" asChild>
+          <Link href={`/product/${props.ID}`} className="mt-2">
+            Edit Product
+          </Link>
+        </Button>
       </CardContent>
     </Card>
   );
