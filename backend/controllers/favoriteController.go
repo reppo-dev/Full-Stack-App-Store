@@ -21,7 +21,7 @@ func AllFavorite(c *fiber.Ctx) error {
 
 
 
-func AddFavorit(c *fiber.Ctx) error {
+func AddFavorite(c *fiber.Ctx) error {
 	var input struct {
     UserID    uint `json:"user_id"`
     ProductID uint `json:"product_id"`

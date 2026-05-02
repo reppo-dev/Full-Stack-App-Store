@@ -1,169 +1,94 @@
-import CardProduct from "../components/product/cardProduct";
+"use client";
 
-type favorite = {
-  id: string;
+import axios from "axios";
+import { useEffect, useState } from "react";
+import CardProduct from "../components/product/cardProduct";
+import GetIdUser from "../components/GetIdUser";
+
+type ProductType = {
+  ID: string;
   title: string;
-  brand: string;
-  category: string;
   price: number;
-  currency: string;
   rating: number;
-  description: string;
   images: string[];
 };
 
-const favorites: favorite[] = [
-  {
-    id: "TEST-1001",
-    title: "Wireless Bluetooth Headphones",
-    brand: "SoundMax",
-    category: "Electronics / Audio",
-    price: 2499000,
-    currency: "IRR",
-    rating: 4.6,
-    description:
-      "High-quality wireless headphones with long battery life and deep bass.",
-    images: [
-      "https://sibche.com/blog/wp-content/uploads/2025/05/%D8%AF%D8%A7%D8%B3%D8%AA%D8%A7%D9%86-%D8%AF%DB%8C%D8%AC%DB%8C-%DA%A9%D8%A7%D9%84%D8%A7-%DA%86%DB%8C%D8%B3%D8%AA%D8%9F.jpg",
-      "https://www.webpouya.com/images/How-did-the-digikala-become-the-digikala-brand.jpg",
-    ],
-  },
-  {
-    id: "TEST-1002",
-    title: "Smart 4K LED TV 55 inch",
-    brand: "VisionTech",
-    category: "Electronics / TV",
-    price: 18999000,
-    currency: "IRR",
-    rating: 4.4,
-    description: "55-inch 4K smart TV with HDR and streaming support.",
-    images: [
-      "https://sibche.com/blog/wp-content/uploads/2025/05/%D8%AF%D8%A7%D8%B3%D8%AA%D8%A7%D9%86-%D8%AF%DB%8C%D8%AC%DB%8C-%DA%A9%D8%A7%D9%84%D8%A7-%DA%86%DB%8C%D8%B3%D8%AA%D8%9F.jpg",
-      "https://www.webpouya.com/images/How-did-the-digikala-become-the-digikala-brand.jpg",
-    ],
-  },
-  {
-    id: "TEST-1003",
-    title: "Android Smartphone 128GB",
-    brand: "NovaMobile",
-    category: "Electronics / Phone",
-    price: 12999000,
-    currency: "IRR",
-    rating: 4.2,
-    description: "Mid‑range smartphone with 128GB storage and triple camera.",
-    images: [
-      "https://sibche.com/blog/wp-content/uploads/2025/05/%D8%AF%D8%A7%D8%B3%D8%AA%D8%A7%D9%86-%D8%AF%DB%8C%D8%AC%DB%8C-%DA%A9%D8%A7%D9%84%D8%A7-%DA%86%DB%8C%D8%B3%D8%AA%D8%9F.jpg",
-      "https://www.webpouya.com/images/How-did-the-digikala-become-the-digikala-brand.jpg",
-    ],
-  },
-  {
-    id: "TEST-1004",
-    title: "Gaming Laptop 15.6 inch",
-    brand: "IronBook",
-    category: "Electronics / Laptop",
-    price: 45999000,
-    currency: "IRR",
-    rating: 4.8,
-    description: "High‑performance laptop with RTX graphics and SSD storage.",
-    images: [
-      "https://sibche.com/blog/wp-content/uploads/2025/05/%D8%AF%D8%A7%D8%B3%D8%AA%D8%A7%D9%86-%D8%AF%DB%8C%D8%AC%DB%8C-%DA%A9%D8%A7%D9%84%D8%A7-%DA%86%DB%8C%D8%B3%D8%AA%D8%9F.jpg",
-      "https://www.webpouya.com/images/How-did-the-digikala-become-the-digikala-brand.jpg",
-    ],
-  },
-  {
-    id: "TEST-1005",
-    title: "Electric Kettle 1.7L",
-    brand: "HomeChef",
-    category: "Home & Kitchen",
-    price: 1399000,
-    currency: "IRR",
-    rating: 4.5,
-    description: "1.7L stainless steel electric kettle with auto shut‑off.",
-    images: [
-      "https://sibche.com/blog/wp-content/uploads/2025/05/%D8%AF%D8%A7%D8%B3%D8%AA%D8%A7%D9%86-%D8%AF%DB%8C%D8%AC%DB%8C-%DA%A9%D8%A7%D9%84%D8%A7-%DA%86%DB%8C%D8%B3%D8%AA%D8%9F.jpg",
-      "https://www.webpouya.com/images/How-did-the-digikala-become-the-digikala-brand.jpg",
-    ],
-  },
-  {
-    id: "TEST-1006",
-    title: "Air Fryer 4.5L",
-    brand: "HealthyCook",
-    category: "Home & Kitchen",
-    price: 3299000,
-    currency: "IRR",
-    rating: 4.3,
-    description: "4.5L air fryer with adjustable temperature and timer.",
-    images: [
-      "https://sibche.com/blog/wp-content/uploads/2025/05/%D8%AF%D8%A7%D8%B3%D8%AA%D8%A7%D9%86-%D8%AF%DB%8C%D8%AC%DB%8C-%DA%A9%D8%A7%D9%84%D8%A7-%DA%86%DB%8C%D8%B3%D8%AA%D8%9F.jpg",
-      "https://www.webpouya.com/images/How-did-the-digikala-become-the-digikala-brand.jpg",
-    ],
-  },
-  {
-    id: "TEST-1007",
-    title: "Men's Running Shoes",
-    brand: "MoveFit",
-    category: "Fashion / Shoes",
-    price: 1899000,
-    currency: "IRR",
-    rating: 4.1,
-    description: "Lightweight breathable running shoes for daily use.",
-    images: [
-      "https://sibche.com/blog/wp-content/uploads/2025/05/%D8%AF%D8%A7%D8%B3%D8%AA%D8%A7%D9%86-%D8%AF%DB%8C%D8%AC%DB%8C-%DA%A9%D8%A7%D9%84%D8%A7-%DA%86%DB%8C%D8%B3%D8%AA%D8%9F.jpg",
-      "https://www.webpouya.com/images/How-did-the-digikala-become-the-digikala-brand.jpg",
-    ],
-  },
-  {
-    id: "TEST-1008",
-    title: "Cotton T-Shirt Pack of 3",
-    brand: "UrbanWear",
-    category: "Fashion / Clothing",
-    price: 799000,
-    currency: "IRR",
-    rating: 4.0,
-    description: "Pack of three soft and breathable cotton T-shirts.",
-    images: [
-      "https://sibche.com/blog/wp-content/uploads/2025/05/%D8%AF%D8%A7%D8%B3%D8%AA%D8%A7%D9%86-%D8%AF%DB%8C%D8%AC%DB%8C-%DA%A9%D8%A7%D9%84%D8%A7-%DA%86%DB%8C%D8%B3%D8%AA%D8%9F.jpg",
-      "https://www.webpouya.com/images/How-did-the-digikala-become-the-digikala-brand.jpg",
-    ],
-  },
-  {
-    id: "TEST-1009",
-    title: "Office Desk Chair",
-    brand: "ComfortSeat",
-    category: "Home & Office / Furniture",
-    price: 2799000,
-    currency: "IRR",
-    rating: 4.3,
-    description:
-      "Ergonomic office chair with height adjustment and lumbar support.",
-    images: [
-      "https://sibche.com/blog/wp-content/uploads/2025/05/%D8%AF%D8%A7%D8%B3%D8%AA%D8%A7%D9%86-%D8%AF%DB%8C%D8%AC%DB%8C-%DA%A9%D8%A7%D9%84%D8%A7-%DA%86%DB%8C%D8%B3%D8%AA%D8%9F.jpg",
-      "https://www.webpouya.com/images/How-did-the-digikala-become-the-digikala-brand.jpg",
-    ],
-  },
-  {
-    id: "TEST-1010",
-    title: "Power Bank 20000mAh",
-    brand: "ChargePlus",
-    category: "Electronics / Accessories",
-    price: 999000,
-    currency: "IRR",
-    rating: 4.7,
-    description: "Portable 20000mAh power bank with fast charging.",
-    images: [
-      "https://sibche.com/blog/wp-content/uploads/2025/05/%D8%AF%D8%A7%D8%B3%D8%AA%D8%A7%D9%86-%D8%AF%DB%8C%D8%AC%DB%8C-%DA%A9%D8%A7%D9%84%D8%A7-%DA%86%DB%8C%D8%B3%D8%AA%D8%9F.jpg",
-      "https://www.webpouya.com/images/How-did-the-digikala-become-the-digikala-brand.jpg",
-    ],
-  },
-];
+interface FavoriteItem {
+  ID: number;
+  product_id: number;
+  Product: ProductType;
+}
 
 const Favorites = () => {
+  const [favorites, setFavorites] = useState<FavoriteItem[]>([]);
+  const [favoriteIds, setFavoriteIds] = useState<Set<number>>(new Set());
+  const [userId, setUserId] = useState<number | null>(null);
+
+  useEffect(() => {
+    const fetchUserId = async () => {
+      const user = await GetIdUser();
+      if (user) setUserId(user.ID);
+    };
+    fetchUserId();
+  }, []);
+
+  useEffect(() => {
+    if (!userId) return;
+    const fetchFavorites = async () => {
+      try {
+        const res = await axios.get(
+          `http://localhost:3000/api/favorites/${userId}`,
+        );
+        const data: FavoriteItem[] = res.data;
+        setFavorites(data);
+        const ids = data.map((fav) => fav.product_id);
+        setFavoriteIds(new Set(ids));
+      } catch (err) {
+        console.error("Failed to fetch favorites", err);
+      }
+    };
+    fetchFavorites();
+  }, [userId]);
+
+  const toggleFavorite = async (productId: number) => {
+    if (!userId) return;
+    const isFav = favoriteIds.has(productId);
+
+    try {
+      if (isFav) {
+        await axios.delete("http://localhost:3000/api/favorites", {
+          data: { user_id: userId, product_id: productId },
+        });
+        setFavorites((prev) =>
+          prev.filter((fav) => fav.product_id !== productId),
+        );
+        setFavoriteIds((prev) => {
+          const next = new Set(prev);
+          next.delete(productId);
+          return next;
+        });
+      } else {
+        await axios.post("http://localhost:3000/api/favorites", {
+          user_id: userId,
+          product_id: productId,
+        });
+      }
+    } catch (err) {
+      console.error("Toggle favorite failed", err);
+    }
+  };
+
   return (
     <div>
       <p className="text-2xl ml-7 my-8">Favorites</p>
       <div className="grid gap-6 grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 mx-6 my-10">
-        {favorites.map((p) => (
-          <CardProduct key={p.id} props={p} />
+        {favorites.map((fav) => (
+          <CardProduct
+            key={fav.Product.ID}
+            props={fav.Product}
+            isFavorite={true}
+            onToggleFavorite={() => toggleFavorite(fav.product_id)}
+          />
         ))}
       </div>
     </div>

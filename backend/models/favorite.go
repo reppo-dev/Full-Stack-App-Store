@@ -9,5 +9,5 @@ type Favorite struct {
     ProductID uint    `gorm:"not null;index:idx_user_product,unique" json:"product_id"`
 	
     User      User    `gorm:"foreignKey:UserID" json:"-"`
-    Product   Product `gorm:"foreignKey:ProductID" json:"-"`
+    Product   Product `gorm:"foreignKey:ProductID" json:"Product"`
 }

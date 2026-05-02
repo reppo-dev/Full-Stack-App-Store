@@ -26,9 +26,15 @@ type Product = {
 };
 type CardProductProps = {
   props: Product;
+  isFavorite: boolean;
+  onToggleFavorite: () => void;
 };
 
-const CardProduct = ({ props }: CardProductProps) => {
+const CardProduct = ({
+  props,
+  isFavorite,
+  onToggleFavorite,
+}: CardProductProps) => {
   return (
     <Card>
       <Carousel className="w-full max-w-7xl mx-auto">
@@ -52,8 +58,8 @@ const CardProduct = ({ props }: CardProductProps) => {
       <CardHeader>
         <CardTitle>{props.title}</CardTitle>
         <CardAction>
-          <Button className="rounded-full">
-            <Heart />
+          <Button className="rounded-full" onClick={onToggleFavorite}>
+            <Heart fill={isFavorite ? "red" : "none"} color="red" />
           </Button>
         </CardAction>
       </CardHeader>
