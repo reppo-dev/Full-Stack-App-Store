@@ -55,7 +55,7 @@ func Setup(app *fiber.App) {
 	app.Post("/api/messages/:id/labels", controllers.AddLabelToMessage)
 	app.Delete("/api/messages/:msgID/labels/:labelID", controllers.RemoveLabelFromMessage)
 
-	
+
 	app.Post("/api/messages", controllers.CreateMessage)
 	app.Get("/api/messages", controllers.GetMessages)
 	app.Get("/api/messages/:id", controllers.GetMessage)
@@ -65,7 +65,7 @@ func Setup(app *fiber.App) {
 	app.Put("/api/messages/:id/restore", controllers.RestoreMessage)
 	app.Delete("/api/messages/:id", controllers.DeleteMessage)
 
-	app.Post(/api"/messages/:id/labels", controllers.AddLabelToMessage)
-	app.Delet/apie("/messages/:id/labels/:labelID", controllers.RemoveLabelFromMessage)
+	app.Post("/api/messages/:id/labels", controllers.AddLabelToMessage)
+	app.Delete("/api/messages/:id/labels/:labelID", controllers.RemoveLabelFromMessage)
 	app.Get("/api/labels/:id/messages", controllers.GetMessagesByLabel)
 }
