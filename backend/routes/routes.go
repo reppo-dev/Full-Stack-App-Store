@@ -42,4 +42,16 @@ func Setup(app *fiber.App) {
 	app.Get("/api/favorites/:id", controllers.AllFavorite)
 	app.Delete("/api/favorites", controllers.RemoveFavorite)
 	app.Post("/api/favorites",controllers.AddFavorite)
+
+
+
+
+	app.Post("/api/labels", controllers.CreateLabel)
+
+	app.Get("/api/labels/:id", controllers.AllLabelUser)
+
+	app.Get("/api/labels/:id/messages", controllers.GetMessagesByLabel)
+	app.Get("/api/messages/:id", controllers.GetMessage)
+	app.Post("/api/messages/:id/labels", controllers.AddLabelToMessage)
+	app.Delete("/api/messages/:msgID/labels/:labelID", controllers.RemoveLabelFromMessage)
 }
