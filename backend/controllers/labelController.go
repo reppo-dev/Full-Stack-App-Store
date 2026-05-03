@@ -29,3 +29,12 @@ func CreateLabel(c *fiber.Ctx) error {
     databases.DB.Create(&label)
     return c.Status(201).JSON(label)
 }
+
+func AllLabel(c *fiber.Ctx) error {
+	id,_:= strconv.Atoi(c.Params("id"))
+	var label models.Label
+
+	databases.DB.Where("user_id = ?", id).Find(&label)
+
+	return c.JSON(label)
+}
