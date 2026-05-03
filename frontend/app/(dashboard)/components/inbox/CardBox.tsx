@@ -11,13 +11,13 @@ import {
 } from "lucide-react";
 
 const sideBox = [
-  { title: "Inbox", url: "/Inbox", icon: Mail },
-  { title: "Starred", url: "/Starred", icon: Star },
-  { title: "Sent", url: "/Send", icon: Send },
-  { title: "Draft", url: "/Draft", icon: Pencil },
-  { title: "Spam", url: "/Spam", icon: AlertTriangle },
-  { title: "Important", url: "/Important", icon: Badge },
-  { title: "Bin", url: "/Bin", icon: Trash2 },
+  { title: "Inbox", url: "/inbox", icon: Mail },
+  { title: "Starred", url: "/starred", icon: Star },
+  { title: "Sent", url: "/send", icon: Send },
+  { title: "Draft", url: "/draft", icon: Pencil },
+  { title: "Spam", url: "/spam", icon: AlertTriangle },
+  { title: "Important", url: "/important", icon: Badge },
+  { title: "Bin", url: "/bin", icon: Trash2 },
 ];
 
 const CardBox = () => {
