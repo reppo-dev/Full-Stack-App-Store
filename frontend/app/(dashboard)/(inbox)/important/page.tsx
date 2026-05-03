@@ -4,7 +4,7 @@ import BoxMessage from "../../components/inbox/BoxMessage";
 const Important = () => {
   return (
     <div className="w-full">
-      <BoxMessage />
+      <BoxMessage folder="important" />
     </div>
   );
 };

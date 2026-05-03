@@ -4,7 +4,7 @@ import BoxMessage from "../../components/inbox/BoxMessage";
 const Send = () => {
   return (
     <div className="w-full">
-      <BoxMessage />
+      <BoxMessage folder="sent" />
     </div>
   );
 };

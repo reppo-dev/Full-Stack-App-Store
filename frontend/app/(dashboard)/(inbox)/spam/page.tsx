@@ -4,7 +4,7 @@ import BoxMessage from "../../components/inbox/BoxMessage";
 const Spam = () => {
   return (
     <div className="w-full">
-      <BoxMessage />
+      <BoxMessage folder="spam" />
     </div>
   );
 };
