@@ -248,3 +248,4 @@ func DeleteMessage(c *fiber.Ctx) error {
 	databases.DB.Unscoped().Delete(&msg)
 	return c.SendStatus(204)
 }
+

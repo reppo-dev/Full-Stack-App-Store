@@ -7,6 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Search, Star, Download, Info, Trash } from "lucide-react";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Link from "next/link";
 
 interface Message {
   ID: number;
@@ -125,52 +126,64 @@ const BoxMessage = ({ folder }: BoxMessageProps) => {
         </div>
       </div>
 
-      {/* لیست پیام‌ها دقیقاً با همان grid و کلاس‌های نسخهٔ دوم */}
       <div>
         {messages.length === 0 ? (
           <p className="text-center text-muted-foreground">No messages</p>
         ) : (
           messages.map((msg) => (
-            <div
+            <Link
+              href={`/inbox/${msg.ID}`}
               key={msg.ID}
-              className="grid grid-cols-[2.5rem_2.5rem_1fr_7.5rem_2fr_1fr] items-center gap-4 py-2"
+              className="contents" // باعث می‌شود لینک مانند یک container شفاف رفتار کند و grid به هم نخورد
             >
-              {/* چک‌باکس */}
-              <Checkbox />
-
-              {/* ستاره */}
-              <button onClick={() => toggleStar(msg.ID)}>
-                <Star
-                  className={`h-5 w-5 ${
-                    msg.is_starred
-                      ? "fill-yellow-400 text-yellow-400"
-                      : "fill-current text-gray-400"
-                  }`}
+              <div className="grid grid-cols-[2.5rem_2.5rem_1fr_7.5rem_2fr_1fr] items-center gap-4 py-2">
+                {/* چک‌باکس */}
+                <Checkbox
+                  onClick={(e) => e.stopPropagation()} // جلوگیری از هدایت
                 />
-              </button>
 
-              {/* نام فرستنده */}
-              <span className="font-medium">{senderName(msg)}</span>
-
-              {/* برچسب (فقط اولی) */}
-              <span className="text-sm">{msg.labels?.[0]?.name}</span>
-
-              {/* خلاصه پیام */}
-              <span className="text-sm truncate">
-                {msg.subject || msg.snippet}
-              </span>
-
-              {/* زمان و دکمهٔ زباله */}
-              <span className="text-sm truncate flex items-center justify-between gap-1">
-                <span>{new Date(msg.CreatedAt).toLocaleTimeString()}</span>
+                {/* ستاره */}
                 <button
-                  className="cursor-pointer"
-                  onClick={() => moveToTrash(msg.ID)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleStar(msg.ID);
+                  }}
                 >
-                  <Trash className="h-4 w-4 text-red-500" />
+                  <Star
+                    className={`h-5 w-5 ${
+                      msg.is_starred
+                        ? "fill-yellow-400 text-yellow-400"
+                        : "fill-current text-gray-400"
+                    }`}
+                  />
                 </button>
-              </span>
-            </div>
+
+                {/* نام فرستنده */}
+                <span className="font-medium">{senderName(msg)}</span>
+
+                {/* برچسب (فقط اولی) */}
+                <span className="text-sm">{msg.labels?.[0]?.name}</span>
+
+                {/* خلاصه پیام */}
+                <span className="text-sm truncate">
+                  {msg.subject || msg.snippet}
+                </span>
+
+                {/* زمان و دکمهٔ زباله */}
+                <span className="text-sm truncate flex items-center justify-between gap-1">
+                  <span>{new Date(msg.CreatedAt).toLocaleTimeString()}</span>
+                  <button
+                    className="cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      moveToTrash(msg.ID);
+                    }}
+                  >
+                    <Trash className="h-4 w-4 text-red-500" />
+                  </button>
+                </span>
+              </div>
+            </Link>
           ))
         )}
       </div>

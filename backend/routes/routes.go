@@ -83,4 +83,5 @@ app.Get("/api/messages/:id", controllers.GetMessage)
 
 app.Post("/api/messages/:id/labels", controllers.AddLabelToMessage)
 app.Delete("/api/messages/:id/labels/:labelID", controllers.RemoveLabelFromMessage)
+app.Get("/api/conversations/:userID", controllers.GetConversation)
 }
