@@ -76,7 +76,7 @@ func RemoveLabelFromMessage(c *fiber.Ctx) error {
     return c.SendStatus(200)
 }
 
-func GetMessage(c *fiber.Ctx) error {
+func GetMessag(c *fiber.Ctx) error {
     msgId := c.Params("id")
 
     var msg models.Message
