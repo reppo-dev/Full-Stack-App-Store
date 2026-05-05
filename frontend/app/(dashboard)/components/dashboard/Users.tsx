@@ -1,31 +1,38 @@
 "use client";
 
 import axios from "axios";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 
-type Product = {
+type User = {
   ID: number;
-  title: string;
-  description: string;
-  images: string[];
-  price: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+  role: {
+    name: string;
+  };
 };
 
-const Details = () => {
-  const [products, setProducts] = useState<Product[]>();
+const Users = () => {
+  const [users, setUsers] = useState<User[]>([]);
   const [page, setPage] = useState(1);
   const [lastPage, setLastPage] = useState(0);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const response = await axios.get(
-        `http://localhost:3000/api/products?page=${page}`,
-      );
-      setProducts(response.data.data);
-      setLastPage(response.data.meta.last_page);
+    const fetchUsers = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:3000/api/users?page=${page}`,
+        );
+
+        setUsers(response.data.data);
+        setLastPage(response.data.meta.last_page);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
     };
-    fetchData();
+
+    fetchUsers();
   }, [page]);
 
   const next = () => {
@@ -43,39 +50,33 @@ const Details = () => {
   return (
     <div className="rounded-lg border bg-card mt-10">
       <div className="p-6">
-        <h2 className="text-2xl font-semibold mb-4">Deals Details</h2>
-        <table className="w-full border-collapse text-center rounded-lg overflow-hidden">
+        <h2 className="text-2xl font-semibold mb-4">Users</h2>
+        <table className="w-full border-collapse rounded-lg overflow-hidden">
           <thead className="bg-muted">
             <tr>
               <th className="p-3 rounded-tl-lg text-sm font-semibold text-muted-foreground">
                 ID
               </th>
-              <th className="p-3 rounded-tl-lg text-sm font-semibold text-muted-foreground">
-                Product Name
+              <th className="p-3 text-sm font-semibold text-muted-foreground">
+                Name
               </th>
               <th className="p-3 text-sm font-semibold text-muted-foreground">
-                Description
+                Email
               </th>
               <th className="p-3 text-sm font-semibold text-muted-foreground">
-                Piece
+                Role
               </th>
             </tr>
           </thead>
           <tbody>
-            {products?.map((product) => (
-              <tr key={product.ID} className="border-t">
-                <td className="p-3">{product.ID}</td>
-                <td className="p-3">
-                  <Image
-                    src={product.images[0]}
-                    alt={product.title}
-                    width={100}
-                    height={100}
-                  />
+            {users.map((user) => (
+              <tr key={user.ID} className="border-t">
+                <td className="p-3 text-center ">{user.ID}</td>
+                <td className="p-3 text-center ">
+                  {user.first_name} {user.last_name}
                 </td>
-                <td className="p-3">{product.title}</td>
-                <td className="p-3">{product.description}</td>
-                <td className="p-3">{product.price}</td>
+                <td className="p-3">{user.email}</td>
+                <td className="p-3 text-center ">{user.role.name}</td>
               </tr>
             ))}
           </tbody>
@@ -99,4 +100,4 @@ const Details = () => {
   );
 };
 
-export default Details;
+export default Users;

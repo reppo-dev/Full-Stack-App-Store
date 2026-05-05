@@ -42,46 +42,4 @@ func Setup(app *fiber.App) {
 	app.Get("/api/favorites/:id", controllers.AllFavorite)
 	app.Delete("/api/favorites", controllers.RemoveFavorite)
 	app.Post("/api/favorites",controllers.AddFavorite)
-
-
-
-
-	app.Post("/api/labels", controllers.CreateLabel)
-
-	app.Get("/api/labels/:id", controllers.AllLabelUser)
-
-	app.Get("/api/labels/:id/messages", controllers.GetMessagesByLabel)
-	app.Get("/api/messages/:id", controllers.GetMessage)
-	app.Post("/api/messages/:id/labels", controllers.AddLabelToMessage)
-	app.Delete("/api/messages/:msgID/labels/:labelID", controllers.RemoveLabelFromMessage)
-
-
-	app.Delete("/api/labels/:id", controllers.DeleteLabel) 
-	app.Post("/api/messages", controllers.CreateMessage)
-	app.Get("/api/messages", controllers.GetMessages)
-	app.Get("/api/messages/:id", controllers.GetMessage)
-	app.Put("/api/messages/:id/star", controllers.ToggleStar)
-	app.Put("/api/messages/:id/important", controllers.ToggleImportant)
-	app.Put("/api/messages/:id/trash", controllers.MoveToTrash)
-	app.Put("/api/messages/:id/restore", controllers.RestoreMessage)
-	app.Delete("/api/messages/:id", controllers.DeleteMessage)
-
-	app.Delete("/api/messages/:id/labels/:labelID", controllers.RemoveLabelFromMessage)
-	app.Get("/api/labels/:id/messages", controllers.GetMessagesByLabel)
-
-
-	// Labels
-app.Post("/api/labels", controllers.CreateLabel)           // create a label
-app.Get("/api/labels", controllers.AllLabelUser)           // get all labels of current user  <-- ADD THIS
-app.Delete("/api/labels/:id", controllers.DeleteLabel)     // delete a label
-app.Get("/api/labels/:id/messages", controllers.GetMessagesByLabel) // messages with a label
-
-app.Post("/api/messages", controllers.CreateMessage)
-app.Get("/api/messages", controllers.GetMessages)
-app.Get("/api/messages/:id", controllers.GetMessage)
-
-
-app.Post("/api/messages/:id/labels", controllers.AddLabelToMessage)
-app.Delete("/api/messages/:id/labels/:labelID", controllers.RemoveLabelFromMessage)
-app.Get("/api/conversations/:userID", controllers.GetConversation)
 }
