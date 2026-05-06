@@ -38,19 +38,17 @@ Features JWT authentication, role‑based access control (RBAC), and CRUD operat
   <img src="screenshots/home.png" alt="Landing Page" width="80%" />
 </p>
 
-### 📊 Dashboard
-
-<p align="center">
-  <img src="screenshots/dashboard1.png" alt="Dashboard View 1" width="30%" />
-  <img src="screenshots/dashboard2.png" alt="Dashboard View 2" width="30%" />
-  <img src="screenshots/dashboard3.png" alt="Dashboard View 3" width="30%" />
-</p>
-
 ### 🛍️ Products
 
 <p align="center">
   <img src="screenshots/product1.png" alt="Products List" width="45%" />
   <img src="screenshots/product2.png" alt="Product Detail" width="45%" />
+</p>
+
+### Contact
+
+<p align="center">
+  <img src="screenshots/contact.png" alt="Products List" width="45%" />
 </p>
 
 ### ⭐ Favorites
