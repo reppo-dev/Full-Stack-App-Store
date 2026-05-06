@@ -163,9 +163,6 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
             <Button type="submit" disabled={loading}>
               {loading ? "Registering..." : "Sign up"}
             </Button>
-            <Button variant="outline" type="button">
-              Sign up with Google
-            </Button>
             <FieldDescription className="px-6 text-center">
               Already have an account? <a href="/login">Log in</a>
             </FieldDescription>

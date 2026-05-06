@@ -120,9 +120,6 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
             <Button type="submit" disabled={loading}>
               {loading ? "Logging in..." : "Login"}
             </Button>
-            <Button variant="outline" type="button">
-              Sign in with Google
-            </Button>
             <FieldDescription className="px-6 text-center">
               Don’t have an account? <a href="/signup">Sign up</a>
             </FieldDescription>
