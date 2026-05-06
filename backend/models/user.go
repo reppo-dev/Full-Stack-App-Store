@@ -17,7 +17,7 @@ type User struct {
 	DateOfBirth     time.Time 	`json:"date_of_birth"`
 	Email			string 		`json:"email" gorm:"uniqueIndex;not null"`
 	Password 		string 		`json:"-" gorm:"not null"`
-	RoleID          uint    	`json:"role_id"`
+	RoleID          uint    	`json:"role_id" gorm:"default:1"`
     Role            Role    	`json:"role" gorm:"foreignKey:RoleId"`
 	Favorites 		[]Favorite  `gorm:"foreignKey:UserID" json:"-"`
 }
