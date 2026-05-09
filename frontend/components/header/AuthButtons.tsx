@@ -11,18 +11,21 @@ export default async function AuthButtons() {
   const isLoggedIn = !!token;
 
   if (isLoggedIn && token) {
-    const res = await axios.get(`http://localhost:3000/api/user`, {
-      headers: {
-        Cookie: `jwt=${token}`,
-      },
-    });
-    const data = res.data;
+    let data;
+    try {
+      const res = await axios.get(`http://localhost:3000/api/user`, {
+        headers: { Cookie: `jwt=${token}` },
+      });
+      data = res.data;
+    } catch {
+      console.warn("Invalid token - treating as guest");
+    }
 
     return (
       <>
         <Bell size={30} />
         <Avatar size="lg">
-          <AvatarImage src={data.image} />
+          <AvatarImage src={data?.image} />
           <AvatarFallback>
             <User size={20} />
           </AvatarFallback>

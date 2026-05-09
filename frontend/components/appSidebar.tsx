@@ -27,6 +27,7 @@ import Link from "next/link";
 import Logout from "./logout";
 import { cookies } from "next/headers";
 import axios from "axios";
+import { redirect } from "next/navigation";
 
 const menuItems = [
   { title: "Products", url: "/products", icon: Package, requiresAuth: true },
@@ -56,7 +57,10 @@ const AppSidebar = async () => {
   const token = cookieStore.get("jwt")?.value;
   const isLogedin = !!token;
 
-  // تعریف data بیرون از if با مقدار پیش‌فرض
+  if (!isLogedin) {
+    redirect("/login");
+  }
+
   let userData = null;
 
   if (isLogedin && token) {
@@ -67,11 +71,11 @@ const AppSidebar = async () => {
         },
       });
       userData = res.data;
-    } catch (error) {
-      console.error("Failed to fetch user:", error);
+    } catch {
+      console.warn("User not authenticated");
     }
   }
-  // role id 2 is admin
+
   const isAdmin = userData?.role_id === 2;
 
   const filteredMenuItems = isLogedin
