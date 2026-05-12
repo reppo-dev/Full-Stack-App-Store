@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import axios from "axios";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -14,13 +13,18 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Field,
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field";
+import { FieldDescription, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "./ui/form";
+import { loginAction } from "@/app/actions/auth";
+import { toast } from "sonner";
 
 const loginSchema = z.object({
   email: z.string().min(1, "Email is required").email("Invalid email format"),
@@ -34,14 +38,10 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 
 export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    setError,
-  } = useForm<LoginFormValues>({
+  const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
@@ -49,28 +49,23 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
     },
   });
 
-  async function onSubmit(data: LoginFormValues) {
-    setLoading(true);
+  async function onSubmit(values: LoginFormValues) {
+    setServerError(null);
+    setIsLoading(true);
 
     try {
-      const response = await axios.post("/api/login", data, {
-        headers: { "Content-Type": "application/json" },
-        withCredentials: true,
-      });
+      const result = await loginAction(values);
 
-      router.push("/dashboard");
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        const message =
-          error.response.data?.message ||
-          error.response.data?.error ||
-          "Login failed";
-        setError("root", { message });
+      if (!result?.success) {
+        setServerError(result?.message);
       } else {
-        setError("root", { message: "Connection error" });
+        toast("Sign up success");
+        router.push("/");
       }
+    } catch {
+      setServerError("Something went wrong. Please try again.");
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   }
 
@@ -81,50 +76,61 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
         <CardDescription>Enter your email and password below.</CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <FieldGroup>
-            <Field>
-              <FieldLabel htmlFor="email">Email</FieldLabel>
-              <Input
-                id="email"
-                type="email"
-                placeholder="Email"
-                {...register("email")}
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <FieldGroup>
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-base font-semibold text-primary">
+                      email
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="example@email.com"
+                        {...field}
+                        className="h-11"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-              {errors.email && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.email.message}
-                </p>
-              )}
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="password">Password</FieldLabel>
-              <Input
-                id="password"
-                type="password"
-                placeholder="Password"
-                {...register("password")}
+              <FormField
+                control={form.control}
+                name="password"
+                render={(field) => (
+                  <FormItem>
+                    <FormLabel className="text-base font-semibold text-primary">
+                      Password
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="example@email.com"
+                        {...field}
+                        className="h-11"
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
               />
-              {errors.password && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.password.message}
-                </p>
+              {serverError && (
+                <div className="rounded-md bg-red-50 p-3 text-sm font-medium text-red-700">
+                  {serverError}
+                </div>
               )}
-            </Field>
-            {errors.root && (
-              <div className="text-red-500 text-sm text-center">
-                {errors.root.message}
-              </div>
-            )}
 
-            <Button type="submit" disabled={loading}>
-              {loading ? "Logging in..." : "Login"}
-            </Button>
-            <FieldDescription className="px-6 text-center">
-              Don’t have an account? <a href="/signup">Sign up</a>
-            </FieldDescription>
-          </FieldGroup>
-        </form>
+              <Button type="submit" disabled={isLoading}>
+                {isLoading ? "Logging in..." : "Login"}
+              </Button>
+              <FieldDescription className="px-6 text-center">
+                Don’t have an account? <a href="/signup">Sign up</a>
+              </FieldDescription>
+            </FieldGroup>
+          </form>
+        </Form>
       </CardContent>
     </Card>
   );

@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -14,18 +13,23 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Field,
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field";
+import { FieldDescription, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { registerAction } from "@/app/actions/auth";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "./ui/form";
+import { toast } from "sonner";
 
 const signUpSchema = z
   .object({
-    email: z.string().min(1, "Email is required").email("Invalid email format"),
     user_name: z.string().min(6, "Username must be at least 6 characters"),
+    email: z.string().min(1, "Email is required").email("Invalid email format"),
     password: z
       .string()
       .min(1, "Password is required")
@@ -41,48 +45,38 @@ type SignUpFormValues = z.infer<typeof signUpSchema>;
 
 export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    setError,
-  } = useForm<SignUpFormValues>({
+  const form = useForm<SignUpFormValues>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
-      email: "",
       user_name: "",
+      email: "",
       password: "",
       password_confirm: "",
     },
   });
 
-  async function onSubmit(data: SignUpFormValues) {
-    setLoading(true);
+  async function onSubmit(values: SignUpFormValues) {
+    setServerError(null);
+    setIsLoading(true);
 
     try {
-      await axios.post("/api/register", data, {
-        headers: { "Content-Type": "application/json" },
-        withCredentials: true,
-      });
+      const result = await registerAction(values);
 
-      router.push("/dashboard");
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        const message =
-          error.response.data?.message ||
-          error.response.data?.error ||
-          "Registration failed";
-        setError("root", { message });
+      if (!result.success) {
+        setServerError(result.message);
       } else {
-        setError("root", { message: "Connection error" });
+        toast("Sign up success");
+        router.push("/");
       }
+    } catch {
+      setServerError("Something went wrong. Please try again.");
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   }
-
   return (
     <Card {...props}>
       <CardHeader>
@@ -90,84 +84,95 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
         <CardDescription>Create an account to continue</CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <FieldGroup>
-            <Field>
-              <FieldLabel htmlFor="email">Email</FieldLabel>
-              <Input
-                id="email"
-                type="email"
-                placeholder="Email"
-                {...register("email")}
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <FieldGroup>
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-base font-semibold text-primary">
+                      email
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="example@email.com"
+                        {...field}
+                        className="h-11"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-              {errors.email && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.email.message}
-                </p>
-              )}
-            </Field>
 
-            <Field>
-              <FieldLabel htmlFor="user_name">Username</FieldLabel>
-              <Input
-                id="user_name"
-                type="text"
-                placeholder="Username"
-                {...register("user_name")}
+              <FormField
+                control={form.control}
+                name="user_name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-base font-semibold text-primary">
+                      User Name
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="username"
+                        {...field}
+                        className="h-11"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-              {errors.user_name && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.user_name.message}
-                </p>
-              )}
-            </Field>
 
-            <Field>
-              <FieldLabel htmlFor="password">Password</FieldLabel>
-              <Input
-                id="password"
-                type="password"
-                placeholder="Password"
-                {...register("password")}
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-base font-semibold text-primary">
+                      Password
+                    </FormLabel>
+                    <FormControl>
+                      <Input placeholder="******" {...field} className="h-11" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-              {errors.password && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.password.message}
-                </p>
-              )}
-            </Field>
 
-            <Field>
-              <FieldLabel htmlFor="password_confirm">
-                Confirm Password
-              </FieldLabel>
-              <Input
-                id="password_confirm"
-                type="password"
-                placeholder="Confirm password"
-                {...register("password_confirm")}
+              <FormField
+                control={form.control}
+                name="password_confirm"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-base font-semibold text-primary">
+                      Password Confirm
+                    </FormLabel>
+                    <FormControl>
+                      <Input placeholder="******" {...field} className="h-11" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-              {errors.password_confirm && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.password_confirm.message}
-                </p>
+              {serverError && (
+                <div className="rounded-md bg-red-50 p-3 text-sm font-medium text-red-700">
+                  {serverError}
+                </div>
               )}
-            </Field>
 
-            {errors.root && (
-              <div className="text-red-500 text-sm text-center">
-                {errors.root.message}
-              </div>
-            )}
-
-            <Button type="submit" disabled={loading}>
-              {loading ? "Registering..." : "Sign up"}
-            </Button>
-            <FieldDescription className="px-6 text-center">
-              Already have an account? <a href="/login">Log in</a>
-            </FieldDescription>
-          </FieldGroup>
-        </form>
+              <Button type="submit" disabled={isLoading}>
+                {isLoading ? "Registering..." : "Sign up"}
+              </Button>
+              <FieldDescription className="px-6 text-center">
+                Already have an account? <a href="/login">Log in</a>
+              </FieldDescription>
+            </FieldGroup>
+          </form>
+        </Form>
       </CardContent>
     </Card>
   );

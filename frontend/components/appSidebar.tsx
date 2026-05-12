@@ -24,10 +24,6 @@ import {
   Settings,
 } from "lucide-react";
 import Link from "next/link";
-import Logout from "./logout";
-import { cookies } from "next/headers";
-import axios from "axios";
-import { redirect } from "next/navigation";
 
 const menuItems = [
   { title: "Products", url: "/products", icon: Package, requiresAuth: true },
