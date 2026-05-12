@@ -53,35 +53,6 @@ const menuItems = [
 ];
 
 const AppSidebar = async () => {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("jwt")?.value;
-  const isLogedin = !!token;
-
-  if (!isLogedin) {
-    redirect("/login");
-  }
-
-  let userData = null;
-
-  if (isLogedin && token) {
-    try {
-      const res = await axios.get(`http://localhost:3000/api/user`, {
-        headers: {
-          Cookie: `jwt=${token}`,
-        },
-      });
-      userData = res.data;
-    } catch {
-      console.warn("User not authenticated");
-    }
-  }
-
-  const isAdmin = userData?.role_id === 2;
-
-  const filteredMenuItems = isLogedin
-    ? menuItems
-    : menuItems.filter((item) => !item.requiresAuth);
-
   return (
     <Sidebar>
       <SidebarHeader>
@@ -97,18 +68,17 @@ const AppSidebar = async () => {
           <SidebarGroupLabel>Menu</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="gap-2">
-              {isLogedin && isAdmin && (
-                <SidebarMenuItem>
-                  <SidebarMenuButton asChild>
-                    <a href="/dashboard">
-                      <Home />
-                      <span>Dashboard</span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              )}
-
-              {filteredMenuItems.map((item) => (
+              (
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <a href="/dashboard">
+                    <Home />
+                    <span>Dashboard</span>
+                  </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              )
+              {/* {filteredMenuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
                     <a href={item.url}>
@@ -117,24 +87,23 @@ const AppSidebar = async () => {
                     </a>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
-              ))}
-
-              {isLogedin ? (
+              ))} */}
+              {/* {isLogedin ? (
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild>
                     <Logout />
                   </SidebarMenuButton>
                 </SidebarMenuItem>
-              ) : (
-                <SidebarMenuItem>
-                  <SidebarMenuButton asChild>
-                    <Link href="/login">
-                      <Settings />
-                      <span>Login</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              )}
+              ) : ( */}
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link href="/login">
+                    <Settings />
+                    <span>Login</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              {/* )} */}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
