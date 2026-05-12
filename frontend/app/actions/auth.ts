@@ -19,16 +19,19 @@ export async function registerAction(paylod: UserRegister) {
       };
     }
     const body: Record<string, unknown> = {
-      name: paylod.user_name,
+      user_name: paylod.user_name,
       email: paylod.email,
       password: paylod.password,
       password_confirm: paylod.password_confirm,
     };
+    console.log(body);
 
     const response = await axios.post(
       `http://localhost:8000/api/register`,
       body,
     );
+
+    console.log(response);
 
     let token = response.data?.token;
     if (!token) {
@@ -45,13 +48,14 @@ export async function registerAction(paylod: UserRegister) {
       return { success: false, message: "No token received from server." };
     }
 
+    // 3. تنظیم کوکی در مرورگر (از طریق پاسخ Server Action)
     const cookieStore = await cookies();
     cookieStore.set("jwt", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
-      maxAge: 60 * 60 * 24,
+      maxAge: 60 * 60 * 24, // 1 روز
     });
 
     return { success: true, message: "Login successful." };
@@ -108,6 +112,33 @@ export const loginAction = async (payload: UserLogin) => {
     return {
       success: false,
       message: "An unexpected error occurred. Please try again.",
+    };
+  }
+};
+
+export const getuserAction = async () => {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("jwt")?.value;
+
+    if (!token) {
+      return {
+        success: false,
+        message: "No authentication token found",
+      };
+    }
+
+    const response = await axios.get(`http://localhost:8000/api/user`, {
+      headers: { Cookie: `jwt=${token}` },
+    });
+    return {
+      success: true,
+      user: response.data,
+    };
+  } catch {
+    return {
+      success: false,
+      message: "An unexpected error occurred",
     };
   }
 };

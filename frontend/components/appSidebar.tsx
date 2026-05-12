@@ -28,6 +28,8 @@ import Logout from "./logout";
 import { cookies } from "next/headers";
 import axios from "axios";
 import { redirect } from "next/navigation";
+import { getuserAction } from "@/app/actions/auth";
+import { User } from "@/models/modles";
 
 const menuItems = [
   { title: "Products", url: "/products", icon: Package, requiresAuth: true },
@@ -57,22 +59,12 @@ const AppSidebar = async () => {
   const token = cookieStore.get("jwt")?.value;
   const isLogedin = !!token;
 
-  let userData = null;
+  const userData = await getuserAction();
 
-  if (isLogedin && token) {
-    try {
-      const res = await axios.get(`http://localhost:3000/api/user`, {
-        headers: {
-          Cookie: `jwt=${token}`,
-        },
-      });
-      userData = res.data;
-    } catch {
-      console.warn("User not authenticated");
-    }
+  let isAdmin = false;
+  if (userData.success && userData.user) {
+    isAdmin = userData.user.role_id === 2;
   }
-
-  const isAdmin = userData?.role_id === 2;
 
   const filteredMenuItems = isLogedin
     ? menuItems
