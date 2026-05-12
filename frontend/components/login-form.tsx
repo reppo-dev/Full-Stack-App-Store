@@ -101,18 +101,22 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
               <FormField
                 control={form.control}
                 name="password"
-                render={(field) => (
+                render={(
+                  { field }, // ✅ درست
+                ) => (
                   <FormItem>
                     <FormLabel className="text-base font-semibold text-primary">
                       Password
                     </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="example@email.com"
+                        type="password"
+                        placeholder="••••••••"
                         {...field}
                         className="h-11"
                       />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />

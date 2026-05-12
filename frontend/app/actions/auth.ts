@@ -30,7 +30,21 @@ export async function registerAction(paylod: UserRegister) {
       body,
     );
 
-    const token = response.data.token;
+    let token = response.data?.token;
+    if (!token) {
+      const setCookie = response.headers["set-cookie"];
+      if (setCookie && Array.isArray(setCookie)) {
+        const jwtCookie = setCookie.find((c) => c.startsWith("jwt="));
+        if (jwtCookie) {
+          token = jwtCookie.split(";")[0].split("=")[1];
+        }
+      }
+    }
+
+    if (!token) {
+      return { success: false, message: "No token received from server." };
+    }
+
     const cookieStore = await cookies();
     cookieStore.set("jwt", token, {
       httpOnly: true,
@@ -39,7 +53,8 @@ export async function registerAction(paylod: UserRegister) {
       path: "/",
       maxAge: 60 * 60 * 24,
     });
-    return { success: true, message: "Register success." };
+
+    return { success: true, message: "Login successful." };
   } catch {
     return {
       success: false,
@@ -63,17 +78,32 @@ export const loginAction = async (payload: UserLogin) => {
 
     const response = await axios.post(`http://localhost:8000/api/login`, body);
 
-    const token = response.data.token;
+    let token = response.data?.token;
+    if (!token) {
+      const setCookie = response.headers["set-cookie"];
+      if (setCookie && Array.isArray(setCookie)) {
+        const jwtCookie = setCookie.find((c) => c.startsWith("jwt="));
+        if (jwtCookie) {
+          token = jwtCookie.split(";")[0].split("=")[1];
+        }
+      }
+    }
 
+    if (!token) {
+      return { success: false, message: "No token received from server." };
+    }
+
+    // 3. تنظیم کوکی در مرورگر (از طریق پاسخ Server Action)
     const cookieStore = await cookies();
     cookieStore.set("jwt", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
-      maxAge: 60 * 60 * 24,
+      maxAge: 60 * 60 * 24, // 1 روز
     });
-    return { success: true, message: "Login success." };
+
+    return { success: true, message: "Login successful." };
   } catch {
     return {
       success: false,

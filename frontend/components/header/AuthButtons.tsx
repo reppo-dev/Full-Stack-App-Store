@@ -8,6 +8,7 @@ import axios from "axios";
 export default async function AuthButtons() {
   const cookieStore = await cookies();
   const token = cookieStore.get("jwt")?.value;
+  console.log(token);
   const isLoggedIn = !!token;
 
   if (isLoggedIn && token) {

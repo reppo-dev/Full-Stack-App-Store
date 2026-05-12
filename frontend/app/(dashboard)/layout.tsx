@@ -17,6 +17,7 @@ export default async function RootLayout({
 }>) {
   const cookieStore = await cookies();
   const token = cookieStore.get("jwt")?.value;
+  console.log(token);
 
   if (!token) {
     redirect("/login");
