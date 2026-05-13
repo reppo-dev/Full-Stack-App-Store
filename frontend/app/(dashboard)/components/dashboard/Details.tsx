@@ -1,7 +1,9 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import axios from "axios";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 type Product = {
@@ -40,24 +42,32 @@ const Details = () => {
     }
   };
 
+  const handleDelte = async () => {};
+
   return (
     <div className="rounded-lg border bg-card mt-10">
       <div className="p-6">
         <h2 className="text-2xl font-semibold mb-4">Deals Details</h2>
-        <table className="w-full border-collapse text-center rounded-lg overflow-hidden">
+        <table className="w-full border-collapse rounded-lg overflow-hidden">
           <thead className="bg-muted">
             <tr>
               <th className="p-3 rounded-tl-lg text-sm font-semibold text-muted-foreground">
                 ID
               </th>
-              <th className="p-3 rounded-tl-lg text-sm font-semibold text-muted-foreground">
+              <th className="p-3 text-sm font-semibold text-muted-foreground">
+                Product Image
+              </th>
+              <th className="p-3 text-sm font-semibold text-muted-foreground">
                 Product Name
               </th>
               <th className="p-3 text-sm font-semibold text-muted-foreground">
                 Description
               </th>
               <th className="p-3 text-sm font-semibold text-muted-foreground">
-                Piece
+                Price
+              </th>
+              <th className="p-3 text-sm font-semibold text-muted-foreground">
+                Status
               </th>
             </tr>
           </thead>
@@ -73,9 +83,15 @@ const Details = () => {
                     height={100}
                   />
                 </td>
-                <td className="p-3">{product.title}</td>
-                <td className="p-3">{product.description}</td>
-                <td className="p-3">{product.price}</td>
+                <td className="p-3 text-center">{product.title}</td>
+                <td className="p-3 ">{product.description}</td>
+                <td className="p-3 text-center">{product.price}</td>
+                <td className="p-3 space-x-4">
+                  <Link href={`/product/${product.ID}`}>
+                    <Button>Edit Product</Button>
+                  </Link>
+                  <Button>Delete</Button>
+                </td>
               </tr>
             ))}
           </tbody>
