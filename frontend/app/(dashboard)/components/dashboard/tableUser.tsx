@@ -2,9 +2,7 @@
 import { ModelUser } from "@/models/modles";
 import { useState } from "react";
 import { allUser, deleteUser } from "@/app/actions/user.action";
-import ButtonById from "@/components/button/ButtonById";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
 
 interface TableUserProps {
   initialUsers: ModelUser[];
@@ -21,7 +19,6 @@ const TableUser = ({
   const [page, setPage] = useState(initialPage);
   const [lastPage, setLastPage] = useState(initialLastPage);
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   const fetchUsers = async (newPage: number) => {
     try {
@@ -53,8 +50,8 @@ const TableUser = ({
 
   const handleDelete = async (id: number) => {
     if (confirm("Are you sure?")) {
+      setUsers((prev) => prev.filter((user) => user.ID !== id));
       await deleteUser(id);
-      router.refresh();
     }
   };
 
