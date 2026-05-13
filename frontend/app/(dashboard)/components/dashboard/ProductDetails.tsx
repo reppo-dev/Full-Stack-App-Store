@@ -47,7 +47,7 @@ const Details = () => {
   return (
     <div className="rounded-lg border bg-card mt-10">
       <div className="p-6">
-        <h2 className="text-2xl font-semibold mb-4">Deals Details</h2>
+        <h2 className="text-2xl font-semibold mb-4">Products Details</h2>
         <table className="w-full border-collapse rounded-lg overflow-hidden">
           <thead className="bg-muted">
             <tr>

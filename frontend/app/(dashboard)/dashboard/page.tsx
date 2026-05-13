@@ -1,4 +1,4 @@
-import Details from "../components/dashboard/Details";
+import Details from "../components/dashboard/ProductDetails";
 import Users from "../components/dashboard/Users";
 
 const Dashboard = () => {
