@@ -71,6 +71,8 @@ func UpdateUser(c *fiber.Ctx) error {
 	user.Image = data.Image
 	user.PhoneNumber = data.PhoneNumber
 	user.Email = data.Email
+	user.UserName = data.UserName
+	user.RoleID = data.RoleID
 	
 	databases.DB.Save(&user)
 

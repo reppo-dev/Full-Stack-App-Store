@@ -43,10 +43,11 @@ type UpdateIfo struct {
     FirstName       string 		`json:"first_name"`
     LastName        string 		`json:"last_name"`
 	Image           string 		`json:"image"`
-	UserName 		string		`json:"user_name" gorm:"uniqueIndex;size:50"`
+	UserName 		string		`json:"user_name"`
 	PhoneNumber 	string 		`json:"phone_number" `
 	DateOfBirth     time.Time 	`json:"date_of_birth"`
     Email           string 		`json:"email"`
+	RoleID          uint  		`json:"role_id"`
 }
 
 type UpdatePassword struct{

@@ -17,6 +17,7 @@ func AllRole(c *fiber.Ctx) error {
 	return c.JSON(role)
 }
 
+
 func CreateRole(c *fiber.Ctx) error {
 	var roleDto fiber.Map
 

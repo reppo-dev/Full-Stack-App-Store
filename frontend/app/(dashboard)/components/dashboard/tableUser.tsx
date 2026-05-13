@@ -3,6 +3,7 @@ import { ModelUser } from "@/models/modles";
 import { useState } from "react";
 import { allUser, deleteUser } from "@/app/actions/user.action";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 interface TableUserProps {
   initialUsers: ModelUser[];
@@ -97,7 +98,9 @@ const TableUser = ({
                   <td className="p-3">{user.email}</td>
                   <td className="p-3 text-center">{user.role?.name ?? "-"}</td>
                   <td className="p-3 text-center space-x-4">
-                    <Button>Edit User</Button>
+                    <Link href={""}>
+                      <Button>Edit User</Button>
+                    </Link>
                     <Button onClick={() => handleDelete(user.ID)}>
                       Delete
                     </Button>
