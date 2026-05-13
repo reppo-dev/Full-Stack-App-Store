@@ -18,3 +18,19 @@ export async function allUser(page: number) {
     };
   }
 }
+
+export async function allusers() {
+  try {
+    const response = await axios.get(`http://localhost:8000/api/user`);
+
+    return {
+      success: true,
+      users: response.data.data,
+    };
+  } catch {
+    return {
+      success: false,
+      message: "failed to fetch all user",
+    };
+  }
+}
