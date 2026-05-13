@@ -9,14 +9,14 @@ import SidebarDash from "./components/SidebarDash";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import axios from "axios";
+import getToken from "../actions/getToken";
 
 export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("jwt")?.value;
+  const token = await getToken();
   console.log(token);
 
   if (!token) {

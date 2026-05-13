@@ -26,10 +26,7 @@ import {
 import Link from "next/link";
 import Logout from "./logout";
 import { cookies } from "next/headers";
-import axios from "axios";
-import { redirect } from "next/navigation";
 import { getuserAction } from "@/app/actions/auth";
-import { User } from "@/models/modles";
 
 const menuItems = [
   { title: "Products", url: "/products", icon: Package, requiresAuth: true },

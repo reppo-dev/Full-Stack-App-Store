@@ -5,24 +5,22 @@ import (
 )
 
 type Order struct {
-	gorm.Model
-	FirstName 	string `json:"-"`
-	LastName 	string `json:"-"`
-	Name        string `json:"name" gorm:"-"`
-	Email 		string `json:"email"`
-	Total       float32 `json:"total" gorm:"-"`
-	OrderItem []OrderItem `json:"order_items" gorm:"foreignKey:OrderId"`
+    gorm.Model
+    FirstName  string      `json:"-"`
+    LastName   string      `json:"-"`
+    Name       string      `json:"name" gorm:"-"`
+    Email      string      `json:"email"`
+    Total      float32     `json:"total" gorm:"-"`
+    OrderItem  []OrderItem `json:"order_items" gorm:"foreignKey:OrderID"`
 }
-
 
 type OrderItem struct {
-	gorm.Model
-	OrderID uint `json:"order_id"`
-	ProductTitle string `json:"product_title"`
-	Price float32 `json:"price"`
-	Quantity uint `json:"quantity"`
+    gorm.Model
+    OrderID      uint    `json:"order_id"`
+    ProductTitle string  `json:"product_title"`
+    Price        float32 `json:"price"`
+    Quantity     uint    `json:"quantity"`
 }
-
 
 func (order *Order) Count(db *gorm.DB) int64 {
 	var total int64

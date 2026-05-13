@@ -16,6 +16,14 @@ func AllUsers(c *fiber.Ctx) error {
 	return c.JSON(models.Paginate(databases.DB,&models.User{},page))
 }
 
+func AllUser(c *fiber.Ctx) error {
+	var user []models.User
+
+	databases.DB.Find(&user)
+
+	return c.JSON(user)
+}
+
 func CreateUser(c *fiber.Ctx) error {
 	var user models.User
 

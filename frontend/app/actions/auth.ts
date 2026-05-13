@@ -3,6 +3,7 @@
 import { UserLogin, UserRegister } from "@/models/modles";
 import axios from "axios";
 import { cookies } from "next/headers";
+import getToken from "./getToken";
 
 export async function registerAction(paylod: UserRegister) {
   try {
@@ -118,8 +119,7 @@ export const loginAction = async (payload: UserLogin) => {
 
 export const getuserAction = async () => {
   try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get("jwt")?.value;
+    const token = await getToken();
 
     if (!token) {
       return {
@@ -141,4 +141,10 @@ export const getuserAction = async () => {
       message: "An unexpected error occurred",
     };
   }
+};
+
+export const updateInfoUser = async () => {
+  try {
+    const token = await getToken();
+  } catch (error) {}
 };
