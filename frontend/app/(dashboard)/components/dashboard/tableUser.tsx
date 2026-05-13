@@ -98,7 +98,7 @@ const TableUser = ({
                   <td className="p-3">{user.email}</td>
                   <td className="p-3 text-center">{user.role?.name ?? "-"}</td>
                   <td className="p-3 text-center space-x-4">
-                    <Link href={""}>
+                    <Link href={`/dashboard/${user.ID}`}>
                       <Button>Edit User</Button>
                     </Link>
                     <Button onClick={() => handleDelete(user.ID)}>

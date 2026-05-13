@@ -1,3 +1,6 @@
+"use client";
+
+import { updatingUser } from "@/app/actions/user.action";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -6,7 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { FieldDescription, FieldGroup } from "@/components/ui/field";
+import { FieldGroup } from "@/components/ui/field";
 import {
   Form,
   FormControl,
@@ -17,52 +20,106 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
-const userSchama = z.object({
-  first_name: z.string(),
-  last_name: z.string(),
-  email: z
-    .string()
-    .email("failed format email")
-    .min(1, "please enter your email"),
-  user_name: z.string().min(6, "user name must 6 character"),
-  image: z.string().url("must be a valid URL"),
-  phone_number: z.string().min(9, "phone number must 9 character"),
-  role_id: z.number(),
+// این تایپ رو می‌تونی از actions import کنی، ولی اینجا تعریف می‌کنم
+interface User {
+  id: number;
+  email: string;
+  first_name: string;
+  last_name: string;
+  image: string;
+  phone_number: string;
+  role_id: number;
+  user_name: string;
+}
+
+interface EditUserFormProps {
+  user: User;
+  userId: number;
+}
+
+const userSchema = z.object({
+  first_name: z.string().min(1, "First name is required"),
+  last_name: z.string().min(1, "Last name is required"),
+  email: z.string().email("Invalid email format"),
+  user_name: z.string().min(6, "Username must be at least 6 characters"),
+  image: z.string().url("Must be a valid URL"),
+  phone_number: z.string().min(9, "Phone number must be at least 9 characters"),
+  role_id: z.number().min(1, "Role is required"), // coerce ایمن‌تره
 });
 
-type UserSchamaType = z.infer<typeof userSchama>;
+type UserSchemaType = z.infer<typeof userSchema>;
 
-const Edituser = () => {
-  const form = useForm<UserSchamaType>({
-    resolver: zodResolver(userSchama),
-    defaultValues: {},
+export default function EditUserForm({ user, userId }: EditUserFormProps) {
+  const [serverError, setServerError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const form = useForm<UserSchemaType>({
+    resolver: zodResolver(userSchema),
+    defaultValues: {
+      first_name: user.first_name ?? "",
+      last_name: user.last_name ?? "",
+      email: user.email ?? "",
+      user_name: user.user_name ?? "",
+      phone_number: user.phone_number ?? "",
+      image: user.image ?? "",
+      role_id: user.role_id ?? "",
+    },
   });
 
-  const onSubmit = () => {};
+  const onSubmit = async (values: UserSchemaType) => {
+    setIsLoading(true);
+    setServerError(null);
+    try {
+      const result = await updatingUser(userId, values);
+      toast("updating user success!");
+      if (!result.success) {
+        setServerError(result.message ?? "Update failed");
+      }
+    } catch {
+      setServerError("An unexpected error occurred");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Create an account</CardTitle>
-        <CardDescription>Create an account to continue</CardDescription>
+        <CardTitle>Edit User</CardTitle>
+        <CardDescription>Update user information below.</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <FieldGroup>
+              {/* همه فیلدها مثل قبل... */}
+              <FormField
+                control={form.control}
+                name="image"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Image URL</FormLabel>
+                    <FormControl>
+                      <Input placeholder="url" {...field} className="h-11" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <FormField
                 control={form.control}
                 name="first_name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-base font-semibold text-primary">
-                      First Name
-                    </FormLabel>
+                    <FormLabel>First Name</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="first name"
+                        placeholder="First name"
                         {...field}
                         className="h-11"
                       />
@@ -76,12 +133,10 @@ const Edituser = () => {
                 name="last_name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-base font-semibold text-primary">
-                      Last Name
-                    </FormLabel>
+                    <FormLabel>Last Name</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="last name"
+                        placeholder="Last name"
                         {...field}
                         className="h-11"
                       />
@@ -95,29 +150,20 @@ const Edituser = () => {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-base font-semibold text-primary">
-                      email
-                    </FormLabel>
+                    <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="example@email.com"
-                        {...field}
-                        className="h-11"
-                      />
+                      <Input placeholder="email" {...field} className="h-11" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="user_name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-base font-semibold text-primary">
-                      User Name
-                    </FormLabel>
+                    <FormLabel>User Name</FormLabel>
                     <FormControl>
                       <Input
                         placeholder="username"
@@ -129,46 +175,37 @@ const Edituser = () => {
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="phone_number"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-base font-semibold text-primary">
-                      Phone number
-                    </FormLabel>
+                    <FormLabel>Phone Number</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="+111 222 000"
+                        placeholder="0231535668"
                         {...field}
                         className="h-11"
                       />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="role_id"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Role Id</FormLabel>
+                    <FormControl>
+                      <Input placeholder="role" {...field} className="h-11" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
 
-              <FormField
-                control={form.control}
-                name="image"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-base font-semibold text-primary">
-                      Image URL
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="image url"
-                        {...field}
-                        className="h-11"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
               {serverError && (
                 <div className="rounded-md bg-red-50 p-3 text-sm font-medium text-red-700">
                   {serverError}
@@ -176,17 +213,12 @@ const Edituser = () => {
               )}
 
               <Button type="submit" disabled={isLoading}>
-                {isLoading ? "Registering..." : "Sign up"}
+                {isLoading ? "Updating..." : "Update User"}
               </Button>
-              <FieldDescription className="px-6 text-center">
-                Already have an account? <a href="/login">Log in</a>
-              </FieldDescription>
             </FieldGroup>
           </form>
         </Form>
       </CardContent>
     </Card>
   );
-};
-
-export default Edituser;
+}

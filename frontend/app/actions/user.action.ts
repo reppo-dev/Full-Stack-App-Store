@@ -1,5 +1,6 @@
 "use server";
 
+import { UpdateUser } from "@/models/modles";
 import axios from "axios";
 
 export async function allUser(page: number) {
@@ -48,6 +49,32 @@ export async function getuser(id: number) {
     return {
       success: false,
       message: "failed to get information user",
+    };
+  }
+}
+
+export async function updatingUser(id: number, paylod: UpdateUser) {
+  try {
+    if (!paylod.email || !paylod.user_name || !paylod.role_id) {
+      return {
+        success: false,
+        message: "paylod value unfind!!",
+      };
+    }
+
+    const result = await axios.put(
+      `http://localhost:8000/api/users/${id}`,
+      paylod,
+    );
+
+    return {
+      success: true,
+      update: result.data,
+    };
+  } catch {
+    return {
+      success: false,
+      message: "failed to update user!",
     };
   }
 }

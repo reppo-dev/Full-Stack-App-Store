@@ -79,3 +79,13 @@ export interface ModelUser {
   created_at: string;
   updated_at: string;
 }
+
+export interface UpdateUser {
+  email: string;
+  first_name: string;
+  last_name: string;
+  image: string;
+  phone_number: string;
+  role_id: number;
+  user_name: string;
+}
