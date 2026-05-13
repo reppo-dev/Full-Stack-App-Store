@@ -1,26 +1,19 @@
-import { cookies } from "next/headers";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Bell, User } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import axios from "axios";
+import getToken from "@/app/actions/getToken";
+import { getuserAction } from "@/app/actions/auth";
+import { ModelUser } from "@/models/modles";
 
 export default async function AuthButtons() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("jwt")?.value;
+  const token = await getToken();
   console.log(token);
   const isLoggedIn = !!token;
 
   if (isLoggedIn && token) {
-    let data;
-    try {
-      const res = await axios.get(`http://localhost:3000/api/user`, {
-        headers: { Cookie: `jwt=${token}` },
-      });
-      data = res.data;
-    } catch {
-      console.warn("Invalid token - treating as guest");
-    }
+    const res = await getuserAction();
+    const data: ModelUser = res.user;
 
     return (
       <>

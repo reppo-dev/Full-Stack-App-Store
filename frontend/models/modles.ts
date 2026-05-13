@@ -64,8 +64,8 @@ export interface Role {
   permission?: Permission[];
 }
 
-export interface User {
-  id: number;
+export interface ModelUser {
+  ID: number;
   first_name: string;
   last_name: string;
   image: string;

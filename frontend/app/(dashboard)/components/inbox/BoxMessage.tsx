@@ -5,8 +5,6 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Search, Star, Download, Info, Trash } from "lucide-react";
-import { useEffect, useState } from "react";
-import axios from "axios";
 import Link from "next/link";
 
 interface Message {

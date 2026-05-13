@@ -142,9 +142,3 @@ export const getuserAction = async () => {
     };
   }
 };
-
-export const updateInfoUser = async () => {
-  try {
-    const token = await getToken();
-  } catch (error) {}
-};
