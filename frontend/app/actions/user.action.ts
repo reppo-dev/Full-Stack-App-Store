@@ -1,4 +1,5 @@
 "use server";
+
 import axios from "axios";
 
 export async function allUser(page: number) {
@@ -25,12 +26,30 @@ export async function allusers() {
 
     return {
       success: true,
-      users: response.data.data,
+      users: response.data,
     };
   } catch {
     return {
       success: false,
       message: "failed to fetch all user",
+    };
+  }
+}
+
+export async function deleteUser(id: number) {
+  try {
+    const response = await axios.delete(
+      `http://localhost:8000/api/users/${id}`,
+    );
+
+    return {
+      success: true,
+      deletedUser: response.data,
+    };
+  } catch {
+    return {
+      success: false,
+      message: "failed to delet user",
     };
   }
 }

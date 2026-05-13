@@ -1,7 +1,10 @@
 "use client";
 import { ModelUser } from "@/models/modles";
 import { useState } from "react";
-import { allUser } from "@/app/actions/user.action";
+import { allUser, deleteUser } from "@/app/actions/user.action";
+import ButtonById from "@/components/button/ButtonById";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 interface TableUserProps {
   initialUsers: ModelUser[];
@@ -18,6 +21,7 @@ const TableUser = ({
   const [page, setPage] = useState(initialPage);
   const [lastPage, setLastPage] = useState(initialLastPage);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const fetchUsers = async (newPage: number) => {
     try {
@@ -47,6 +51,13 @@ const TableUser = ({
     }
   };
 
+  const handleDelete = async (id: number) => {
+    if (confirm("Are you sure?")) {
+      await deleteUser(id);
+      router.refresh();
+    }
+  };
+
   return (
     <div className="rounded-lg border bg-card mt-10">
       <div className="p-6">
@@ -65,6 +76,9 @@ const TableUser = ({
               </th>
               <th className="p-3 text-sm font-semibold text-muted-foreground">
                 Role
+              </th>
+              <th className="p-3 text-sm font-semibold text-muted-foreground">
+                Status
               </th>
             </tr>
           </thead>
@@ -85,6 +99,12 @@ const TableUser = ({
                   </td>
                   <td className="p-3">{user.email}</td>
                   <td className="p-3 text-center">{user.role?.name ?? "-"}</td>
+                  <td className="p-3 text-center space-x-4">
+                    <Button>Edit User</Button>
+                    <Button onClick={() => handleDelete(user.ID)}>
+                      Delete
+                    </Button>
+                  </td>
                 </tr>
               ))}
           </tbody>
