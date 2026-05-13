@@ -36,6 +36,22 @@ export async function allusers() {
   }
 }
 
+export async function getuser(id: number) {
+  try {
+    const result = await axios.get(`http://localhost:8000/api/users/${id}`);
+
+    return {
+      success: true,
+      user: result.data,
+    };
+  } catch {
+    return {
+      success: false,
+      message: "failed to get information user",
+    };
+  }
+}
+
 export async function deleteUser(id: number) {
   try {
     const response = await axios.delete(
