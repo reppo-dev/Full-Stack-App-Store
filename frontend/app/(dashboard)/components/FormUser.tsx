@@ -25,7 +25,6 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-// این تایپ رو می‌تونی از actions import کنی، ولی اینجا تعریف می‌کنم
 interface User {
   id: number;
   email: string;
@@ -44,7 +43,7 @@ interface EditUserFormProps {
 
 const userSchema = z.object({
   first_name: z.string().min(1, "First name is required"),
-  last_name: z.string().min(1, "Last name is required"),
+  last_name: z.string(),
   email: z.string().email("Invalid email format"),
   user_name: z.string().min(6, "Username must be at least 6 characters"),
   image: z.string().url("Must be a valid URL"),
@@ -199,7 +198,17 @@ export default function EditUserForm({ user, userId }: EditUserFormProps) {
                   <FormItem>
                     <FormLabel>Role Id</FormLabel>
                     <FormControl>
-                      <Input placeholder="role" {...field} className="h-11" />
+                      <Input
+                        placeholder="role"
+                        {...field}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          field.onChange(
+                            value === "" ? undefined : Number(value),
+                          );
+                        }}
+                        className="h-11"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

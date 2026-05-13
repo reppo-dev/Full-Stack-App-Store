@@ -1,5 +1,5 @@
 import { getuser } from "@/app/actions/user.action";
-import EditUserForm from "../../components/FormUser";
+import EditUserForm from "../../../components/FormUser";
 
 interface PageProps {
   params: Promise<{ id: string }>;
