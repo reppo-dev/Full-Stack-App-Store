@@ -13,28 +13,12 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { Product } from "@/models/modles";
 import { Heart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-type Product = {
-  ID: string;
-  title: string;
-  price: number;
-  rating: number;
-  images: string[];
-};
-type CardProductProps = {
-  props: Product;
-  isFavorite: boolean;
-  onToggleFavorite: () => void;
-};
-
-const CardProducts = ({
-  props,
-  isFavorite,
-  onToggleFavorite,
-}: CardProductProps) => {
+const CardProducts = ({ props }: { props: Product }) => {
   return (
     <Card>
       <Carousel className="w-full max-w-7xl mx-auto">
@@ -58,9 +42,9 @@ const CardProducts = ({
       <CardHeader>
         <CardTitle>{props.title}</CardTitle>
         <CardAction>
-          <Button className="rounded-full" onClick={onToggleFavorite}>
+          {/* <Button className="rounded-full" onClick={onToggleFavorite}>
             <Heart fill={isFavorite ? "red" : "none"} color="red" />
-          </Button>
+          </Button> */}
         </CardAction>
       </CardHeader>
       <CardContent>

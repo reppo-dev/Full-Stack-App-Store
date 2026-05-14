@@ -27,6 +27,7 @@ import Link from "next/link";
 import Logout from "./logout";
 import { cookies } from "next/headers";
 import { getuserAction } from "@/app/actions/auth";
+import getToken from "@/app/actions/getToken";
 
 const menuItems = [
   { title: "Products", url: "/products", icon: Package, requiresAuth: true },
@@ -52,8 +53,7 @@ const menuItems = [
 ];
 
 const AppSidebar = async () => {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("jwt")?.value;
+  const token = await getToken();
   const isLogedin = !!token;
 
   const userData = await getuserAction();

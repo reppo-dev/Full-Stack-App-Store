@@ -1,9 +1,11 @@
 import { Product } from "@/models/modles";
 import axios from "axios";
 
-export async function getPermitionProducts() {
+export async function getPermitionProducts(page: number) {
   try {
-    const result = await axios.get(`http://localhost:8000/api/products`);
+    const result = await axios.get(
+      `http://localhost:8000/api/products?page=${page}`,
+    );
 
     return {
       product: result.data,

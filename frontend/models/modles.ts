@@ -31,7 +31,7 @@ export interface Tag {
 }
 
 export interface Product {
-  id: number;
+  ID: number;
   title: string;
   slug: string;
   description: string;
