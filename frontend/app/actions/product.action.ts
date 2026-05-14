@@ -1,3 +1,4 @@
+import { Product } from "@/models/modles";
 import axios from "axios";
 
 export async function getPermitionProducts() {
@@ -23,5 +24,69 @@ export async function getProducts() {
     };
   } catch {
     return { success: false, message: "we can`t get your product in server" };
+  }
+}
+
+export async function createProduct(payload: Product) {
+  try {
+    if (
+      !payload.images ||
+      !payload.title ||
+      !payload.description ||
+      !payload.price
+    ) {
+      return {
+        success: false,
+        message: "required",
+      };
+    }
+    const result = await axios.post(
+      `http://localhost:8000/api/products`,
+      payload,
+    );
+
+    return {
+      success: true,
+      data: result.data,
+    };
+  } catch {
+    return {
+      success: false,
+      message: "failed to create product!",
+    };
+  }
+}
+
+export async function getDetailsProduct(id: number) {
+  try {
+    const result = await axios.get(`http://localhost:8000/api/products/${id}`);
+
+    return {
+      date: result.data,
+      success: true,
+    };
+  } catch {
+    return {
+      success: false,
+      message: "can't get details product",
+    };
+  }
+}
+
+export async function deleteProduct(id: number) {
+  try {
+    const result = await axios.delete(
+      `http://localhost:8000/api/products/${id}`,
+    );
+
+    return {
+      date: result.data,
+      success: true,
+    };
+  } catch {
+    return {
+      success: false,
+      message: "can't get details product",
+    };
   }
 }
