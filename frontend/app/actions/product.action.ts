@@ -57,6 +57,36 @@ export async function createProduct(payload: Product) {
   }
 }
 
+export async function updateProduct(id: number, payload: Product) {
+  try {
+    if (
+      !payload.images ||
+      !payload.title ||
+      !payload.description ||
+      !payload.price
+    ) {
+      return {
+        success: false,
+        message: "required",
+      };
+    }
+    const result = await axios.post(
+      `http://localhost:8000/api/products/${id}`,
+      payload,
+    );
+
+    return {
+      success: true,
+      data: result.data,
+    };
+  } catch {
+    return {
+      success: false,
+      message: "failed to create product!",
+    };
+  }
+}
+
 export async function getDetailsProduct(id: number) {
   try {
     const result = await axios.get(`http://localhost:8000/api/products/${id}`);
