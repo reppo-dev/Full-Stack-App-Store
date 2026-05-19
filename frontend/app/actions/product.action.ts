@@ -94,7 +94,7 @@ export async function getDetailsProduct(id: number) {
     const result = await axios.get(`http://localhost:8000/api/products/${id}`);
 
     return {
-      date: result.data,
+      data: result.data,
       success: true,
     };
   } catch {

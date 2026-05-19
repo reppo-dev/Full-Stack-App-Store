@@ -1,15 +1,39 @@
 import type { NextConfig } from "next";
 
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+const nextConfig: NextConfig = {
   images: {
-    domains: [
-      "sibche.com",
-      "www.webpouya.com",
-      "localhost",
-      "dkstatics-public.digikala.com",
+    remotePatterns: [
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "3000",
+        pathname: "/uploads/**",
+      },
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "8000",
+        pathname: "/uploads/**",
+      },
+      {
+        protocol: "https",
+        hostname: "sibche.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "www.webpouya.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "dkstatics-public.digikala.com",
+        pathname: "/**",
+      },
     ],
+    dangerouslyAllowLocalIP: true,
   },
+
   async rewrites() {
     return [
       {

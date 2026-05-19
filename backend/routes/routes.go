@@ -43,4 +43,6 @@ func Setup(app *fiber.App) {
 	app.Get("/api/favorites/:id", controllers.AllFavorite)
 	app.Delete("/api/favorites", controllers.RemoveFavorite)
 	app.Post("/api/favorites",controllers.AddFavorite)
+
+	app.Post("/uploads",controllers.Upload)
 }

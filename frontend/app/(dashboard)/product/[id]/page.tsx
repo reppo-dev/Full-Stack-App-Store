@@ -1,10 +1,18 @@
 "use client";
 
+import { getDetailsProduct } from "@/app/actions/product.action";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
+import { FieldGroup } from "@/components/ui/field";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import Image from "next/image";
@@ -19,25 +27,21 @@ const editSchema = z.object({
   rating: z.number().min(0),
   description: z.string().min(1, "Description is required"),
   sku: z.string(),
+  images: z.string(),
   stock: z.number().min(0),
-  categoryId: z.number(),
+  categoryId: z.number().min(1),
 });
 
-type Editingproduct = z.infer<typeof editSchema>;
+type EditingProduct = z.infer<typeof editSchema>;
 
 const EditProduct = () => {
   const params = useParams();
-  const productId = params.id as string;
-  const [loading, setLoading] = useState(false);
+  const productId = parseInt(params.id as string, 10);
+
+  const [isLoading, setIsLoading] = useState(false);
   const [productImages, setProductImages] = useState<string[]>([]);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-    setError,
-  } = useForm<Editingproduct>({
+  const form = useForm<EditingProduct>({
     resolver: zodResolver(editSchema),
     defaultValues: {
       title: "",
@@ -45,150 +49,248 @@ const EditProduct = () => {
       rating: 0,
       description: "",
       sku: "",
+      images: "",
       stock: 0,
       categoryId: 0,
     },
   });
 
+  const { setValue, setError } = form;
+
   useEffect(() => {
     const fetchProduct = async () => {
+      if (!productId) return;
       try {
-        const res = await axios.get(
-          `http://localhost:3000/api/products/${productId}`,
+        const res = await getDetailsProduct(productId);
+        const product = res.data;
+        if (!product) return;
+
+        const imagesArray = Array.isArray(product.images)
+          ? product.images
+          : product.images
+            ? [product.images]
+            : [];
+        setProductImages(imagesArray);
+
+        setValue("title", product.title || "");
+        setValue("price", product.price || 0);
+        setValue("rating", product.rating || 0);
+        setValue(
+          "description",
+          product.description || product.Description || "",
         );
-        const data = res.data;
-        setProductImages(data.images || []);
-        reset({
-          title: data.title || "",
-          price: data.price || 0,
-          rating: data.rating || 0,
-          description: data.Description || "",
-          sku: data.SKU || "",
-          stock: data.Stock || 0,
-          categoryId: data.CategoryID || 0,
-        });
+        setValue("sku", product.sku || product.SKU || "");
+        setValue("stock", product.stock || product.Stock || 0);
+        setValue("categoryId", product.categoryId || product.CategoryID || 0);
       } catch (err) {
         console.error("Failed to load product", err);
       }
     };
-    if (productId) fetchProduct();
-  }, [productId, reset]);
+    fetchProduct();
+  }, [productId, setValue]);
 
-  async function onSubmit(data: Editingproduct) {
-    setLoading(true);
+  const onSubmit = async (data: EditingProduct) => {
+    setIsLoading(true);
     try {
-      await axios.put(`http://localhost:3000/api/products/${productId}`, data);
+      const finalData = {
+        ...data,
+        images: data.images || productImages[0] || "",
+      };
+      await axios.put(
+        `http://localhost:3000/api/products/${productId}`,
+        finalData,
+      );
       alert("Product updated successfully!");
-    } catch (err) {
-      console.error(err);
+    } catch {
       setError("root", { message: "Update failed. Please try again." });
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="p-6">
       <Card>
-        <div className="flex gap-2 flex-wrap p-4">
-          {productImages.map((img) => (
-            <Image
-              key={img}
-              src={img}
-              alt="product"
-              width={200}
-              height={200}
-              className="object-cover rounded"
-            />
-          ))}
-        </div>
-        <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <FieldGroup>
-              <Field>
-                <FieldLabel>Title</FieldLabel>
-                <Input
-                  id="title"
-                  type="text"
-                  placeholder="Title"
-                  {...register("title")}
-                />
-                {errors.title && (
-                  <p className="text-red-500 text-sm">{errors.title.message}</p>
-                )}
-              </Field>
+        {productImages.length > 0 && (
+          <div className="flex gap-2 flex-wrap p-4">
+            {productImages.map((img, idx) => (
+              <Image
+                key={idx}
+                src={img}
+                alt={`product-${idx}`}
+                width={200}
+                height={200}
+                className="object-cover rounded"
+              />
+            ))}
+          </div>
+        )}
 
-              <Field>
-                <FieldLabel>Description</FieldLabel>
-                <Textarea
-                  id="description"
-                  placeholder="Description"
-                  {...register("description")}
+        <CardContent>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)}>
+              <FieldGroup>
+                <FormField
+                  control={form.control}
+                  name="images"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>New Image URL (optional)</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="text"
+                          placeholder="Leave empty to keep current images"
+                          {...field}
+                          className="h-11"
+                          disabled={isLoading}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
-                {errors.description && (
-                  <p className="text-red-500 text-sm">
-                    {errors.description.message}
+
+                <FormField
+                  control={form.control}
+                  name="title"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Title</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="text"
+                          placeholder="Title"
+                          {...field}
+                          className="h-11"
+                          disabled={isLoading}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Description</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="text"
+                          placeholder="Description"
+                          {...field}
+                          className="h-11"
+                          disabled={isLoading}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="price"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Price</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          placeholder="Price"
+                          {...field}
+                          onChange={(e) =>
+                            field.onChange(Number(e.target.value) || 0)
+                          }
+                          className="h-11"
+                          disabled={isLoading}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="stock"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Stock</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          placeholder="Stock"
+                          {...field}
+                          onChange={(e) =>
+                            field.onChange(Number(e.target.value) || 0)
+                          }
+                          className="h-11"
+                          disabled={isLoading}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="sku"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>SKU</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="text"
+                          placeholder="SKU"
+                          {...field}
+                          className="h-11"
+                          disabled={isLoading}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="categoryId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Category ID</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          placeholder="Category ID"
+                          {...field}
+                          onChange={(e) =>
+                            field.onChange(Number(e.target.value) || 0)
+                          }
+                          className="h-11"
+                          disabled={isLoading}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {form.formState.errors.root && (
+                  <p className="text-red-600 text-sm">
+                    {form.formState.errors.root.message}
                   </p>
                 )}
-              </Field>
 
-              <Field>
-                <FieldLabel>Price</FieldLabel>
-                <Input
-                  id="price"
-                  type="text"
-                  placeholder="Price"
-                  {...register("price", { valueAsNumber: true })}
-                />
-                {errors.price && (
-                  <p className="text-red-500 text-sm">{errors.price.message}</p>
-                )}
-              </Field>
-
-              <Field>
-                <FieldLabel>Stock</FieldLabel>
-                <Input
-                  id="stock"
-                  type="text"
-                  placeholder="Stock"
-                  {...register("stock", { valueAsNumber: true })}
-                />
-                {errors.stock && (
-                  <p className="text-red-500 text-sm">{errors.stock.message}</p>
-                )}
-              </Field>
-
-              <Field>
-                <FieldLabel>SKU</FieldLabel>
-                <Input
-                  id="sku"
-                  type="text"
-                  placeholder="SKU"
-                  {...register("sku")}
-                />
-              </Field>
-
-              <Field>
-                <FieldLabel>Category ID</FieldLabel>
-                <Input
-                  id="categoryId"
-                  type="number"
-                  placeholder="Category ID"
-                  {...register("categoryId")}
-                />
-              </Field>
-
-              {errors.root && (
-                <p className="text-red-500 text-sm text-center">
-                  {errors.root.message}
-                </p>
-              )}
-
-              <Button type="submit" disabled={loading}>
-                {loading ? "Saving..." : "Edit Product"}
-              </Button>
-            </FieldGroup>
-          </form>
+                <Button type="submit" disabled={isLoading}>
+                  {isLoading ? "Saving..." : "Edit Product"}
+                </Button>
+              </FieldGroup>
+            </form>
+          </Form>
         </CardContent>
       </Card>
     </div>
