@@ -1,6 +1,6 @@
 "use client";
 
-import { getDetailsProduct } from "@/app/actions/product.action";
+import { getDetailsProduct, updateProduct } from "@/app/actions/product.action";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { FieldGroup } from "@/components/ui/field";
@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -96,10 +95,7 @@ const EditProduct = () => {
         ...data,
         images: data.images || productImages[0] || "",
       };
-      await axios.put(
-        `http://localhost:3000/api/products/${productId}`,
-        finalData,
-      );
+      await updateProduct(productId, finalData);
       alert("Product updated successfully!");
     } catch {
       setError("root", { message: "Update failed. Please try again." });

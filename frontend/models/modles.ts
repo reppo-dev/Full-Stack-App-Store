@@ -49,6 +49,17 @@ export interface Product {
   created_at: string;
 }
 
+export interface UpdateProdut {
+  title: string;
+  price: number;
+  rating: number;
+  description: string;
+  sku: string;
+  images: string;
+  stock: number;
+  categoryId: number;
+}
+
 export interface Favorite {
   id: number;
   user_id: number;

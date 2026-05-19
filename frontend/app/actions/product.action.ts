@@ -1,4 +1,4 @@
-import { Product } from "@/models/modles";
+import { Product, UpdateProdut } from "@/models/modles";
 import axios from "axios";
 
 export async function getPermitionProducts(page: number) {
@@ -59,7 +59,7 @@ export async function createProduct(payload: Product) {
   }
 }
 
-export async function updateProduct(id: number, payload: Product) {
+export async function updateProduct(id: number, payload: UpdateProdut) {
   try {
     if (
       !payload.images ||
@@ -72,7 +72,7 @@ export async function updateProduct(id: number, payload: Product) {
         message: "required",
       };
     }
-    const result = await axios.post(
+    const result = await axios.put(
       `http://localhost:8000/api/products/${id}`,
       payload,
     );
