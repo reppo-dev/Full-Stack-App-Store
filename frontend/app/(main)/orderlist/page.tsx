@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { orderUser } from "@/app/actions/order";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
@@ -20,39 +20,28 @@ type Order = {
   order_items: OrderItem[];
 };
 
-const Orders = () => {
+const Order = () => {
   const [orders, setOrders] = useState<Order[]>([]);
-  const [page, setPage] = useState(1);
-  const [lastPage, setLastPage] = useState(0);
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:3000/api/orders?page=${page}`,
-        );
-        setOrders(response.data.data);
-        setLastPage(response.data.meta.last_page);
-        console.log("Orders Meta:", response.data.meta);
+        const response = await orderUser();
+        console.log(response);
+        console.log(response.data);
+        if (response.success) {
+          setOrders(response.data);
+        } else {
+          console.log(response.message);
+          setOrders([]);
+        }
       } catch (error) {
         console.error("Error fetching users:", error);
       }
     };
 
     fetchUsers();
-  }, [page]);
-
-  const next = () => {
-    if (page < lastPage) {
-      setPage(page + 1);
-    }
-  };
-
-  const previous = () => {
-    if (page > 1) {
-      setPage(page - 1);
-    }
-  };
+  }, []);
 
   const [selected, setSelected] = useState(0);
 
@@ -144,22 +133,8 @@ const Orders = () => {
           </tbody>
         </table>
       </div>
-      <div className="flex justify-between items-center p-4 mx-4 mt-4">
-        <button
-          className="cursor-pointer hover:scale-105 h-7 dark:hover:bg-gray-600 rounded w-16 transition-all duration-200 text-xs dark:bg-gray-700 bg-gray-200"
-          onClick={previous}
-        >
-          Previous
-        </button>
-        <button
-          className="cursor-pointer hover:scale-105 h-7 dark:hover:bg-gray-600 rounded w-10 transition-all duration-200 text-xs dark:bg-gray-700 bg-gray-200"
-          onClick={next}
-        >
-          Next
-        </button>
-      </div>
     </div>
   );
 };
 
-export default Orders;
+export default Order;

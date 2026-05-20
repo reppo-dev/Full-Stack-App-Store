@@ -35,7 +35,7 @@ const menuItems = [
   { title: "Inbox", url: "/inbox", icon: Inbox, requiresAuth: true },
   {
     title: "Order Lists",
-    url: "/orderlists",
+    url: "/orderlist",
     icon: ShoppingCart,
     requiresAuth: true,
   },
