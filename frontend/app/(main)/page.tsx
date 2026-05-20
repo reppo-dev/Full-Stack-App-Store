@@ -3,8 +3,10 @@ import CardLandingPage from "@/components/cardLandigpage";
 
 const Home = () => {
   return (
-    <div>
-      <BannerCarousel />
+    <div className="mx-0 md:mx-20">
+      <div className="mx-10 md:mx-0">
+        <BannerCarousel />
+      </div>
       <CardLandingPage />
     </div>
   );

@@ -39,12 +39,6 @@ const menuItems = [
     icon: ShoppingCart,
     requiresAuth: true,
   },
-  {
-    title: "Product Stock",
-    url: "/productstock",
-    icon: Layers,
-    requiresAuth: true,
-  },
   { title: "Pricing", url: "/pricing", icon: CreditCard, requiresAuth: false },
   { title: "Calendar", url: "/calendar", icon: Calendar, requiresAuth: true },
   { title: "To-Do", url: "/todo", icon: CheckSquare, requiresAuth: true },

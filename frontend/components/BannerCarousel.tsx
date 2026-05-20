@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 
 export default function BannerCarousel() {
   return (
-    <div className="mx-2">
+    <div className="md:mx-0">
       <Carousel className="w-full max-w-7xl mx-auto">
         <CarouselContent>
           <CarouselItem>

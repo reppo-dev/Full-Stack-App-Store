@@ -21,7 +21,7 @@ const items: LandingCard[] = [
 
 export default function CardLandingPage() {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 m-10 mx-20 gap-6">
+    <div className="grid grid-cols-2 md:grid-cols-3 m-10 gap-6">
       {items.map((item) => (
         <Card
           key={item.content}
