@@ -109,10 +109,9 @@ const EditProduct = () => {
   const onSubmit = async (data: EditingProduct) => {
     setIsLoading(true);
     try {
-      // انتخاب تصویر نهایی با اولویت: تصویر S3 > آدرس دستی > اولین تصویر قدیمی
       const finalImage =
         isImageAvalible && isImagePath
-          ? `https://${isImagePath}` // اگر مسیر کامل با پروتکل لازم دارد
+          ? `${isImagePath}`
           : data.images || productImages[0] || "";
 
       const finalData = {
