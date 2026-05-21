@@ -3,10 +3,10 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import CardProduct from "../components/product/cardProduct";
-import GetIdUser from "../components/GetIdUser";
+import GetIdUser from "../../actions/GetIdUser";
 
 type ProductType = {
-  ID: string;
+  ID: number;
   title: string;
   price: number;
   rating: number;
@@ -28,6 +28,7 @@ const Favorites = () => {
     const fetchUserId = async () => {
       const user = await GetIdUser();
       if (user) setUserId(user.ID);
+      console.log(user.ID);
     };
     fetchUserId();
   }, []);

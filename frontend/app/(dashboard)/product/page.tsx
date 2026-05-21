@@ -4,10 +4,10 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import BannerProduct from "../components/product/banner";
 import CardProduct from "../components/product/cardProduct";
-import GetIdUser from "../components/GetIdUser";
+import GetIdUser from "../../actions/GetIdUser";
 
 type ProductType = {
-  ID: string;
+  ID: number;
   title: string;
   price: number;
   rating: number;

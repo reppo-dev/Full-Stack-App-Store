@@ -6,41 +6,49 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/reppo/go-backend/databases"
 	"github.com/reppo/go-backend/models"
+	"gorm.io/gorm/clause"
 )
 
 func AllFavorite(c *fiber.Ctx) error {
-	id, _ := strconv.Atoi(c.Params("id"))
+    id, err := strconv.Atoi(c.Params("id"))
+    if err != nil || id <= 0 {
+        return c.Status(400).JSON(fiber.Map{"error": "Invalid user ID"})
+    }
 
-	var favorite []models.Favorite
+    var favorite []models.Favorite
+    databases.DB.Where("user_id = ?", id).Preload("Product").Find(&favorite)
 
-	databases.DB.Where("user_id = ?",id).Preload("Product").Find(&favorite)
-
-	return c.JSON(favorite)
+    return c.JSON(favorite)
 }
-
-
-
 
 func AddFavorite(c *fiber.Ctx) error {
-	var input struct {
-    UserID    uint `json:"user_id"`
-    ProductID uint `json:"product_id"`
-	}
-	c.BodyParser(&input)
+    var input struct {
+        UserID    uint `json:"user_id"`
+        ProductID uint `json:"product_id"`
+    }
+    
+    if err := c.BodyParser(&input); err != nil {
+        return c.Status(400).JSON(fiber.Map{"error": "Invalid input"})
+    }
 
-	var existing models.Favorite
+    fav := models.Favorite{
+        UserID:    input.UserID,
+        ProductID: input.ProductID,
+    }
 
-	databases.DB.Where("user_id = ? AND product_id = ?",input.UserID,input.ProductID).First(&existing)
+    result := databases.DB.Clauses(clause.OnConflict{DoNothing: true}).Create(&fav)
+    
+    if result.Error != nil {
+        return c.Status(500).JSON(fiber.Map{"error": "Database error"})
+    }
+    
+    if result.RowsAffected == 0 {
+        return c.Status(409).JSON(fiber.Map{"error": "Already in favorites"})
+    }
 
-	fav := models.Favorite{
-		UserID: input.UserID,
-		ProductID: input.ProductID,
-	}
-
-	databases.DB.Create(&fav)
-
-	return c.Status(201).JSON(fav)
+    return c.Status(201).JSON(fav)
 }
+
 
 func RemoveFavorite(c *fiber.Ctx) error {
     var input struct {

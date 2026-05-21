@@ -1,6 +1,7 @@
 "use client";
 
 import { getDetailsProduct, updateProduct } from "@/app/actions/product.action";
+import { s3UploadAction } from "@/app/actions/S3BucketAction";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { FieldGroup } from "@/components/ui/field";
@@ -16,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { ChangeEventHandler, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -39,6 +40,23 @@ const EditProduct = () => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [productImages, setProductImages] = useState<string[]>([]);
+
+  const [isImageAvalible, setIsImageAvalible] = useState(false);
+  const [isImagePath, setIsImagePath] = useState(``);
+
+  const uploadImage: ChangeEventHandler<HTMLInputElement> = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const data = new FormData();
+    data.set("file", file);
+    const result = await s3UploadAction(data);
+
+    if (result.success) {
+      setIsImagePath(result.imagePath!);
+      setIsImageAvalible(true);
+    }
+  };
 
   const form = useForm<EditingProduct>({
     resolver: zodResolver(editSchema),
@@ -91,9 +109,15 @@ const EditProduct = () => {
   const onSubmit = async (data: EditingProduct) => {
     setIsLoading(true);
     try {
+      // انتخاب تصویر نهایی با اولویت: تصویر S3 > آدرس دستی > اولین تصویر قدیمی
+      const finalImage =
+        isImageAvalible && isImagePath
+          ? `https://${isImagePath}` // اگر مسیر کامل با پروتکل لازم دارد
+          : data.images || productImages[0] || "";
+
       const finalData = {
         ...data,
-        images: data.images || productImages[0] || "",
+        images: finalImage,
       };
       await updateProduct(productId, finalData);
       alert("Product updated successfully!");
@@ -126,25 +150,29 @@ const EditProduct = () => {
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <FieldGroup>
-                <FormField
-                  control={form.control}
-                  name="images"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>New Image URL (optional)</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="text"
-                          placeholder="Leave empty to keep current images"
-                          {...field}
-                          className="h-11"
-                          disabled={isLoading}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium mb-1">
+                    Upload new image
+                  </label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={uploadImage}
+                    disabled={isLoading}
+                  />
+                  {isImageAvalible && isImagePath && (
+                    <div className="mt-2">
+                      <p className="text-sm text-green-600">
+                        Image uploaded successfully!
+                      </p>
+                      <Image
+                        src={`https://${isImagePath}`}
+                        alt="New"
+                        className="w-32 h-32 object-cover mt-1 rounded border"
+                      />
+                    </div>
                   )}
-                />
+                </div>
 
                 <FormField
                   control={form.control}

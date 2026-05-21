@@ -7,7 +7,7 @@ const GetIdUser = async () => {
   const cookieStore = await cookies();
   const token = cookieStore.get("jwt")?.value;
 
-  const res = await axios.get(`http://localhost:3000/api/user`, {
+  const res = await axios.get(`http://localhost:8000/api/user`, {
     headers: {
       Cookie: `jwt=${token}`,
     },

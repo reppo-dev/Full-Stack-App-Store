@@ -61,10 +61,10 @@ export interface UpdateProdut {
 }
 
 export interface Favorite {
-  id: number;
-  user_id: number;
-  product_id: number;
-  product?: Product;
+  ID: number;
+  UserID: number;
+  ProductID: number;
+  Product: Product;
 }
 
 export interface Role {

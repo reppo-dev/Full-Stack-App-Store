@@ -1,6 +1,6 @@
 "use client";
 
-import GetIdUser from "@/app/(dashboard)/components/GetIdUser";
+import GetIdUser from "@/app/actions/GetIdUser";
 import CardProducts from "@/components/cardProductsmain";
 import axios from "axios";
 import { useEffect, useState } from "react";

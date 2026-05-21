@@ -1,3 +1,4 @@
+import FavoriteButton from "@/components/button-favorite";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,12 +14,11 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { Heart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 type Product = {
-  ID: string;
+  ID: number;
   title: string;
   price: number;
   rating: number;
@@ -30,11 +30,7 @@ type CardProductProps = {
   onToggleFavorite: () => void;
 };
 
-const CardProduct = ({
-  props,
-  isFavorite,
-  onToggleFavorite,
-}: CardProductProps) => {
+const CardProduct = ({ props }: CardProductProps) => {
   return (
     <Card>
       <Carousel className="w-full max-w-7xl mx-auto">
@@ -58,9 +54,7 @@ const CardProduct = ({
       <CardHeader>
         <CardTitle>{props.title}</CardTitle>
         <CardAction>
-          <Button className="rounded-full" onClick={onToggleFavorite}>
-            <Heart fill={isFavorite ? "red" : "none"} color="red" />
-          </Button>
+          <FavoriteButton productId={props.ID} />
         </CardAction>
       </CardHeader>
       <CardContent>
