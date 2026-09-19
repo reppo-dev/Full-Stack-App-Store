@@ -65,14 +65,26 @@ func (h *ProductHandler) ListProducts(c *fiber.Ctx) error {
 	})
 }
 
-// GetProduct retrieves a single product by numeric identifier.
+// GetProduct retrieves a single product by numeric identifier or unique URL slug.
 func (h *ProductHandler) GetProduct(c *fiber.Ctx) error {
-	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
-	if err != nil || id <= 0 {
-		return response.BadRequest(c, "INVALID_ID", "invalid product ID")
+	param := strings.TrimSpace(c.Params("id"))
+	if param == "" {
+		return response.BadRequest(c, "INVALID_PARAM", "missing product identifier")
 	}
 
-	prod, err := h.productService.GetByID(c.Context(), id)
+	id, err := strconv.ParseInt(param, 10, 64)
+	if err == nil && id > 0 {
+		prod, err := h.productService.GetByID(c.Context(), id)
+		if err == nil {
+			return response.Success(c, fiber.StatusOK, prod)
+		}
+		if !errors.Is(err, domain.ErrProductNotFound) {
+			return response.InternalServerError(c, "failed to retrieve product")
+		}
+	}
+
+	// Fallback to lookup by slug
+	prod, err := h.productService.GetBySlug(c.Context(), param)
 	if err != nil {
 		if errors.Is(err, domain.ErrProductNotFound) {
 			return response.NotFound(c, "product not found")

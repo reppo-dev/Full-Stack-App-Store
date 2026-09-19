@@ -28,6 +28,8 @@ type ProductSeed struct {
 	CategorySlug string
 	SKU          string
 	Images       []string
+	Colors       []string
+	Attributes   map[string]string
 }
 
 func main() {
@@ -152,8 +154,21 @@ func main() {
 			CategorySlug: "smartphones-tablets",
 			SKU:          "IPH16PM-256-TI",
 			Images: []string{
-				"https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=1000&q=80",
-				"https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=1000&q=80",
+				"https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=1200&q=80",
+				"https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=1200&q=80",
+				"https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?auto=format&fit=crop&w=1200&q=80",
+				"https://images.unsplash.com/photo-1580910051074-3eb694886505?auto=format&fit=crop&w=1200&q=80",
+			},
+			Colors: []string{"Natural Titanium", "Desert Titanium", "White Titanium", "Black Titanium"},
+			Attributes: map[string]string{
+				"Display":      "6.9-inch Super Retina XDR OLED, 120Hz ProMotion",
+				"Processor":    "Apple A18 Pro (3nm architecture)",
+				"Storage":      "256GB NVMe High-Speed Storage",
+				"RAM":          "8GB Unified Memory",
+				"Camera":       "48MP Fusion + 48MP Ultra Wide + 12MP 5x Telephoto",
+				"Battery":      "Up to 33 hours video playback",
+				"Connectivity": "5G, Wi-Fi 7, Bluetooth 5.3, USB-C 3.2 (10Gbps)",
+				"Warranty":     "1 Year Official Apple Warranty",
 			},
 		},
 		{
@@ -166,7 +181,20 @@ func main() {
 			CategorySlug: "smartphones-tablets",
 			SKU:          "SGS24U-512-GRY",
 			Images: []string{
-				"https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?auto=format&fit=crop&w=1000&q=80",
+				"https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?auto=format&fit=crop&w=1200&q=80",
+				"https://images.unsplash.com/photo-1580910051074-3eb694886505?auto=format&fit=crop&w=1200&q=80",
+				"https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=1200&q=80",
+			},
+			Colors: []string{"Titanium Gray", "Titanium Black", "Titanium Violet", "Titanium Yellow"},
+			Attributes: map[string]string{
+				"Display":      "6.8-inch Dynamic AMOLED 2X, QHD+, 120Hz",
+				"Processor":    "Qualcomm Snapdragon 8 Gen 3 for Galaxy",
+				"Storage":      "512GB UFS 4.0 Storage",
+				"RAM":          "12GB LPDDR5X",
+				"Camera":       "200MP Main + 50MP Periscope 5x + 10MP 3x + 12MP Ultra Wide",
+				"Stylus":       "Integrated S Pen with Bluetooth LE",
+				"Battery":      "5000 mAh with 45W Fast Charging",
+				"Warranty":     "18 Months Official Samsung Warranty",
 			},
 		},
 		{
@@ -179,7 +207,18 @@ func main() {
 			CategorySlug: "smartphones-tablets",
 			SKU:          "IPADP13-M4-256",
 			Images: []string{
-				"https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=1000&q=80",
+				"https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=1200&q=80",
+				"https://images.unsplash.com/photo-1561154464-82e9adf32764?auto=format&fit=crop&w=1200&q=80",
+				"https://images.unsplash.com/photo-1585790050230-5dd28404ccb9?auto=format&fit=crop&w=1200&q=80",
+			},
+			Colors: []string{"Space Black", "Silver"},
+			Attributes: map[string]string{
+				"Display":     "13-inch Tandem OLED Ultra Retina XDR",
+				"Processor":   "Apple M4 Chip (9-core CPU, 10-core GPU)",
+				"Storage":     "256GB High-Speed SSD",
+				"Thickness":   "5.1mm (Thinnest Apple device ever)",
+				"Accessories": "Apple Pencil Pro & Magic Keyboard compatible",
+				"Warranty":    "1 Year Official Apple Warranty",
 			},
 		},
 		{
@@ -192,8 +231,19 @@ func main() {
 			CategorySlug: "laptops-computers",
 			SKU:          "MBP16-M3MAX-BLK",
 			Images: []string{
-				"https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1000&q=80",
-				"https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?auto=format&fit=crop&w=1000&q=80",
+				"https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1200&q=80",
+				"https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?auto=format&fit=crop&w=1200&q=80",
+				"https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&w=1200&q=80",
+			},
+			Colors: []string{"Space Black", "Silver"},
+			Attributes: map[string]string{
+				"Display":   "16.2-inch Liquid Retina XDR, 1600 nits peak",
+				"Processor": "Apple M3 Max (16-core CPU, 40-core GPU)",
+				"Memory":    "36GB Unified Memory",
+				"Storage":   "1TB PCIe Gen4 SSD",
+				"Battery":   "Up to 22 hours Apple TV app movie playback",
+				"Ports":     "3x Thunderbolt 4, HDMI, SDXC, MagSafe 3",
+				"Warranty":  "1 Year Official Apple Warranty",
 			},
 		},
 		{
@@ -206,7 +256,17 @@ func main() {
 			CategorySlug: "laptops-computers",
 			SKU:          "DXPS15-I9-4070",
 			Images: []string{
-				"https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&w=1000&q=80",
+				"https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&w=1200&q=80",
+				"https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&w=1200&q=80",
+			},
+			Colors: []string{"Platinum Silver with Black Carbon Fiber"},
+			Attributes: map[string]string{
+				"Display":   "15.6-inch 3.5K (3456x2160) OLED Touch Display",
+				"Processor": "Intel Core i9-13900H (14 cores, up to 5.4GHz)",
+				"Graphics":  "NVIDIA GeForce RTX 4070 8GB GDDR6",
+				"Memory":    "32GB DDR5 4800MHz",
+				"Storage":   "1TB M.2 PCIe NVMe SSD",
+				"Warranty":  "2 Years Dell ProSupport",
 			},
 		},
 		{
@@ -219,7 +279,18 @@ func main() {
 			CategorySlug: "audio-headphones",
 			SKU:          "SONY-WHXM5-SLV",
 			Images: []string{
-				"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1000&q=80",
+				"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1200&q=80",
+				"https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&fit=crop&w=1200&q=80",
+				"https://images.unsplash.com/photo-1583394838336-acd977736f90?auto=format&fit=crop&w=1200&q=80",
+			},
+			Colors: []string{"Black", "Silver", "Midnight Blue"},
+			Attributes: map[string]string{
+				"Driver Unit":        "30mm precision-engineered Carbon Fiber",
+				"Noise Cancellation": "Auto NC Optimizer with 8 microphones",
+				"Battery Life":       "30 hours with ANC on (3-min charge gives 3 hours)",
+				"Codec Support":      "LDAC, AAC, SBC, Hi-Res Audio Wireless",
+				"Weight":             "250g Ultra-lightweight",
+				"Warranty":           "1 Year Official Sony Warranty",
 			},
 		},
 		{
@@ -232,7 +303,16 @@ func main() {
 			CategorySlug: "audio-headphones",
 			SKU:          "BOSE-QCU-BLK",
 			Images: []string{
-				"https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&w=1000&q=80",
+				"https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&w=1200&q=80",
+				"https://images.unsplash.com/photo-1572536147248-ac59a8abfa4b?auto=format&fit=crop&w=1200&q=80",
+			},
+			Colors: []string{"Black", "White Smoke", "Moonstone Blue"},
+			Attributes: map[string]string{
+				"Audio":              "Bose Immersive Audio (Spatial Sound)",
+				"Noise Cancellation": "CustomTune World-Class ANC",
+				"Battery":            "Up to 6 hours (24 hours total with case)",
+				"Water Resistance":   "IPX4 sweat & weather resistant",
+				"Warranty":           "1 Year Official Bose Warranty",
 			},
 		},
 		{
@@ -245,7 +325,19 @@ func main() {
 			CategorySlug: "wearable-tech",
 			SKU:          "AW-ULTRA2-OCEAN",
 			Images: []string{
-				"https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=1000&q=80",
+				"https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=1200&q=80",
+				"https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?auto=format&fit=crop&w=1200&q=80",
+				"https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?auto=format&fit=crop&w=1200&q=80",
+			},
+			Colors: []string{"Natural Titanium (Ocean Band)", "Natural Titanium (Alpine Loop)"},
+			Attributes: map[string]string{
+				"Case Size":        "49mm Aerospace-grade Titanium",
+				"Display":          "Always-On Retina display, up to 3000 nits",
+				"Chip":             "S9 SiP with 4-core Neural Engine",
+				"Sensors":          "Dual-frequency GPS, Depth gauge, ECG, Blood Oxygen",
+				"Water Resistance": "100m water resistant, EN13319 dive certified",
+				"Battery Life":     "Up to 36 hours (72 hours Low Power Mode)",
+				"Warranty":         "1 Year Official Apple Warranty",
 			},
 		},
 		{
@@ -258,7 +350,17 @@ func main() {
 			CategorySlug: "gaming-accessories",
 			SKU:          "PS5-PRO-2TB",
 			Images: []string{
-				"https://images.unsplash.com/photo-1606813907291-d86efa9b94db?auto=format&fit=crop&w=1000&q=80",
+				"https://images.unsplash.com/photo-1606813907291-d86efa9b94db?auto=format&fit=crop&w=1200&q=80",
+				"https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=1200&q=80",
+			},
+			Colors: []string{"Signature Matte White & Black"},
+			Attributes: map[string]string{
+				"GPU":          "Advanced AMD RDNA ray tracing architecture",
+				"AI Upscaling": "PlayStation Spectral Super Resolution (PSSR)",
+				"Storage":      "2TB Ultra-High Speed NVMe SSD",
+				"Resolution":   "Native 4K at 60Hz and 120Hz with VRR",
+				"Controller":   "DualSense Wireless Controller with Haptic Feedback",
+				"Warranty":     "1 Year Sony PlayStation Warranty",
 			},
 		},
 		{
@@ -271,7 +373,17 @@ func main() {
 			CategorySlug: "gaming-accessories",
 			SKU:          "KEY-Q1PRO-WHT",
 			Images: []string{
-				"https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=1000&q=80",
+				"https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=1200&q=80",
+				"https://images.unsplash.com/photo-1618384887929-16ec33fab9ef?auto=format&fit=crop&w=1200&q=80",
+			},
+			Colors: []string{"Carbon Black", "Shell White", "Silver Grey"},
+			Attributes: map[string]string{
+				"Layout":       "75% ANSI layout with programmable knob",
+				"Connectivity": "Bluetooth 5.1 & Type-C wired (1000Hz polling)",
+				"Switches":     "Hot-swappable Keychron K Pro Banana / Red",
+				"Case":         "Full CNC-machined 6063 Aluminum",
+				"Firmware":     "QMK/VIA Open Source Programmable",
+				"Battery":      "4000 mAh rechargeable Li-polymer",
 			},
 		},
 		{
@@ -284,7 +396,16 @@ func main() {
 			CategorySlug: "gaming-accessories",
 			SKU:          "LOGI-MXM3S-PLT",
 			Images: []string{
-				"https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?auto=format&fit=crop&w=1000&q=80",
+				"https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?auto=format&fit=crop&w=1200&q=80",
+				"https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?auto=format&fit=crop&w=1200&q=80",
+			},
+			Colors: []string{"Graphite", "Pale Grey"},
+			Attributes: map[string]string{
+				"Sensor":       "Darkfield 8000 DPI track-on-glass",
+				"Scroll Wheel": "MagSpeed Electromagnetic (1000 lines/sec)",
+				"Clicks":       "Quiet Clicks (90% noise reduction)",
+				"Multi-Device": "Easy-Switch up to 3 devices across Mac/Windows",
+				"Battery":      "Up to 70 days on full charge (USB-C quick charge)",
 			},
 		},
 	}
@@ -294,11 +415,13 @@ func main() {
 	for _, p := range products {
 		catID := catMap[p.CategorySlug]
 		imagesJSON, _ := json.Marshal(p.Images)
+		colorsJSON, _ := json.Marshal(p.Colors)
+		attributesJSON, _ := json.Marshal(p.Attributes)
 
 		var prodID int64
 		err := db.QueryRowContext(ctx, `
-			INSERT INTO products (title, slug, description, price, stock, rating, images, category_id, sku, is_active, created_at, updated_at)
-			VALUES ($1, $2, $3, $4, $5, $6, $7::jsonb, $8, $9, true, NOW(), NOW())
+			INSERT INTO products (title, slug, description, price, stock, rating, images, colors, attributes, category_id, sku, is_active, created_at, updated_at)
+			VALUES ($1, $2, $3, $4, $5, $6, $7::jsonb, $8::jsonb, $9::jsonb, $10, $11, true, NOW(), NOW())
 			ON CONFLICT (slug) DO UPDATE SET 
 				title = $1,
 				description = $3,
@@ -306,11 +429,14 @@ func main() {
 				stock = $5,
 				rating = $6,
 				images = $7::jsonb,
-				category_id = $8,
+				colors = $8::jsonb,
+				attributes = $9::jsonb,
+				category_id = $10,
+				sku = $11,
 				is_active = true,
 				updated_at = NOW()
 			RETURNING id
-		`, p.Title, p.Slug, p.Description, p.Price, p.Stock, p.Rating, string(imagesJSON), catID, p.SKU).Scan(&prodID)
+		`, p.Title, p.Slug, p.Description, p.Price, p.Stock, p.Rating, string(imagesJSON), string(colorsJSON), string(attributesJSON), catID, p.SKU).Scan(&prodID)
 
 		if err != nil {
 			log.Fatalf("Failed to seed product %s: %v", p.Title, err)

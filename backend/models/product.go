@@ -8,11 +8,11 @@ type Product struct {
 	gorm.Model
 
 	Title       string `gorm:"type:varchar(200);not null" json:"title"`
-	Slug        string `gorm:"type:varchar(200);uniqueIndex"`
-	Description string `gorm:"type:text"`
+	Slug        string `gorm:"type:varchar(200);uniqueIndex" json:"slug"`
+	Description string `gorm:"type:text" json:"description"`
 
 	Price float64 `gorm:"type:decimal(10,2);not null" json:"price"`
-	Stock int
+	Stock int     `json:"stock"`
 
 	Rating float64 `json:"rating"`
 
@@ -20,14 +20,14 @@ type Product struct {
 	Colors     []string          `gorm:"serializer:json" json:"colors"`
 	Attributes map[string]string `gorm:"serializer:json" json:"attributes"`
 
-	CategoryID uint
-	Category   Category
+	CategoryID uint     `gorm:"column:category_id" json:"category_id"`
+	Category   Category `json:"category,omitempty"`
 
-	Tags []Tag `gorm:"many2many:product_tags;"`
+	Tags []Tag `gorm:"many2many:product_tags;" json:"tags,omitempty"`
 
-	SKU string `gorm:"uniqueIndex"`
+	SKU string `gorm:"uniqueIndex" json:"sku"`
 
-	IsActive bool `gorm:"default:true"`
+	IsActive bool `gorm:"default:true" json:"is_active"`
 }
 
 type UpdateProduct struct {

@@ -202,24 +202,24 @@ export default function FavoritesPage() {
 
                   {/* Title & Price */}
                   <Link
-                    href={`/products/${prodId}`}
-                    className="block group-hover:text-primary transition"
+                    href={`/products/${prod.slug || prodId}`}
+                    className="block group-hover:text-red-600 transition"
                   >
-                    <h3 className="font-semibold text-base line-clamp-1 mb-1">
+                    <h3 className="font-semibold text-sm line-clamp-1 mb-1">
                       {prod.title}
                     </h3>
                   </Link>
 
-                  <div className="flex items-center justify-between mt-1 mb-4">
-                    <span className="text-lg font-bold text-foreground">
-                      ${(prod.price ?? 0).toFixed(2)}
+                  <div className="flex items-center justify-between mt-1 mb-3">
+                    <span className="text-base font-extrabold text-foreground">
+                      ${Number(prod.price ?? 0).toFixed(2)}
                     </span>
                     {prod.stock !== undefined && (
                       <span
-                        className={`text-xs font-medium px-2 py-0.5 rounded-full ${
+                        className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
                           prod.stock > 0
-                            ? "bg-emerald-500/10 text-emerald-600"
-                            : "bg-rose-500/10 text-rose-600"
+                            ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+                            : "bg-rose-500/10 text-rose-600 dark:text-rose-400"
                         }`}
                       >
                         {prod.stock > 0 ? `${prod.stock} in stock` : "Out of stock"}
@@ -229,11 +229,11 @@ export default function FavoritesPage() {
                 </div>
 
                 {/* Actions */}
-                <div className="space-y-2 pt-2 border-t">
+                <div className="space-y-2 pt-2 border-t border-border/40">
                   <Button
                     onClick={() => handleAddToCart(fav)}
                     disabled={prod.stock === 0}
-                    className="w-full gap-2 font-medium"
+                    className="w-full gap-2 font-bold bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs h-9 shadow-xs"
                     size="sm"
                   >
                     <ShoppingBag className="w-4 h-4" />
@@ -243,9 +243,9 @@ export default function FavoritesPage() {
                     variant="ghost"
                     size="sm"
                     asChild
-                    className="w-full text-xs text-muted-foreground hover:text-foreground"
+                    className="w-full text-xs text-muted-foreground hover:text-foreground h-8"
                   >
-                    <Link href={`/products/${prodId}`}>View Details</Link>
+                    <Link href={`/products/${prod.slug || prodId}`}>View Details</Link>
                   </Button>
                 </div>
               </div>

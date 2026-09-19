@@ -84,6 +84,14 @@ export const productsApi = {
     return normalizeProduct(data);
   },
 
+  async getByIdOrSlug(identifier: string | number): Promise<Product> {
+    try {
+      return await this.getById(identifier);
+    } catch {
+      return await this.getBySlug(String(identifier));
+    }
+  },
+
   async create(payload: Partial<Product>): Promise<Product> {
     const res = await apiClient.post("/api/v1/products", payload);
     return normalizeProduct(res.data.data !== undefined ? res.data.data : res.data);
