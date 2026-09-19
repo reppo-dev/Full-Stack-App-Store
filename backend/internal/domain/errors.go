@@ -35,4 +35,7 @@ var (
 	ErrInvalidTicketStatus      = errors.New("invalid ticket status")
 	ErrInvalidTicketPriority    = errors.New("invalid ticket priority")
 	ErrUnauthorizedTicketAccess = errors.New("unauthorized ticket access")
+
+	// Banner management domain errors
+	ErrBannerNotFound = errors.New("banner not found")
 )

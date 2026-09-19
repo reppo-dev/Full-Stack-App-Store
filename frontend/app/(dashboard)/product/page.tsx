@@ -5,6 +5,9 @@ import { useEffect, useState } from "react";
 import BannerProduct from "../components/product/banner";
 import CardProduct from "../components/product/cardProduct";
 import GetIdUser from "../../actions/GetIdUser";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Sliders } from "lucide-react";
 
 type ProductType = {
   ID: number;
@@ -88,7 +91,23 @@ const Product = () => {
 
   return (
     <div>
-      <p className="text-2xl ml-7 my-8">Product</p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between mx-7 my-8 gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-foreground">Products & Catalog</h1>
+          <p className="text-xs text-muted-foreground mt-0.5">
+            Browse inventory, toggle favorites, and manage promotional campaigns
+          </p>
+        </div>
+        <Link href="/dashboard/banners">
+          <Button
+            variant="outline"
+            className="flex items-center gap-2 border-blue-600/40 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-950/40 font-semibold"
+          >
+            <Sliders className="h-4 w-4" />
+            Manage Banners & CTAs
+          </Button>
+        </Link>
+      </div>
       <div className="mx-5">
         <BannerProduct />
       </div>

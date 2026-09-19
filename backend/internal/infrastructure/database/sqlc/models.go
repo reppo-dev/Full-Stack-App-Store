@@ -8,6 +8,22 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+type Banner struct {
+	ID        int64              `json:"id"`
+	CreatedAt pgtype.Timestamptz `json:"created_at"`
+	UpdatedAt pgtype.Timestamptz `json:"updated_at"`
+	Title     string             `json:"title"`
+	Subtitle  pgtype.Text        `json:"subtitle"`
+	Badge     pgtype.Text        `json:"badge"`
+	ImageUrl  string             `json:"image_url"`
+	LinkUrl   string             `json:"link_url"`
+	CtaText   pgtype.Text        `json:"cta_text"`
+	CtaLink   pgtype.Text        `json:"cta_link"`
+	Type      string             `json:"type"`
+	Position  int32              `json:"position"`
+	IsActive  bool               `json:"is_active"`
+}
+
 type Category struct {
 	ID        int64              `json:"id"`
 	CreatedAt pgtype.Timestamptz `json:"created_at"`

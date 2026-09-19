@@ -28,7 +28,7 @@ export const getUserFavorites = async () => {
   }
 };
 
-// اضافه کردن به علاقه‌مندی‌ها
+// Add to favorites
 export async function addToFavorites(productId: number) {
   try {
     const user = await GetIdUser();
@@ -60,7 +60,7 @@ export async function addToFavorites(productId: number) {
   }
 }
 
-// حذف از علاقه‌مندی‌ها
+// Remove from favorites
 export async function removeFromFavorites(productId: number) {
   try {
     const user = await GetIdUser();

@@ -1,7 +1,6 @@
 "use client";
 
-import React from "react";
-import Link from "next/link";
+import React, { useState } from "react";
 import {
   Zap,
   Tag,
@@ -12,117 +11,180 @@ import {
   Gamepad2,
   Gift,
 } from "lucide-react";
+import StoryViewerModal, { StoryData } from "./StoryViewerModal";
 
-interface StoryItem {
-  id: string;
-  title: string;
-  href: string;
+interface StoryItem extends StoryData {
   icon: React.ComponentType<{ className?: string }>;
-  gradient: string;
-  badge?: string;
 }
 
-const stories: StoryItem[] = [
+const storiesData: StoryItem[] = [
   {
-    id: "jet",
-    title: "ارسال امروز",
-    href: "/products",
-    icon: Zap,
+    id: "express",
+    title: "Superfast Same-Day Delivery",
+    subtitle: "Order before 2:00 PM and receive your favorite electronics at your doorstep today with priority dispatch.",
+    badge: "EXPRESS",
+    category: "Express Shipping",
+    image: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1000&q=80",
+    link: "/products",
+    buttonText: "Shop Same-Day Items",
     gradient: "from-amber-400 to-orange-500",
-    badge: "فوری",
+    icon: Zap,
+    featuredPrice: "Free on $50+",
   },
   {
     id: "incredible",
-    title: "شگفت‌انگیزها",
-    href: "#incredible-offers",
-    icon: Tag,
+    title: "Today's Incredible Offers",
+    subtitle: "Huge price drops on flagship smartphones, ultrabooks, and studio wireless headphones.",
+    badge: "FLASH DEAL",
+    category: "Incredible Deals",
+    image: "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=1000&q=80",
+    link: "#incredible-offers",
+    buttonText: "See Flash Deals",
     gradient: "from-rose-500 to-red-600",
-    badge: "ویژه",
+    icon: Tag,
+    featuredPrice: "Up to 45% OFF",
   },
   {
     id: "mobiles",
-    title: "موبایل و تبلت",
-    href: "/products?category_id=1",
-    icon: Smartphone,
+    title: "Next-Gen Mobile Flagships",
+    subtitle: "Explore iPhone 16 Pro Max, Samsung Galaxy S24 Ultra, and iPad Pro M4 with cutting-edge AI.",
+    badge: "AI POWERED",
+    category: "Smartphones & Tablets",
+    image: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=1000&q=80",
+    link: "/products?category_id=1",
+    buttonText: "Shop Smartphones",
     gradient: "from-blue-500 to-indigo-600",
+    icon: Smartphone,
+    featuredPrice: "$1,199",
   },
   {
     id: "laptops",
-    title: "لپ‌تاپ و کامپیوتر",
-    href: "/products?category_id=2",
-    icon: Laptop,
+    title: "Unrivaled Computing Performance",
+    subtitle: "Conquer heavy workflows with MacBook Pro M3 Max and Dell XPS 15 OLED workstation laptops.",
+    badge: "M3 MAX",
+    category: "Laptops & PCs",
+    image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1000&q=80",
+    link: "/products?category_id=2",
+    buttonText: "Explore Laptops",
     gradient: "from-purple-500 to-violet-600",
+    icon: Laptop,
+    featuredPrice: "$2,299",
   },
   {
     id: "audio",
-    title: "صوتی و هدفون",
-    href: "/products?category_id=3",
-    icon: Headphones,
+    title: "Pure Studio Acoustic Euphoria",
+    subtitle: "Industry-leading active noise cancellation with Sony WH-1000XM5 and Bose QuietComfort Ultra.",
+    badge: "HI-RES",
+    category: "Audio & Headphones",
+    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1000&q=80",
+    link: "/products?category_id=3",
+    buttonText: "Explore Hi-Fi Audio",
     gradient: "from-emerald-400 to-teal-600",
+    icon: Headphones,
+    featuredPrice: "$299",
   },
   {
     id: "wearables",
-    title: "ساعت هوشمند",
-    href: "/products?category_id=4",
-    icon: Watch,
+    title: "Rugged Endurance & Health",
+    subtitle: "Precision dual-frequency GPS, depth gauges, and vital metric sensors crafted in titanium.",
+    badge: "TITANIUM",
+    category: "Smart Watches",
+    image: "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?auto=format&fit=crop&w=1000&q=80",
+    link: "/products?category_id=4",
+    buttonText: "Shop Wearables",
     gradient: "from-sky-400 to-cyan-600",
+    icon: Watch,
+    featuredPrice: "$799",
   },
   {
     id: "gaming",
-    title: "کنسول و گیمینگ",
-    href: "/products?category_id=5",
-    icon: Gamepad2,
+    title: "PlayStation 5 Pro & Elite Gaming",
+    subtitle: "Experience 4K 120Hz ray tracing with PS5 Pro and custom mechanical keyboards for competitive play.",
+    badge: "PS5 PRO",
+    category: "Gaming & Esports",
+    image: "https://images.unsplash.com/photo-1606813907291-d86efa9b94db?auto=format&fit=crop&w=1000&q=80",
+    link: "/products?category_id=5",
+    buttonText: "Level Up Rig",
     gradient: "from-fuchsia-500 to-pink-600",
+    icon: Gamepad2,
+    featuredPrice: "$699",
   },
   {
     id: "deals",
-    title: "حراج و تخفیف‌ها",
-    href: "/products",
-    icon: Gift,
+    title: "Weekly Clearance & Rewards",
+    subtitle: "Exclusive bundle savings, member cashback, and limited-stock promotional accessories.",
+    badge: "SPECIAL",
+    category: "Member Perks",
+    image: "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&w=1000&q=80",
+    link: "/products",
+    buttonText: "View Clearance",
     gradient: "from-yellow-400 to-amber-600",
+    icon: Gift,
+    featuredPrice: "From $19",
   },
 ];
 
 export default function QuickAccessStories() {
+  const [selectedStoryIndex, setSelectedStoryIndex] = useState<number | null>(null);
+
+  const handleOpenStory = (index: number) => {
+    setSelectedStoryIndex(index);
+  };
+
+  const handleCloseStory = () => {
+    setSelectedStoryIndex(null);
+  };
+
   return (
-    <section className="w-full py-4 overflow-x-auto scrollbar-none">
-      <div className="flex items-center justify-between sm:justify-center gap-4 sm:gap-8 min-w-max px-4">
-        {stories.map((story) => {
-          const Icon = story.icon;
-          return (
-            <Link
-              key={story.id}
-              href={story.href}
-              className="flex flex-col items-center gap-2 group transition-transform hover:-translate-y-1"
-            >
-              <div className="relative">
-                {/* Gradient Ring Outer Border */}
-                <div
-                  className={`p-0.5 rounded-full bg-gradient-to-tr ${story.gradient} shadow-xs group-hover:shadow-md transition-shadow`}
-                >
-                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-card p-1 flex items-center justify-center">
-                    <div
-                      className={`w-full h-full rounded-full bg-gradient-to-tr ${story.gradient} flex items-center justify-center text-white`}
-                    >
-                      <Icon className="w-6 h-6 sm:w-7 sm:h-7 transition-transform group-hover:scale-110" />
+    <>
+      <section className="w-full py-5 overflow-x-auto scrollbar-none">
+        <div className="flex items-center justify-between sm:justify-center gap-4 sm:gap-7 min-w-max px-4">
+          {storiesData.map((story, index) => {
+            const Icon = story.icon;
+            return (
+              <button
+                key={story.id}
+                type="button"
+                onClick={() => handleOpenStory(index)}
+                className="flex flex-col items-center gap-2 group transition-transform hover:-translate-y-1 focus:outline-hidden cursor-pointer"
+              >
+                <div className="relative">
+                  {/* Dynamic Gradient Ring Outer Border */}
+                  <div
+                    className={`p-0.5 rounded-full bg-gradient-to-tr ${story.gradient} shadow-xs group-hover:shadow-lg group-hover:scale-105 transition-all duration-300`}
+                  >
+                    <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-card p-0.5 flex items-center justify-center">
+                      <div
+                        className={`w-full h-full rounded-full bg-gradient-to-tr ${story.gradient} flex items-center justify-center text-white shadow-inner`}
+                      >
+                        <Icon className="w-6 h-6 sm:w-7 sm:h-7 transition-transform group-hover:scale-110" />
+                      </div>
                     </div>
                   </div>
+
+                  {story.badge && (
+                    <span className="absolute -top-1 -right-1 bg-red-600 text-white text-[9px] font-bold px-1.5 py-0.2 rounded-full ring-2 ring-background tracking-tighter uppercase">
+                      {story.badge}
+                    </span>
+                  )}
                 </div>
 
-                {story.badge && (
-                  <span className="absolute -top-1 -right-1 bg-red-600 text-white text-[9px] font-bold px-1.5 py-0.2 rounded-full ring-2 ring-background">
-                    {story.badge}
-                  </span>
-                )}
-              </div>
+                <span className="text-[11px] sm:text-xs font-semibold text-foreground/85 group-hover:text-blue-600 transition-colors text-center max-w-[80px] truncate">
+                  {story.category}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </section>
 
-              <span className="text-[11px] sm:text-xs font-medium text-foreground/85 group-hover:text-primary transition-colors text-center">
-                {story.title}
-              </span>
-            </Link>
-          );
-        })}
-      </div>
-    </section>
+      {/* Interactive Story Viewer Modal */}
+      <StoryViewerModal
+        stories={storiesData}
+        initialIndex={selectedStoryIndex ?? 0}
+        isOpen={selectedStoryIndex !== null}
+        onClose={handleCloseStory}
+      />
+    </>
   );
 }

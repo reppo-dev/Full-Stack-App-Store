@@ -3,7 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Grid, ChevronLeft } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 
 interface CategoryCard {
   id: number;
@@ -16,36 +16,36 @@ interface CategoryCard {
 const categories: CategoryCard[] = [
   {
     id: 1,
-    name: "موبایل و تبلت",
-    countText: "بیش از ۳۰ کالا",
+    name: "Smartphones & Tablets",
+    countText: "30+ Products",
     href: "/products?category_id=1",
     imageUrl: "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=400&q=80",
   },
   {
     id: 2,
-    name: "لپ‌تاپ و کامپیوتر",
-    countText: "بیش از ۲۰ کالا",
+    name: "Laptops & Computers",
+    countText: "20+ Products",
     href: "/products?category_id=2",
     imageUrl: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=400&q=80",
   },
   {
     id: 3,
-    name: "هدفون و تجهیزات صوتی",
-    countText: "بیش از ۱۵ کالا",
+    name: "Audio & Headphones",
+    countText: "15+ Products",
     href: "/products?category_id=3",
     imageUrl: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=400&q=80",
   },
   {
     id: 4,
-    name: "ساعت و گجت پوشیدنی",
-    countText: "بیش از ۱۰ کالا",
+    name: "Wearable Tech",
+    countText: "10+ Products",
     href: "/products?category_id=4",
     imageUrl: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=400&q=80",
   },
   {
     id: 5,
-    name: "کنسول و تجهیزات گیمینگ",
-    countText: "بیش از ۲۵ کالا",
+    name: "Gaming & Consoles",
+    countText: "25+ Products",
     href: "/products?category_id=5",
     imageUrl: "https://images.unsplash.com/photo-1606813907291-d86efa9b94db?auto=format&fit=crop&w=400&q=80",
   },
@@ -56,18 +56,18 @@ export default function CategoryExplorer() {
     <section className="w-full my-8">
       {/* Section Header */}
       <div className="flex items-center justify-between mb-5">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
           <div className="w-2.5 h-6 bg-red-600 rounded-full" />
-          <h2 className="text-lg sm:text-xl font-bold text-foreground">
-            خرید بر اساس دسته‌بندی
+          <h2 className="text-lg sm:text-xl font-bold text-foreground tracking-tight">
+            Shop by Category
           </h2>
         </div>
         <Link
           href="/products"
           className="text-xs font-semibold text-primary hover:text-primary/80 flex items-center gap-1 group"
         >
-          <span>مشاهده همه دسته‌ها</span>
-          <ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+          <span>View All Departments</span>
+          <ChevronRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
         </Link>
       </div>
 
@@ -86,6 +86,7 @@ export default function CategoryExplorer() {
                 fill
                 sizes="120px"
                 className="object-cover rounded-full p-1"
+                unoptimized
               />
             </div>
             <h3 className="text-xs sm:text-sm font-bold text-foreground mb-1 group-hover:text-primary transition-colors">

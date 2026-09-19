@@ -20,6 +20,7 @@ type RouteDependencies struct {
 	FavoriteHandler *handler.FavoriteHandler
 	TicketHandler   *handler.TicketHandler
 	DashboardHandler *handler.DashboardHandler
+	BannerHandler   *handler.BannerHandler
 	TokenManager    security.TokenManager
 }
 
@@ -151,6 +152,18 @@ func Setup(app *fiber.App, optDeps ...*RouteDependencies) {
 				dashGroup.Get("/metrics", authGuard, adminGuard, deps.DashboardHandler.GetMetrics)
 			} else {
 				dashGroup.Get("/metrics", deps.DashboardHandler.GetMetrics)
+			}
+		}
+
+		if deps.BannerHandler != nil {
+			bannerGroup := v1.Group("/banners")
+			bannerGroup.Get("/", deps.BannerHandler.ListActiveBanners)
+			bannerGroup.Get("/:id", deps.BannerHandler.GetBannerByID)
+			if authGuard != nil && adminGuard != nil {
+				bannerGroup.Get("/admin/all", authGuard, adminGuard, deps.BannerHandler.ListAllBanners)
+				bannerGroup.Post("/", authGuard, adminGuard, deps.BannerHandler.CreateBanner)
+				bannerGroup.Put("/:id", authGuard, adminGuard, deps.BannerHandler.UpdateBanner)
+				bannerGroup.Delete("/:id", authGuard, adminGuard, deps.BannerHandler.DeleteBanner)
 			}
 		}
 	}

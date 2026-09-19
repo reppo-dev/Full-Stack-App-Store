@@ -11,28 +11,28 @@ interface TrustItem {
 
 const trustItems: TrustItem[] = [
   {
-    title: "امکان تحویل اکسپرس",
-    description: "تحویل سفارشات در سریع‌ترین زمان ممکن",
+    title: "Express Delivery",
+    description: "Superfast doorstep dispatch on all orders",
     icon: Truck,
   },
   {
-    title: "۷ روز ضمانت بازگشت کالا",
-    description: "امکان مرجوعی بدون قید و شرط تا ۷ روز",
+    title: "7 Days Easy Returns",
+    description: "Hassle-free 100% money back guarantee",
     icon: RotateCcw,
   },
   {
-    title: "ضمانت اصالت کالا",
-    description: "تضمین ۱۰۰٪ اصالت فیزیکی و دیجیتال",
+    title: "Authenticity Guaranteed",
+    description: "Genuine physical & digital tech guaranteed",
     icon: ShieldCheck,
   },
   {
-    title: "پشتیبانی ۲۴ ساعته",
-    description: "پاسخگویی سریع در تمامی روزهای هفته",
+    title: "24/7 Dedicated Support",
+    description: "Expert assistance anytime around the clock",
     icon: Headphones,
   },
   {
-    title: "پرداخت امن و مطمئن",
-    description: "درگاه معتبر شاپرکی با بالاترین استانداردها",
+    title: "Secure Checkout",
+    description: "256-bit SSL encrypted bank-grade payments",
     icon: CreditCard,
   },
 ];

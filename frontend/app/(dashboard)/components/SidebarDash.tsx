@@ -30,12 +30,14 @@ import {
   Table,
   Settings,
   LogOut,
+  Sliders,
 } from "lucide-react";
 import Logout from "@/components/logout";
 
 const menuItems = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
   { title: "Products", url: "/product", icon: Package },
+  { title: "Banners", url: "/dashboard/banners", icon: Sliders },
   { title: "Favorites", url: "/favorites", icon: Heart },
   { title: "Inbox", url: "/inbox", icon: Inbox },
   { title: "Order Lists", url: "/orderlists", icon: ListOrdered },

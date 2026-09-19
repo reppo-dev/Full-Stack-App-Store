@@ -48,7 +48,7 @@ const userSchema = z.object({
   user_name: z.string().min(6, "Username must be at least 6 characters"),
   image: z.string().url("Must be a valid URL"),
   phone_number: z.string().min(9, "Phone number must be at least 9 characters"),
-  role_id: z.number().min(1, "Role is required"), // coerce ایمن‌تره
+  role_id: z.number().min(1, "Role is required"), // coerced role id
 });
 
 type UserSchemaType = z.infer<typeof userSchema>;
@@ -96,7 +96,7 @@ export default function EditUserForm({ user, userId }: EditUserFormProps) {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <FieldGroup>
-              {/* همه فیلدها مثل قبل... */}
+              {/* Form fields */}
               <FormField
                 control={form.control}
                 name="image"

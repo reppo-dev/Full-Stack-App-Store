@@ -409,5 +409,130 @@ func main() {
 		fmt.Println("✓ Sample tickets and conversation threads created successfully")
 	}
 
+	// 7. Seed Dynamic Banners (Hero & Promo)
+	fmt.Println("🎨 Seeding promotional and hero storefront banners...")
+	bannersSQL := `
+		INSERT INTO banners (title, subtitle, badge, image_url, link_url, cta_text, cta_link, type, position, is_active, created_at, updated_at)
+		VALUES
+			(
+				'Apple iPhone 16 Pro Max',
+				'Titanium design with A18 Pro chip, 48MP Fusion camera, and 5x Telephoto zoom.',
+				'Latest Flagship',
+				'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=1200&q=80',
+				'/products/apple-iphone-16-pro-max-256gb',
+				'Shop iPhone 16 Pro',
+				'/products/apple-iphone-16-pro-max-256gb',
+				'hero',
+				0,
+				true,
+				NOW(),
+				NOW()
+			),
+			(
+				'MacBook Pro 16-inch M3 Max',
+				'Extreme computing performance with Liquid Retina XDR display and 22-hour battery life.',
+				'Pro Performance',
+				'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1200&q=80',
+				'/products/macbook-pro-16-inch-m3-max',
+				'Explore MacBook',
+				'/products/macbook-pro-16-inch-m3-max',
+				'hero',
+				1,
+				true,
+				NOW(),
+				NOW()
+			),
+			(
+				'Premium Hi-Fi Audio Festival',
+				'Silence the world with Sony WH-1000XM5 and Bose QuietComfort Ultra noise-canceling headphones.',
+				'Up to 20% Off',
+				'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1200&q=80',
+				'/products?category_id=3',
+				'Discover Audio',
+				'/products?category_id=3',
+				'hero',
+				2,
+				true,
+				NOW(),
+				NOW()
+			),
+			(
+				'PlayStation 5 Pro & Elite Gaming',
+				'Next-gen ray tracing, PSSR AI upscaling, and 2TB high-speed NVMe storage.',
+				'Gamer Choice',
+				'https://images.unsplash.com/photo-1606813907291-d86efa9b94db?auto=format&fit=crop&w=1200&q=80',
+				'/products/sony-playstation-5-pro-console',
+				'Order PS5 Pro',
+				'/products/sony-playstation-5-pro-console',
+				'hero',
+				3,
+				true,
+				NOW(),
+				NOW()
+			),
+			(
+				'Apple Ecosystem',
+				'iPhone 16 Pro, MacBook Pro M3, and Apple Watch Ultra 2.',
+				'Special Bundle Deal',
+				'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=600&q=80',
+				'/products?category_id=1',
+				'Explore Apple',
+				'/products?category_id=1',
+				'promo',
+				0,
+				true,
+				NOW(),
+				NOW()
+			),
+			(
+				'Galaxy AI Era',
+				'Samsung Galaxy S24 Ultra with titanium armor and built-in S Pen.',
+				'Free Express Shipping',
+				'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?auto=format&fit=crop&w=600&q=80',
+				'/products/samsung-galaxy-s24-ultra-512gb',
+				'Shop Galaxy AI',
+				'/products/samsung-galaxy-s24-ultra-512gb',
+				'promo',
+				1,
+				true,
+				NOW(),
+				NOW()
+			),
+			(
+				'Pro Gaming Battlestation',
+				'PS5 Pro, Keychron mechanical keyboards, and Dell XPS laptops.',
+				'Official Warranty',
+				'https://images.unsplash.com/photo-1606813907291-d86efa9b94db?auto=format&fit=crop&w=600&q=80',
+				'/products?category_id=5',
+				'Game On',
+				'/products?category_id=5',
+				'promo',
+				2,
+				true,
+				NOW(),
+				NOW()
+			),
+			(
+				'Studio Sound Experience',
+				'Immerse in pure acoustic fidelity with Bose & Sony headphones.',
+				'100% Genuine',
+				'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&w=600&q=80',
+				'/products?category_id=3',
+				'Listen Now',
+				'/products?category_id=3',
+				'promo',
+				3,
+				true,
+				NOW(),
+				NOW()
+			);
+	`
+	_, err = db.ExecContext(ctx, bannersSQL)
+	if err != nil {
+		log.Printf("Banners seeding notice: %v", err)
+	} else {
+		fmt.Println("✓ Default hero and promo banners seeded successfully")
+	}
+
 	fmt.Println("🎉 Database seeding completed successfully!")
 }

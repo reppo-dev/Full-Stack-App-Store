@@ -81,11 +81,13 @@ func main() {
 		favoriteRepo := repository.NewFavoriteRepositorySQLC(querier)
 		ticketRepo := repository.NewTicketRepositorySQLC(querier)
 		dashboardRepo := repository.NewDashboardRepositorySQLC(querier)
+		bannerRepo := repository.NewBannerRepositorySQLC(querier)
 
 		orderSvc := service.NewOrderService(orderRepo)
 		favoriteSvc := service.NewFavoriteService(favoriteRepo)
 		ticketSvc := service.NewTicketService(ticketRepo)
 		dashboardSvc := service.NewDashboardService(dashboardRepo)
+		bannerSvc := service.NewBannerService(bannerRepo)
 
 		routeDeps = &routes.RouteDependencies{
 			AuthHandler:      handler.NewAuthHandler(authSvc),
@@ -97,6 +99,7 @@ func main() {
 			FavoriteHandler:  handler.NewFavoriteHandler(favoriteSvc),
 			TicketHandler:    handler.NewTicketHandler(ticketSvc),
 			DashboardHandler: handler.NewDashboardHandler(dashboardSvc),
+			BannerHandler:    handler.NewBannerHandler(bannerSvc),
 			TokenManager:     tokenManager,
 		}
 		logger.Info("SQLC repositories and Application services initialized cleanly")

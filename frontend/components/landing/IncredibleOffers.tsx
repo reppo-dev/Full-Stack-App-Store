@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Product } from "@/models/modles";
-import { ChevronLeft, ChevronRight, Clock, Flame, Sparkles } from "lucide-react";
+import { ChevronLeft, ChevronRight, Flame, Sparkles, ArrowRight } from "lucide-react";
 
 interface IncredibleOffersProps {
   products: Product[];
@@ -39,7 +39,7 @@ export default function IncredibleOffers({ products }: IncredibleOffersProps) {
 
   const scroll = (direction: "left" | "right") => {
     if (scrollRef.current) {
-      const scrollAmount = direction === "left" ? -300 : 300;
+      const scrollAmount = direction === "left" ? -320 : 320;
       scrollRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
     }
   };
@@ -67,35 +67,35 @@ export default function IncredibleOffers({ products }: IncredibleOffersProps) {
         <div className="absolute bottom-0 left-0 -mb-10 -ml-10 w-48 h-48 rounded-full bg-black/10 blur-2xl pointer-events-none" />
 
         <div className="flex flex-col lg:flex-row items-stretch gap-4 relative z-10">
-          {/* Header Card (Signature Digikala Box) */}
+          {/* Header Card (Signature Incredible Box) */}
           <div className="flex lg:flex-col justify-between items-center lg:items-center text-white lg:w-48 shrink-0 p-2 lg:p-4 text-center">
             <div className="flex flex-col items-start lg:items-center space-y-1">
-              <div className="w-12 h-12 rounded-full bg-white/15 flex items-center justify-center mb-1">
+              <div className="w-12 h-12 rounded-full bg-white/15 flex items-center justify-center mb-1 shadow-inner">
                 <Flame className="w-7 h-7 text-amber-300 animate-bounce" />
               </div>
               <h2 className="text-xl sm:text-2xl font-black tracking-tight leading-tight">
-                پیشنهاد
+                Incredible
                 <br className="hidden lg:block" />
-                شگفت‌انگیز
+                Offers
               </h2>
-              <span className="text-[11px] text-white/80 flex items-center gap-1">
-                <Sparkles className="w-3 h-3" /> فرصت محدود
+              <span className="text-[11px] text-white/90 flex items-center gap-1 font-medium">
+                <Sparkles className="w-3 h-3" /> Limited Time
               </span>
             </div>
 
             {/* Countdown Box */}
-            <div className="flex flex-col items-end lg:items-center space-y-2 mt-2">
-              <div className="flex items-center gap-1 font-mono text-sm font-bold">
-                <span className="bg-white/20 px-2 py-1 rounded-md min-w-[28px] text-center">
-                  {String(timeLeft.seconds).padStart(2, "0")}
+            <div className="flex flex-col items-end lg:items-center space-y-2 mt-3">
+              <div className="flex items-center gap-1 font-mono text-sm font-extrabold">
+                <span className="bg-white/20 px-2 py-1 rounded-md min-w-[28px] text-center shadow-xs">
+                  {String(timeLeft.hours).padStart(2, "0")}
                 </span>
                 <span>:</span>
-                <span className="bg-white/20 px-2 py-1 rounded-md min-w-[28px] text-center">
+                <span className="bg-white/20 px-2 py-1 rounded-md min-w-[28px] text-center shadow-xs">
                   {String(timeLeft.minutes).padStart(2, "0")}
                 </span>
                 <span>:</span>
-                <span className="bg-white/20 px-2 py-1 rounded-md min-w-[28px] text-center">
-                  {String(timeLeft.hours).padStart(2, "0")}
+                <span className="bg-white/20 px-2 py-1 rounded-md min-w-[28px] text-center shadow-xs">
+                  {String(timeLeft.seconds).padStart(2, "0")}
                 </span>
               </div>
 
@@ -103,8 +103,8 @@ export default function IncredibleOffers({ products }: IncredibleOffersProps) {
                 href="/products"
                 className="text-xs font-bold text-white hover:text-amber-200 transition-colors flex items-center gap-1 group pt-1"
               >
-                مشاهده همه
-                <ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+                View All
+                <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
               </Link>
             </div>
           </div>
@@ -135,14 +135,15 @@ export default function IncredibleOffers({ products }: IncredibleOffersProps) {
                         fill
                         sizes="210px"
                         className="object-contain p-2 group-hover:scale-105 transition-transform duration-300"
+                        unoptimized
                       />
-                      <span className="absolute top-2 right-2 bg-red-600 text-white font-extrabold text-[11px] px-1.5 py-0.5 rounded-full shadow-xs">
-                        %{item.discountPercent}
+                      <span className="absolute top-2 right-2 bg-red-600 text-white font-extrabold text-[11px] px-2 py-0.5 rounded-full shadow-sm">
+                        {item.discountPercent}% OFF
                       </span>
                     </div>
 
                     {/* Title */}
-                    <h3 className="text-xs font-medium text-foreground line-clamp-2 h-8 leading-snug mb-2 group-hover:text-primary transition-colors">
+                    <h3 className="text-xs font-semibold text-foreground line-clamp-2 h-8 leading-snug mb-2 group-hover:text-red-600 transition-colors">
                       {item.title}
                     </h3>
 
@@ -152,7 +153,7 @@ export default function IncredibleOffers({ products }: IncredibleOffersProps) {
                         <span className="text-[11px] text-muted-foreground line-through">
                           ${item.originalPrice.toFixed(0)}
                         </span>
-                        <span className="text-sm font-bold text-foreground">
+                        <span className="text-sm font-extrabold text-foreground">
                           ${Number(item.price).toFixed(2)}
                         </span>
                       </div>
@@ -167,8 +168,8 @@ export default function IncredibleOffers({ products }: IncredibleOffersProps) {
                             }}
                           />
                         </div>
-                        <p className="text-[10px] text-muted-foreground text-left">
-                          تنها {item.stockLeft} عدد در انبار باقیست
+                        <p className="text-[10px] text-muted-foreground font-medium">
+                          Only {item.stockLeft} left in stock
                         </p>
                       </div>
                     </div>
@@ -179,12 +180,12 @@ export default function IncredibleOffers({ products }: IncredibleOffersProps) {
               {/* End Card */}
               <Link
                 href="/products"
-                className="bg-white/10 hover:bg-white/20 text-white rounded-xl p-4 w-[140px] shrink-0 flex flex-col items-center justify-center text-center gap-3 backdrop-blur-xs transition-colors border border-white/20"
+                className="bg-white/10 hover:bg-white/20 text-white rounded-xl p-4 w-[140px] shrink-0 flex flex-col items-center justify-center text-center gap-3 backdrop-blur-md transition-colors border border-white/20 group"
               >
-                <div className="w-10 h-10 rounded-full bg-white text-red-600 flex items-center justify-center font-bold">
-                  <ChevronLeft className="w-6 h-6" />
+                <div className="w-10 h-10 rounded-full bg-white text-red-600 flex items-center justify-center font-bold shadow-md group-hover:scale-110 transition-transform">
+                  <ArrowRight className="w-5 h-5" />
                 </div>
-                <span className="text-xs font-bold">مشاهده همه شگفت‌انگیزها</span>
+                <span className="text-xs font-bold leading-tight">View All Incredible Offers</span>
               </Link>
             </div>
 

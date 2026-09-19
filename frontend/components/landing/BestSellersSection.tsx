@@ -6,8 +6,7 @@ import Link from "next/link";
 import { Product } from "@/models/modles";
 import AddToCartButton from "@/components/cart/AddToCartButton";
 import FavoriteButton from "@/components/button-favorite";
-import { Star, Truck, ShieldCheck, ChevronLeft, Flame } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { Star, Truck, Flame } from "lucide-react";
 
 interface BestSellersSectionProps {
   products: Product[];
@@ -27,26 +26,26 @@ export default function BestSellersSection({ products }: BestSellersSectionProps
     <section className="w-full my-8">
       {/* Header and Tabs */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border/60">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
           <div className="w-2.5 h-6 bg-red-600 rounded-full" />
-          <h2 className="text-lg sm:text-xl font-bold text-foreground flex items-center gap-2">
+          <h2 className="text-lg sm:text-xl font-bold text-foreground flex items-center gap-2 tracking-tight">
             <Flame className="w-5 h-5 text-amber-500" />
-            پرفروش‌ترین کالاهای بازار
+            Top Selling Electronics
           </h2>
         </div>
 
         {/* Filter Pills */}
         <div className="flex items-center gap-2 overflow-x-auto scrollbar-none text-xs">
           {[
-            { key: "all", label: "همه کالاها" },
-            { key: "mobiles", label: "موبایل و تبلت" },
-            { key: "laptops", label: "لپ‌تاپ و مک‌بوک" },
-            { key: "audio", label: "هدفون و اسپیکر" },
+            { key: "all", label: "All Items" },
+            { key: "mobiles", label: "Phones & Tablets" },
+            { key: "laptops", label: "Laptops & PCs" },
+            { key: "audio", label: "Audio & Sound" },
           ].map((tab) => (
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key as any)}
-              className={`px-3.5 py-1.5 rounded-full font-medium transition-all whitespace-nowrap ${
+              className={`px-3.5 py-1.5 rounded-full font-semibold transition-all whitespace-nowrap ${
                 activeTab === tab.key
                   ? "bg-red-600 text-white shadow-xs"
                   : "bg-muted text-muted-foreground hover:text-foreground hover:bg-muted/80"
@@ -72,11 +71,11 @@ export default function BestSellersSection({ products }: BestSellersSectionProps
           return (
             <div
               key={prodId}
-              className="bg-card text-card-foreground rounded-2xl border border-border/60 p-4 flex flex-col justify-between hover:shadow-lg transition-all duration-300 group relative"
+              className="bg-card text-card-foreground rounded-2xl border border-border/60 p-4 flex flex-col justify-between hover:shadow-xl transition-all duration-300 group relative"
             >
               {/* Wishlist Top Button */}
               <div className="absolute top-3 right-3 z-10">
-                <FavoriteButton productId={prodId} className="w-8 h-8 rounded-full bg-background/80 shadow-xs backdrop-blur-xs" />
+                <FavoriteButton productId={prodId} className="w-8 h-8 rounded-full bg-background/80 shadow-xs backdrop-blur-md" />
               </div>
 
               {/* Product Image Link */}
@@ -90,14 +89,15 @@ export default function BestSellersSection({ products }: BestSellersSectionProps
                   fill
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                   className="object-contain p-2 group-hover:scale-105 transition-transform duration-300"
+                  unoptimized
                 />
               </Link>
 
               {/* Delivery Badge & Rating */}
               <div className="flex items-center justify-between gap-2 mb-2 text-[11px]">
-                <span className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-medium">
+                <span className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-semibold">
                   <Truck className="w-3.5 h-3.5" />
-                  ارسال رایگان
+                  Free Express
                 </span>
                 <div className="flex items-center gap-1 text-amber-500 font-bold">
                   <Star className="w-3.5 h-3.5 fill-amber-500" />
@@ -107,7 +107,7 @@ export default function BestSellersSection({ products }: BestSellersSectionProps
 
               {/* Title */}
               <Link href={`/products/${product.slug || prodId}`}>
-                <h3 className="text-xs sm:text-sm font-semibold text-foreground line-clamp-2 h-10 leading-snug mb-3 group-hover:text-primary transition-colors">
+                <h3 className="text-xs sm:text-sm font-semibold text-foreground line-clamp-2 h-10 leading-snug mb-3 group-hover:text-red-600 transition-colors">
                   {product.title}
                 </h3>
               </Link>
@@ -115,7 +115,7 @@ export default function BestSellersSection({ products }: BestSellersSectionProps
               {/* Price and Cart Action */}
               <div className="pt-3 border-t border-border/40 space-y-3">
                 <div className="flex items-baseline justify-between">
-                  <span className="text-xs text-muted-foreground">قیمت مصرف‌کننده:</span>
+                  <span className="text-xs text-muted-foreground font-medium">Price:</span>
                   <span className="text-base font-extrabold text-foreground">
                     ${Number(product.price).toFixed(2)}
                   </span>
@@ -125,7 +125,7 @@ export default function BestSellersSection({ products }: BestSellersSectionProps
                   <AddToCartButton
                     product={product}
                     inStock={inStock}
-                    className="w-full h-9 text-xs rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold"
+                    className="w-full h-9 text-xs rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold shadow-xs"
                   />
                 </div>
               </div>

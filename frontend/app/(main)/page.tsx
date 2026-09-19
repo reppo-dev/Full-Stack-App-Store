@@ -45,7 +45,7 @@ export default async function HomePage() {
         {/* 2. Main Hero Promotional Slider */}
         <DigikalaHeroSlider />
 
-        {/* 3. The Iconic "پیشنهاد شگفت‌انگیز" (Incredible Offers Carousel) */}
+        {/* 3. The Iconic "Incredible Offers" (Flash Deals Carousel) */}
         <IncredibleOffers products={productList} />
 
         {/* 4. Promotional 4-Banner Grid */}

@@ -114,3 +114,20 @@ export interface UpdateUser {
   role_id: number;
   user_name: string;
 }
+
+export interface Banner {
+  id: number;
+  title: string;
+  subtitle: string;
+  badge?: string;
+  image_url: string;
+  link_url: string;
+  cta_text: string;
+  cta_link: string;
+  type: "hero" | "promo" | string;
+  position: number;
+  is_active: boolean;
+  created_at?: string;
+  updated_at?: string;
+}
+

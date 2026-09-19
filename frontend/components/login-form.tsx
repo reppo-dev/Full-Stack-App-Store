@@ -102,7 +102,7 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
                 control={form.control}
                 name="password"
                 render={(
-                  { field }, // ✅ درست
+                  { field }, // Validated field
                 ) => (
                   <FormItem>
                     <FormLabel className="text-base font-semibold text-primary">
