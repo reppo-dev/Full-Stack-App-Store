@@ -5,21 +5,21 @@ import (
 )
 
 type Order struct {
-    gorm.Model
-    FirstName  string      `json:"-"`
-    LastName   string      `json:"-"`
-    Name       string      `json:"name" gorm:"-"`
-    Email      string      `json:"email"`
-    Total      float32     `json:"total" gorm:"-"`
-    OrderItem  []OrderItem `json:"order_items" gorm:"foreignKey:OrderID"`
+	gorm.Model
+	FirstName string      `json:"-"`
+	LastName  string      `json:"-"`
+	Name      string      `json:"name" gorm:"-"`
+	Email     string      `json:"email"`
+	Total     float32     `json:"total" gorm:"-"`
+	OrderItem []OrderItem `json:"order_items" gorm:"foreignKey:OrderID"`
 }
 
 type OrderItem struct {
-    gorm.Model
-    OrderID      uint    `json:"order_id"`
-    ProductTitle string  `json:"product_title"`
-    Price        float32 `json:"price"`
-    Quantity     uint    `json:"quantity"`
+	gorm.Model
+	OrderID      uint    `json:"order_id"`
+	ProductTitle string  `json:"product_title"`
+	Price        float32 `json:"price"`
+	Quantity     uint    `json:"quantity"`
 }
 
 func (order *Order) Count(db *gorm.DB) int64 {
@@ -30,15 +30,15 @@ func (order *Order) Count(db *gorm.DB) int64 {
 	return total
 }
 
-func (order *Order) Take(db *gorm.DB,limit int,offset int) interface{} {
+func (order *Order) Take(db *gorm.DB, limit int, offset int) interface{} {
 	var orders []Order
 
 	db.Preload("OrderItems").Offset(offset).Limit(limit).Find(&orders)
 
-		for i  := range orders{
+	for i := range orders {
 		var total float32 = 0
 
-		for _,orderItem := range orders[i].OrderItem {
+		for _, orderItem := range orders[i].OrderItem {
 			total += orderItem.Price * float32(orderItem.Quantity)
 		}
 

@@ -9,74 +9,72 @@ import (
 
 type User struct {
 	gorm.Model
-	FirstName 		string		`json:"first_name" gorm:"size:50" `
-	LastName 		string 		`json:"last_name" gorm:"size:50"`
-	Image           string  	`json:"image"`
-	UserName		string  	`json:"user_name" gorm:"uniqueIndex;size:50"`
-	PhoneNumber 	string 		`json:"phone_number" gorm:"size:20"`
-	DateOfBirth     time.Time 	`json:"date_of_birth"`
-	Email			string 		`json:"email" gorm:"uniqueIndex;not null"`
-	Password 		string 		`json:"-" gorm:"not null"`
-	RoleID          uint    	`json:"role_id" gorm:"default:1"`
-    Role            Role    	`json:"role" gorm:"foreignKey:RoleId"`
-	Favorites 		[]Favorite  `gorm:"foreignKey:UserID" json:"-"`
+	FirstName   string     `json:"first_name" gorm:"size:50" `
+	LastName    string     `json:"last_name" gorm:"size:50"`
+	Image       string     `json:"image"`
+	UserName    string     `json:"user_name" gorm:"uniqueIndex;size:50"`
+	PhoneNumber string     `json:"phone_number" gorm:"size:20"`
+	DateOfBirth time.Time  `json:"date_of_birth"`
+	Email       string     `json:"email" gorm:"uniqueIndex;not null"`
+	Password    string     `json:"-" gorm:"not null"`
+	RoleID      uint       `json:"role_id" gorm:"default:1"`
+	Role        Role       `json:"role" gorm:"foreignKey:RoleId"`
+	Favorites   []Favorite `gorm:"foreignKey:UserID" json:"-"`
 }
 
 type RegisterRequest struct {
-    FirstName       string 		`json:"first_name"`
-    LastName        string 		`json:"last_name"`
-	Image           string 		`json:"image"`
-	UserName 		string 		`json:"user_name" gorm:"uniqueIndex;size:50"`
-	PhoneNumber		string		`json:"phone_number"`
-	DateOfBirth     time.Time 	`json:"date_of_birth"`
-    Email           string		`json:"email"`
-	Password        string 		`json:"password"`
-	PasswordConfirm string		`json:"password_confirm"`
+	FirstName       string    `json:"first_name"`
+	LastName        string    `json:"last_name"`
+	Image           string    `json:"image"`
+	UserName        string    `json:"user_name" gorm:"uniqueIndex;size:50"`
+	PhoneNumber     string    `json:"phone_number"`
+	DateOfBirth     time.Time `json:"date_of_birth"`
+	Email           string    `json:"email"`
+	Password        string    `json:"password"`
+	PasswordConfirm string    `json:"password_confirm"`
 }
 
 type LoginRequest struct {
-    Email           string `json:"email"`
-    Password        string `json:"password"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
 
 type UpdateIfo struct {
-    FirstName       string 		`json:"first_name"`
-    LastName        string 		`json:"last_name"`
-	Image           string 		`json:"image"`
-	UserName 		string		`json:"user_name"`
-	PhoneNumber 	string 		`json:"phone_number" `
-	DateOfBirth     time.Time 	`json:"date_of_birth"`
-    Email           string 		`json:"email"`
-	RoleID          uint  		`json:"role_id"`
+	FirstName   string    `json:"first_name"`
+	LastName    string    `json:"last_name"`
+	Image       string    `json:"image"`
+	UserName    string    `json:"user_name"`
+	PhoneNumber string    `json:"phone_number" `
+	DateOfBirth time.Time `json:"date_of_birth"`
+	Email       string    `json:"email"`
+	RoleID      uint      `json:"role_id"`
 }
 
-type UpdatePassword struct{
+type UpdatePassword struct {
 	Password        string `json:"password"`
-    PasswordConfirm string `json:"password_confirm"`
+	PasswordConfirm string `json:"password_confirm"`
 }
 
 type UpdateRequest struct {
-    FirstName       string 		`json:"first_name"`
-    LastName        string		`json:"last_name"`
-	Image           string		`json:"image"`
-	UserName 		string 		`json:"user_name" gorm:"uniqueIndex;size:50"`
-	PhoneNumber 	string 		`json:"phone_number"`
-	DateOfBirth     time.Time	`json:"date_of_birth"`
-    Email           string 		`json:"email"`
-    RoleID          uint  		`json:"role_id"`
+	FirstName   string    `json:"first_name"`
+	LastName    string    `json:"last_name"`
+	Image       string    `json:"image"`
+	UserName    string    `json:"user_name" gorm:"uniqueIndex;size:50"`
+	PhoneNumber string    `json:"phone_number"`
+	DateOfBirth time.Time `json:"date_of_birth"`
+	Email       string    `json:"email"`
+	RoleID      uint      `json:"role_id"`
 }
 
-
 func (user *User) SetPassword(password string) {
-	hashpassword,_ := bcrypt.GenerateFromPassword([]byte(password),14)
+	hashpassword, _ := bcrypt.GenerateFromPassword([]byte(password), 12)
 
 	user.Password = string(hashpassword)
 }
 
 func (user *User) ComperPassword(password string) error {
-	return 	bcrypt.CompareHashAndPassword([]byte(user.Password),[]byte(password))
+	return bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 }
-
 
 func (user *User) Count(db *gorm.DB) int64 {
 	var total int64
@@ -85,7 +83,7 @@ func (user *User) Count(db *gorm.DB) int64 {
 	return total
 }
 
-func (user *User) Take(db *gorm.DB,limit int, offset int) interface{} {
+func (user *User) Take(db *gorm.DB, limit int, offset int) interface{} {
 	var users []User
 	db.Preload("Role").Offset(offset).Limit(limit).Find(&users)
 

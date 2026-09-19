@@ -9,9 +9,9 @@ import {
 } from "@/components/ui/carousel";
 import { Button } from "@/components/ui/button";
 
-export default function BannerCarousel() {
+export default function BannerCarousel({ className }: { className?: string }) {
   return (
-    <div className="md:mx-0">
+    <div className={className || "md:mx-0"}>
       <Carousel className="w-full max-w-7xl mx-auto">
         <CarouselContent>
           <CarouselItem>

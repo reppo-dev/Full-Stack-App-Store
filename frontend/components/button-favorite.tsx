@@ -1,83 +1,87 @@
 "use client";
 
-import {
-  addToFavorites,
-  isFavorite,
-  removeFromFavorites,
-} from "@/app/actions/favorite";
-import { useTransition, useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useTransition } from "react";
+import { favoritesApi } from "@/lib/api/favorites";
+import { Heart, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 interface FavoriteButtonProps {
   productId: number;
+  className?: string;
+  onToggle?: (isFav: boolean) => void;
 }
 
-export default function FavoriteButton({ productId }: FavoriteButtonProps) {
+export default function FavoriteButton({
+  productId,
+  className = "",
+  onToggle,
+}: FavoriteButtonProps) {
   const [favorite, setFavorite] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [isPending, startTransition] = useTransition();
-  const isMounted = useRef(true);
-  const initialized = useRef(false); // برای جلوگیری از چندبار مقداردهی
 
-  // مقداردهی اولیه فقط یک بار
   useEffect(() => {
-    if (initialized.current) return;
-    initialized.current = true;
+    let isMounted = true;
+    setIsLoading(true);
 
-    isFavorite(productId)
-      .then((result) => {
-        if (isMounted.current) setFavorite(result);
+    favoritesApi
+      .check(productId)
+      .then((isFav) => {
+        if (isMounted) {
+          setFavorite(isFav);
+          setIsLoading(false);
+        }
       })
       .catch(() => {
-        // در صورت خطا، مقدار پیش‌فرض false بماند (یا می‌توانی true هم فرض کنی)
+        if (isMounted) {
+          setFavorite(false);
+          setIsLoading(false);
+        }
       });
+
+    return () => {
+      isMounted = false;
+    };
   }, [productId]);
 
-  useEffect(() => {
-    isMounted.current = true;
-    return () => {
-      isMounted.current = false;
-    };
-  }, []);
+  const toggleFavorite = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (isPending || isLoading) return;
 
-  const toggleFavorite = () => {
-    if (isPending) return;
-
-    // ذخیره وضعیت قبلی
     const previousState = favorite;
-    // به‌روزرسانی خوش‌بینانه
-    setFavorite(!previousState);
+    const nextState = !previousState;
+    setFavorite(nextState);
 
     startTransition(async () => {
-      if (previousState) {
-        // درخواست حذف
-        const res = await removeFromFavorites(productId);
-        if (res.success) {
-          // حذف موفق: وضعیت نهایی false
-          if (isMounted.current) setFavorite(false);
+      try {
+        if (previousState) {
+          await favoritesApi.remove(productId);
+          onToggle?.(false);
+          toast.success("Removed from wishlist");
         } else {
-          // خطا: اگر خطای 404 بود، یعنی محصول وجود نداشته => وضعیت نهایی false
-          if (res.error === "This product was not found in the wishlist") {
-            if (isMounted.current) setFavorite(false);
-          } else {
-            // سایر خطاها: برگردان به حالت قبل
-            if (isMounted.current) setFavorite(previousState);
-          }
+          await favoritesApi.add(productId);
+          onToggle?.(true);
+          toast.success("Added to wishlist");
         }
-      } else {
-        // درخواست افزودن
-        const res = await addToFavorites(productId);
-        if (res.success) {
-          // افزودن موفق: وضعیت نهایی true
-          if (isMounted.current) setFavorite(true);
-        } else {
-          // خطا: اگر 409 بود، یعنی قبلاً وجود داشته => وضعیت نهایی true
-          if (
-            res.error === "This product has already been added to favorites"
-          ) {
-            if (isMounted.current) setFavorite(true);
-          } else {
-            if (isMounted.current) setFavorite(previousState);
-          }
+      } catch (err: any) {
+        // If 409 conflict on add, it's already a favorite
+        if (err?.statusCode === 409) {
+          setFavorite(true);
+          onToggle?.(true);
+          return;
         }
+        // If 404 on remove, it's already removed
+        if (err?.statusCode === 404 && previousState) {
+          setFavorite(false);
+          onToggle?.(false);
+          return;
+        }
+
+        // Revert on unexpected failure
+        setFavorite(previousState);
+        onToggle?.(previousState);
+        toast.error(err?.message || "Failed to update wishlist");
       }
     });
   };
@@ -85,15 +89,16 @@ export default function FavoriteButton({ productId }: FavoriteButtonProps) {
   return (
     <button
       onClick={toggleFavorite}
-      disabled={isPending}
-      className="p-2 rounded-full hover:bg-gray-100 transition"
+      disabled={isPending || isLoading}
+      className={`p-2 rounded-full hover:bg-muted/80 active:scale-95 transition-all duration-150 flex items-center justify-center ${className}`}
+      aria-label={favorite ? "Remove from wishlist" : "Add to wishlist"}
     >
       {isPending ? (
-        <div className="w-5 h-5 border-2 border-red-300 border-t-red-500 rounded-full animate-spin" />
+        <Loader2 className="w-5 h-5 animate-spin text-rose-500" />
       ) : favorite ? (
-        <span className="text-red-500 text-xl">❤️</span>
+        <Heart className="w-5 h-5 fill-rose-500 text-rose-500 transition-transform duration-150 scale-110" />
       ) : (
-        <span className="text-gray-500 text-xl">🤍</span>
+        <Heart className="w-5 h-5 text-muted-foreground hover:text-rose-500 transition-colors" />
       )}
     </button>
   );

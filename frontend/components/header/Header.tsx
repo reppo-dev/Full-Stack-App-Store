@@ -1,8 +1,9 @@
 import { Input } from "../ui/input";
-import { Bell, Search, User } from "lucide-react";
+import { Search } from "lucide-react";
 import LightDarkToggle from "../light-dark";
 import { SidebarToggle } from "../sidebarToggle";
 import AuthButtons from "./AuthButtons";
+import HeaderCartButton from "../cart/HeaderCartButton";
 
 const Header = () => {
   return (
@@ -18,7 +19,8 @@ const Header = () => {
           <Input className="w-full p-6" placeholder="Search product, item" />
           <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
         </div>
-        <div className="flex items-center justify-center gap-8">
+        <div className="flex items-center justify-center gap-6">
+          <HeaderCartButton />
           <LightDarkToggle />
           <AuthButtons />
         </div>
@@ -28,3 +30,4 @@ const Header = () => {
 };
 
 export default Header;
+

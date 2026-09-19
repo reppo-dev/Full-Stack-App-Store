@@ -1,55 +1,48 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import React from "react";
+import { useParams, useRouter } from "next/navigation";
+import TicketConversationThread from "../../../components/inbox/TicketConversationThread";
 import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
-const MessageDetail = () => {
+export default function MessageDetailPage() {
+  const params = useParams();
   const router = useRouter();
+  const ticketId = parseInt(params.messageId as string, 10);
+
+  if (isNaN(ticketId) || ticketId <= 0) {
+    return (
+      <div className="p-6 w-full flex flex-col items-center justify-center min-h-[400px]">
+        <p className="text-muted-foreground mb-4">Invalid Ticket ID specified.</p>
+        <Link href="/inbox">
+          <Button variant="outline">Back to Tickets</Button>
+        </Link>
+      </div>
+    );
+  }
 
   return (
-    <div className="p-6 w-full mx-auto flex flex-col h-[90vh]">
-      <button
-        onClick={() => router.back()}
-        className="mb-4 text-sm text-blue-600 hover:underline self-start"
-      >
-        ← Back to list
-      </button>
+    <div className="w-full flex flex-col h-[calc(100vh-140px)] min-h-[600px]">
+      <div className="mb-3">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => router.push("/inbox")}
+          className="text-muted-foreground hover:text-foreground text-xs"
+        >
+          <ArrowLeft className="w-4 h-4 mr-1" />
+          Back to all tickets
+        </Button>
+      </div>
 
-      <div className="flex flex-col flex-1 border rounded-lg bg-white dark:bg-gray-800 overflow-hidden">
-        <div className="p-4 border-b">
-          <h2 className="font-semibold text-lg">...</h2>
-          <p className="text-xs text-gray-500">..</p>
-        </div>
-
-        <div className="flex-1 overflow-y-auto p-4 space-y-3">
-          <div>
-            <div>
-              <div className="flex justify-between items-center gap-2 mb-1">
-                <span className="font-medium text-xs"></span>
-                <span className="text-[10px] opacity-70"></span>
-              </div>
-              <p className="whitespace-pre-wrap">jjj</p>
-              <div className="flex gap-1 mt-1">
-                <span className="px-1.5 py-0.5 rounded text-[10px] text-white">
-                  lll
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="border-t p-4">
-          <textarea
-            placeholder="Write your reply..."
-            className="w-full border rounded-md p-3 text-sm min-h-20 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
-            rows={3}
-          />
-          <div className="flex justify-end mt-2">
-            <Button>Send Reply</Button>
-          </div>
-        </div>
+      <div className="flex-1 min-h-0">
+        <TicketConversationThread
+          ticketId={ticketId}
+          onClose={() => router.push("/inbox")}
+        />
       </div>
     </div>
   );
-};
-
-export default MessageDetail;
+}

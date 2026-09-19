@@ -1,165 +1,239 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { ordersApi, Order, OrderItem } from "@/lib/api/orders";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from "sonner";
+import {
+  Download,
+  Package,
+  Calendar,
+  ChevronDown,
+  ChevronUp,
+  RefreshCw,
+  AlertCircle,
+  FileSpreadsheet,
+} from "lucide-react";
 
-type OrderItem = {
-  ID: number;
-  order_id: number;
-  product_title: string;
-  price: number;
-  quantity: number;
-};
-
-type Order = {
-  ID: number;
-  name: string;
-  email: string;
-  total: number;
-  order_items: OrderItem[];
-};
-
-const Orders = () => {
+export default function AdminOrderListPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [page, setPage] = useState(1);
-  const [lastPage, setLastPage] = useState(0);
+  const [lastPage, setLastPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isExporting, setIsExporting] = useState(false);
+  const [selected, setSelected] = useState<number | null>(null);
+
+  const fetchOrders = async (targetPage: number) => {
+    setIsLoading(true);
+    try {
+      const res = await ordersApi.listAll({ page: targetPage, limit: 10 });
+      setOrders(res.data);
+      setLastPage(res.meta.last_page || 1);
+      setTotalCount(res.meta.total || res.data.length);
+    } catch (error: any) {
+      console.error("Error fetching admin orders:", error);
+      toast.error(error.message || "Failed to load orders");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:3000/api/orders?page=${page}`,
-        );
-        setOrders(response.data.data);
-        setLastPage(response.data.meta.last_page);
-        console.log("Orders Meta:", response.data.meta);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      }
-    };
-
-    fetchUsers();
+    fetchOrders(page);
   }, [page]);
 
-  const next = () => {
-    if (page < lastPage) {
-      setPage(page + 1);
+  const handleExportCsv = async () => {
+    setIsExporting(true);
+    try {
+      const blob = await ordersApi.exportCsv();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `orders_export_${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      toast.success("Orders CSV exported successfully!");
+    } catch (err: any) {
+      console.error("Export CSV failed:", err);
+      toast.error(err.message || "Failed to export CSV");
+    } finally {
+      setIsExporting(false);
     }
   };
-
-  const previous = () => {
-    if (page > 1) {
-      setPage(page - 1);
-    }
-  };
-
-  const [selected, setSelected] = useState(0);
 
   const select = (id: number) => {
-    setSelected(selected !== id ? id : 0);
+    setSelected(selected !== id ? id : null);
   };
 
   return (
-    <div className="container mx-auto pb-10">
-      <div className="mx-4 overflow-x-auto shadow-md sm:rounded-lg">
-        <table className="w-full border-collapse text-center rounded-lg overflow-hidden">
-          <thead className="bg-muted">
+    <div className="container mx-auto pb-10 px-4">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 my-8">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">
+            Order Management
+          </h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            Review, inspect, and export all customer orders.
+          </p>
+        </div>
+        <Button
+          onClick={handleExportCsv}
+          disabled={isExporting}
+          variant="outline"
+          className="gap-2 shadow-sm"
+        >
+          <FileSpreadsheet className="w-4 h-4 text-emerald-600" />
+          {isExporting ? "Exporting..." : "Export CSV"}
+        </Button>
+      </div>
+
+      {/* Orders Table */}
+      <div className="overflow-x-auto shadow-sm rounded-xl border bg-card">
+        <table className="w-full border-collapse text-left text-sm">
+          <thead className="bg-muted/50 border-b text-xs font-semibold text-muted-foreground uppercase">
             <tr>
-              <th className="px-6 py-3 font-semibold">#</th>
-              <th className="px-6 py-3 font-semibold">Name</th>
-              <th className="px-6 py-3 font-semibold">Email</th>
-              <th className="px-6 py-3 font-semibold">Total</th>
-              <th className="px-6 py-3 font-semibold"></th>
+              <th className="px-6 py-4">#</th>
+              <th className="px-6 py-4">Customer</th>
+              <th className="px-6 py-4">Email</th>
+              <th className="px-6 py-4">Status</th>
+              <th className="px-6 py-4">Total</th>
+              <th className="px-6 py-4 text-right">Actions</th>
             </tr>
           </thead>
 
-          <tbody>
-            {orders.map((order: Order) => (
-              <React.Fragment key={order.ID}>
-                <tr className="border-t">
-                  <td className="px-6 py-4 font-medium">{order.ID}</td>
-                  <td className="px-6 py-4">{order.name}</td>
-                  <td className="px-6 py-4">{order.email}</td>
-                  <td className="px-6 py-4 font-bold">${order.total}</td>
-                  <td>
-                    <button
-                      onClick={() => select(order.ID)}
-                      className="w-12 h-8 cursor-pointer bg-gray-200 rounded hover:bg-gray-300 hover:scale-105 transition-all duration-150 text-black"
-                    >
-                      View
-                    </button>
+          <tbody className="divide-y divide-border">
+            {isLoading ? (
+              Array.from({ length: 5 }).map((_, i) => (
+                <tr key={i}>
+                  <td colSpan={6} className="px-6 py-4">
+                    <Skeleton className="h-6 w-full" />
                   </td>
                 </tr>
-                {selected === order.ID && (
-                  <tr className="dark:bg-gray-400 bg-gray-50">
-                    <td colSpan={5} className="p-0 border-b">
-                      <div className="overflow-hidden py-4 px-6 ml-8 mr-4 my-2 dark:bg-gray-950 bg-white rounded-lg border-l-4 border-blue-400 shadow-sm">
-                        <h4 className="text-xs font-bold text-gray-500 uppercase mb-3 tracking-wider">
-                          Order Items
-                        </h4>
-                        <table className="w-full text-left text-sm">
-                          <thead className="text-xs text-gray-500 dark:bg-gray-700/50 rounded-lg bg-gray-50/50 border-b">
-                            <tr>
-                              <th className="py-2 px-4 font-medium">#</th>
-                              <th className="py-2 px-4 font-medium">
-                                Product Title
-                              </th>
-                              <th className="py-2 px-4 font-medium">
-                                Quantity
-                              </th>
-                              <th className="py-2 px-4 font-medium">Price</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {order.order_items.map((e: OrderItem) => {
-                              return (
-                                <tr
-                                  key={e.ID}
-                                  className="border-b last:border-0 hover:bg-gray-50/50"
-                                >
-                                  <td className="py-2 px-4 text-gray-600">
-                                    {e.ID}
-                                  </td>
-                                  <td className="py-2 px-4 font-medium text-gray-800">
-                                    {e.product_title}
-                                  </td>
-                                  <td className="py-2 px-4 text-gray-600">
-                                    {e.quantity}
-                                  </td>
-                                  <td className="py-2 px-4 text-gray-600">
-                                    ${e.price}
-                                  </td>
-                                </tr>
-                              );
-                            })}
-                          </tbody>
-                        </table>
-                      </div>
-                    </td>
-                  </tr>
-                )}
-              </React.Fragment>
-            ))}
+              ))
+            ) : orders.length === 0 ? (
+              <tr>
+                <td colSpan={6} className="px-6 py-12 text-center text-muted-foreground">
+                  No orders found.
+                </td>
+              </tr>
+            ) : (
+              orders.map((order) => {
+                const orderId = order.id || order.ID;
+                const isSelected = selected === orderId;
+
+                return (
+                  <React.Fragment key={orderId}>
+                    <tr className="hover:bg-muted/20 transition-colors">
+                      <td className="px-6 py-4 font-mono font-medium">{orderId}</td>
+                      <td className="px-6 py-4 font-medium text-foreground">
+                        {order.name || `${order.first_name} ${order.last_name}`}
+                      </td>
+                      <td className="px-6 py-4 text-muted-foreground">{order.email}</td>
+                      <td className="px-6 py-4">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary capitalize">
+                          {order.status || "pending"}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 font-bold text-foreground">
+                        ${order.total.toFixed(2)}
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => select(orderId)}
+                          className="gap-1 text-xs"
+                        >
+                          {isSelected ? "Hide" : "Details"}
+                          {isSelected ? (
+                            <ChevronUp className="w-3.5 h-3.5" />
+                          ) : (
+                            <ChevronDown className="w-3.5 h-3.5" />
+                          )}
+                        </Button>
+                      </td>
+                    </tr>
+
+                    {isSelected && (
+                      <tr className="bg-muted/10">
+                        <td colSpan={6} className="p-4 border-b">
+                          <div className="py-4 px-6 rounded-xl bg-card border shadow-sm space-y-3">
+                            <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                              Order Items ({order.order_items?.length || 0})
+                            </h4>
+                            <div className="rounded-lg border overflow-hidden">
+                              <table className="w-full text-left text-sm">
+                                <thead className="text-xs bg-muted/40 border-b text-muted-foreground font-semibold">
+                                  <tr>
+                                    <th className="py-2.5 px-4">#</th>
+                                    <th className="py-2.5 px-4">Product Title</th>
+                                    <th className="py-2.5 px-4 text-center">Quantity</th>
+                                    <th className="py-2.5 px-4 text-right">Price</th>
+                                    <th className="py-2.5 px-4 text-right">Subtotal</th>
+                                  </tr>
+                                </thead>
+                                <tbody className="divide-y divide-border">
+                                  {(order.order_items || []).map((e, idx) => (
+                                    <tr key={e.id || e.ID || idx}>
+                                      <td className="py-2 px-4 text-muted-foreground font-mono">
+                                        {e.id || e.ID || idx + 1}
+                                      </td>
+                                      <td className="py-2 px-4 font-medium text-foreground">
+                                        {e.product_title}
+                                      </td>
+                                      <td className="py-2 px-4 text-center font-mono">
+                                        {e.quantity}
+                                      </td>
+                                      <td className="py-2 px-4 text-right text-muted-foreground">
+                                        ${e.price.toFixed(2)}
+                                      </td>
+                                      <td className="py-2 px-4 text-right font-semibold text-foreground">
+                                        ${(e.price * e.quantity).toFixed(2)}
+                                      </td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
+                );
+              })
+            )}
           </tbody>
         </table>
       </div>
-      <div className="flex justify-between items-center p-4 mx-4 mt-4">
-        <button
-          className="cursor-pointer hover:scale-105 h-7 dark:hover:bg-gray-600 rounded w-16 transition-all duration-200 text-xs dark:bg-gray-700 bg-gray-200"
-          onClick={previous}
+
+      {/* Pagination Controls */}
+      <div className="flex justify-between items-center px-4 mt-6">
+        <Button
+          variant="outline"
+          size="sm"
+          disabled={page <= 1}
+          onClick={() => setPage((p) => Math.max(1, p - 1))}
         >
           Previous
-        </button>
-        <button
-          className="cursor-pointer hover:scale-105 h-7 dark:hover:bg-gray-600 rounded w-10 transition-all duration-200 text-xs dark:bg-gray-700 bg-gray-200"
-          onClick={next}
+        </Button>
+        <span className="text-xs text-muted-foreground">
+          Page {page} of {lastPage} ({totalCount} total)
+        </span>
+        <Button
+          variant="outline"
+          size="sm"
+          disabled={page >= lastPage}
+          onClick={() => setPage((p) => Math.min(lastPage, p + 1))}
         >
           Next
-        </button>
+        </Button>
       </div>
     </div>
   );
-};
-
-export default Orders;
+}

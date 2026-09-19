@@ -4,12 +4,19 @@ import { revalidatePath } from "next/cache";
 import axios, { AxiosError } from "axios";
 import { Favorite } from "@/models/modles";
 import GetIdUser from "./GetIdUser";
+import getToken from "./getToken";
 
 export const getUserFavorites = async () => {
   try {
     const user = await GetIdUser();
+    const token = await getToken();
     const response = await axios.get<Favorite[]>(
       `http://localhost:8000/api/favorites/${user.ID}`,
+      {
+        headers: {
+          Cookie: `jwt=${token}`,
+        },
+      },
     );
     return { success: true, data: response.data };
   } catch (error) {
@@ -25,11 +32,17 @@ export const getUserFavorites = async () => {
 export async function addToFavorites(productId: number) {
   try {
     const user = await GetIdUser();
+    const token = await getToken();
     const response = await axios.post<Favorite>(
       "http://localhost:8000/api/favorites",
       {
         user_id: user.ID,
         product_id: productId,
+      },
+      {
+        headers: {
+          Cookie: `jwt=${token}`,
+        },
       },
     );
     revalidatePath("/favorites");
@@ -51,7 +64,11 @@ export async function addToFavorites(productId: number) {
 export async function removeFromFavorites(productId: number) {
   try {
     const user = await GetIdUser();
+    const token = await getToken();
     await axios.delete("http://localhost:8000/api/favorites", {
+      headers: {
+        Cookie: `jwt=${token}`,
+      },
       data: { user_id: user.ID, product_id: productId },
     });
     revalidatePath("/favorites");

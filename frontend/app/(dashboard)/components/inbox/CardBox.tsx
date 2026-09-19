@@ -15,38 +15,51 @@ import {
   X,
 } from "lucide-react";
 
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
 const sideBox = [
-  { title: "Inbox", url: "/inbox", icon: Mail },
+  { title: "All Tickets", url: "/inbox", icon: Mail },
   { title: "Starred", url: "/starred", icon: Star },
-  { title: "Sent", url: "/send", icon: Send },
-  { title: "Draft", url: "/draft", icon: Pencil },
-  { title: "Spam", url: "/spam", icon: AlertTriangle },
-  { title: "Important", url: "/important", icon: Badge },
-  { title: "Bin", url: "/bin", icon: Trash2 },
+  { title: "Urgent & High", url: "/important", icon: Badge },
+  { title: "Resolved / Closed", url: "/bin", icon: Trash2 },
 ];
 
 const CardBox = () => {
-  return (
-    <aside className="w-64">
-      <Card className="flex flex-col p-5 gap-4">
-        <Button className="w-full p-5">+ Compose</Button>
+  const pathname = usePathname();
 
-        <div className="flex flex-col gap-2">
-          <span className="text-sm font-semibold text-gray-500 px-2">
-            My Email
+  return (
+    <aside className="w-56 shrink-0 hidden md:block">
+      <Card className="flex flex-col p-4 gap-4 shadow-sm">
+        <Link href="/inbox">
+          <Button className="w-full font-medium" size="sm">
+            <Plus className="w-4 h-4 mr-1" /> New Ticket
+          </Button>
+        </Link>
+
+        <div className="flex flex-col gap-1.5">
+          <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground px-2">
+            Support Views
           </span>
 
           <nav className="flex flex-col gap-1">
-            {sideBox.map((item) => (
-              <a
-                href={item.url}
-                key={item.title}
-                className="flex items-center gap-3 px-2 py-2 rounded-md dark:hover:bg-gray-700 hover:bg-slate-100 cursor-pointer font-normal text-sm transition-colors"
-              >
-                <item.icon size={18} />
-                {item.title}
-              </a>
-            ))}
+            {sideBox.map((item) => {
+              const isActive = pathname === item.url;
+              return (
+                <Link
+                  href={item.url}
+                  key={item.title}
+                  className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium transition-colors ${
+                    isActive
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  }`}
+                >
+                  <item.icon size={16} />
+                  {item.title}
+                </Link>
+              );
+            })}
           </nav>
         </div>
 

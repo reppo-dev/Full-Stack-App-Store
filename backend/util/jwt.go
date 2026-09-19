@@ -1,29 +1,41 @@
 package util
 
 import (
+	"os"
 	"strconv"
 	"time"
 
 	"github.com/golang-jwt/jwt"
 )
 
+const fallbackSecret = "dev-insecure-secret-change-me"
 
-const SecretKey = "secret"
+func getJwtSecret() []byte {
+	secret := os.Getenv("JWT_SECRET")
+	if os.Getenv("APP_ENV") == "production" {
+		if secret == "" || secret == fallbackSecret {
+			panic("JWT_SECRET must be securely configured in production")
+		}
+	}
+	if secret == "" {
+		secret = fallbackSecret
+	}
+	return []byte(secret)
+}
 
 func GenerateJwt(userId uint) (string, error) {
 	claims := jwt.StandardClaims{
-
 		Issuer:    strconv.Itoa(int(userId)),
 		ExpiresAt: time.Now().Add(time.Hour * 24).Unix(),
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString([]byte(SecretKey))
+	return token.SignedString(getJwtSecret())
 }
 
 func ParseJwt(cookie string) (string, error) {
 	token, err := jwt.ParseWithClaims(cookie, &jwt.StandardClaims{}, func(t *jwt.Token) (interface{}, error) {
-		return []byte(SecretKey), nil
+		return getJwtSecret(), nil
 	})
 
 	if err != nil || !token.Valid {

@@ -9,12 +9,18 @@ import (
 )
 
 func AllProduct(c *fiber.Ctx) error {
+	if databases.DB == nil {
+		return c.JSON(fiber.Map{"data": []models.Product{}, "meta": fiber.Map{"page": 1, "last_page": 1, "total": 0}})
+	}
 	page, _ := strconv.Atoi(c.Query("page", "1"))
 
-	return c.JSON(models.Paginate(databases.DB,&models.Product{},page))
+	return c.JSON(models.Paginate(databases.DB, &models.Product{}, page))
 }
 
 func AllProducts(c *fiber.Ctx) error {
+	if databases.DB == nil {
+		return c.JSON([]models.Product{})
+	}
 	var products []models.Product
 
 	databases.DB.Find(&products)
@@ -32,12 +38,15 @@ func CreateProduct(c *fiber.Ctx) error {
 }
 
 func GetProduct(c *fiber.Ctx) error {
+	if databases.DB == nil {
+		return c.Status(404).JSON(fiber.Map{"message": "product not found"})
+	}
 
-	id,_ := strconv.Atoi(c.Params("id"))
+	id, _ := strconv.Atoi(c.Params("id"))
 
 	var product models.Product
 
-	databases.DB.First(&product,id)
+	databases.DB.First(&product, id)
 
 	return c.JSON(product)
 }
@@ -51,7 +60,6 @@ func UpdateProduct(c *fiber.Ctx) error {
 
 	var data models.UpdateProduct
 	c.BodyParser(&data)
-
 
 	var product models.Product
 	databases.DB.First(&product, id)
@@ -101,24 +109,22 @@ func UpdateProduct(c *fiber.Ctx) error {
 	}
 
 	if err := databases.DB.Model(&product).Updates(product).Error; err != nil {
-	return fiber.NewError(fiber.StatusInternalServerError, err.Error())
-}
+		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+	}
 
 	return c.JSON(product)
 }
 
-
-
 func DeleteProduct(c *fiber.Ctx) error {
-	id,_:=strconv.Atoi(c.Params("id"))
+	id, _ := strconv.Atoi(c.Params("id"))
 
 	var product models.Product
 
-	databases.DB.First(&product,id)
+	databases.DB.First(&product, id)
 
 	databases.DB.Unscoped().Delete(&product)
 
 	return c.JSON(fiber.Map{
-		"message":"success delete product",
+		"message": "success delete product",
 	})
 }

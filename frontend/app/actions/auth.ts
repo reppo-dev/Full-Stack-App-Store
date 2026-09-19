@@ -5,36 +5,59 @@ import axios from "axios";
 import { cookies } from "next/headers";
 import getToken from "./getToken";
 
-export async function registerAction(paylod: UserRegister) {
+const BASE_API_URL =
+  process.env.INTERNAL_API_URL ||
+  process.env.NEXT_PUBLIC_API_URL ||
+  "http://localhost:8000";
+
+export async function registerAction(payload: UserRegister) {
   try {
     if (
-      !paylod.user_name ||
-      !paylod.email ||
-      !paylod.password ||
-      !paylod.password_confirm
+      !payload.user_name ||
+      !payload.email ||
+      !payload.password ||
+      !payload.password_confirm
     ) {
       return {
         success: false,
         message:
-          "Missing required fields: email, name,password,confirm password and password are mandatory.",
+          "Missing required fields: email, username, password, and confirm password are mandatory.",
       };
     }
+
     const body: Record<string, unknown> = {
-      user_name: paylod.user_name,
-      email: paylod.email,
-      password: paylod.password,
-      password_confirm: paylod.password_confirm,
+      user_name: payload.user_name,
+      email: payload.email,
+      password: payload.password,
+      password_confirm: payload.password_confirm,
+      first_name: payload.first_name || "",
+      last_name: payload.last_name || "",
+      image: payload.image || "",
+      phone_number: payload.phone_number || "",
     };
-    console.log(body);
 
-    const response = await axios.post(
-      `http://localhost:8000/api/register`,
-      body,
-    );
+    // Try V1 endpoint first with fallback to legacy endpoint
+    let response;
+    try {
+      response = await axios.post(`${BASE_API_URL}/api/v1/auth/register`, body, {
+        headers: { "Content-Type": "application/json" },
+      });
+    } catch (err) {
+      if (axios.isAxiosError(err) && err.response && err.response.status < 500) {
+        const errorMsg =
+          err.response.data?.error?.message ||
+          err.response.data?.message ||
+          "Registration failed";
+        return { success: false, message: errorMsg };
+      }
+      // Fallback to legacy
+      response = await axios.post(`${BASE_API_URL}/api/register`, body);
+    }
 
-    console.log(response);
+    let token =
+      response.data?.data?.token ||
+      response.data?.token;
 
-    let token = response.data?.token;
     if (!token) {
       const setCookie = response.headers["set-cookie"];
       if (setCookie && Array.isArray(setCookie)) {
@@ -46,24 +69,30 @@ export async function registerAction(paylod: UserRegister) {
     }
 
     if (!token) {
-      return { success: false, message: "No token received from server." };
+      return { success: false, message: "No authentication token received from server." };
     }
 
-    // 3. تنظیم کوکی در مرورگر (از طریق پاسخ Server Action)
     const cookieStore = await cookies();
     cookieStore.set("jwt", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
-      maxAge: 60 * 60 * 24, // 1 روز
+      maxAge: 60 * 60 * 24, // 1 day
     });
 
-    return { success: true, message: "Login successful." };
-  } catch {
+    return { success: true, message: "Registration successful." };
+  } catch (err: unknown) {
+    if (axios.isAxiosError(err) && err.response) {
+      const msg =
+        err.response.data?.error?.message ||
+        err.response.data?.message ||
+        "Registration failed.";
+      return { success: false, message: msg };
+    }
     return {
       success: false,
-      message: "An unexpected error occurred. Please try again.",
+      message: "An unexpected error occurred during registration. Please try again.",
     };
   }
 }
@@ -73,17 +102,35 @@ export const loginAction = async (payload: UserLogin) => {
     if (!payload.password || !payload.email) {
       return {
         success: false,
-        message: "Missing required fields: email, and password are mandatory.",
+        message: "Missing required fields: email and password are mandatory.",
       };
     }
+
     const body: Record<string, unknown> = {
       email: payload.email,
       password: payload.password,
     };
 
-    const response = await axios.post(`http://localhost:8000/api/login`, body);
+    let response;
+    try {
+      response = await axios.post(`${BASE_API_URL}/api/v1/auth/login`, body, {
+        headers: { "Content-Type": "application/json" },
+      });
+    } catch (err) {
+      if (axios.isAxiosError(err) && err.response && err.response.status < 500) {
+        const errorMsg =
+          err.response.data?.error?.message ||
+          err.response.data?.message ||
+          "Invalid email or password";
+        return { success: false, message: errorMsg };
+      }
+      response = await axios.post(`${BASE_API_URL}/api/login`, body);
+    }
 
-    let token = response.data?.token;
+    let token =
+      response.data?.data?.token ||
+      response.data?.token;
+
     if (!token) {
       const setCookie = response.headers["set-cookie"];
       if (setCookie && Array.isArray(setCookie)) {
@@ -95,24 +142,30 @@ export const loginAction = async (payload: UserLogin) => {
     }
 
     if (!token) {
-      return { success: false, message: "No token received from server." };
+      return { success: false, message: "No authentication token received from server." };
     }
 
-    // 3. تنظیم کوکی در مرورگر (از طریق پاسخ Server Action)
     const cookieStore = await cookies();
     cookieStore.set("jwt", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
-      maxAge: 60 * 60 * 24, // 1 روز
+      maxAge: 60 * 60 * 24, // 1 day
     });
 
     return { success: true, message: "Login successful." };
-  } catch {
+  } catch (err: unknown) {
+    if (axios.isAxiosError(err) && err.response) {
+      const msg =
+        err.response.data?.error?.message ||
+        err.response.data?.message ||
+        "Invalid email or password.";
+      return { success: false, message: msg };
+    }
     return {
       success: false,
-      message: "An unexpected error occurred. Please try again.",
+      message: "An unexpected error occurred during login. Please try again.",
     };
   }
 };
@@ -128,17 +181,32 @@ export const getuserAction = async () => {
       };
     }
 
-    const response = await axios.get(`http://localhost:8000/api/user`, {
-      headers: { Cookie: `jwt=${token}` },
-    });
+    let response;
+    try {
+      response = await axios.get(`${BASE_API_URL}/api/v1/auth/me`, {
+        headers: {
+          Cookie: `jwt=${token}`,
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    } catch {
+      response = await axios.get(`${BASE_API_URL}/api/user`, {
+        headers: {
+          Cookie: `jwt=${token}`,
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    }
+
+    const userData = response.data?.data || response.data;
     return {
       success: true,
-      user: response.data,
+      user: userData,
     };
   } catch {
     return {
       success: false,
-      message: "An unexpected error occurred",
+      message: "An unexpected error occurred retrieving user profile",
     };
   }
 };

@@ -21,14 +21,13 @@ func CategoryTree(c *fiber.Ctx) error {
 	var categories []models.Category
 
 	databases.DB.
-	Preload("Children.Children").
-	Preload("Children.Children.Children").
-	Where("parent_id IS NULL").
-	Find(&categories)
+		Preload("Children.Children").
+		Preload("Children.Children.Children").
+		Where("parent_id IS NULL").
+		Find(&categories)
 
 	return c.JSON(categories)
 }
-
 
 func CreateCategory(c *fiber.Ctx) error {
 	var categoryData models.CreateCategory
@@ -40,8 +39,8 @@ func CreateCategory(c *fiber.Ctx) error {
 	}
 
 	category := models.Category{
-		Slug: categoryData.Slug,
-		Name: categoryData.Name,
+		Slug:     categoryData.Slug,
+		Name:     categoryData.Name,
 		ParentID: categoryData.ParentID,
 	}
 
@@ -56,7 +55,7 @@ func CreateCategory(c *fiber.Ctx) error {
 
 func UpdateCategory(c *fiber.Ctx) error {
 
-	id,_ := strconv.Atoi(c.Params("id"))
+	id, _ := strconv.Atoi(c.Params("id"))
 
 	var upcategory models.CreateCategory
 
@@ -64,7 +63,7 @@ func UpdateCategory(c *fiber.Ctx) error {
 
 	var category models.Category
 
-	databases.DB.First(&category,id)
+	databases.DB.First(&category, id)
 
 	category.Name = upcategory.Name
 	category.Slug = upcategory.Slug
@@ -77,13 +76,13 @@ func UpdateCategory(c *fiber.Ctx) error {
 }
 
 func DeleteCategory(c *fiber.Ctx) error {
-	id,_:=strconv.Atoi(c.Params("id"))
+	id, _ := strconv.Atoi(c.Params("id"))
 
 	var category models.Category
 
-	databases.DB.Delete(&category,id)
+	databases.DB.Delete(&category, id)
 
 	return c.JSON(fiber.Map{
-		"message":"success delete",
+		"message": "success delete",
 	})
 }

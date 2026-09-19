@@ -1,14 +1,8 @@
 import type { Metadata } from "next";
-// import { Inter } from "next/font/google";
 import "./globals.css";
-import { SidebarProvider } from "@/components/ui/sidebar";
-import AppSidebar from "@/components/appSidebar";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "sonner";
-
-// const inter = Inter({
-//   subsets: ["latin"],
-// });
+import { AppProviders } from "@/components/providers/AppProviders";
 
 export const metadata: Metadata = {
   title: "Full stack app",
@@ -22,19 +16,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={` antialiased`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <SidebarProvider defaultOpen={false}>
-            <AppSidebar />
-            <main className="flex-1">{children}</main>
+      <body className="antialiased">
+        <AppProviders>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
             <Toaster />
-          </SidebarProvider>
-        </ThemeProvider>
+          </ThemeProvider>
+        </AppProviders>
       </body>
     </html>
   );

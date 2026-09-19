@@ -13,15 +13,15 @@ func Upload(c *fiber.Ctx) error {
 
 	filename := ""
 
-	for _,file := range files {
+	for _, file := range files {
 		filename = file.Filename
 
-		if err:= c.SaveFile(file,"./uploads/"+filename); err != nil {
+		if err := c.SaveFile(file, "./uploads/"+filename); err != nil {
 			return err
 		}
 	}
-	
+
 	return c.JSON(fiber.Map{
-		"url":"http://localhost:5173/uploads"+ filename,
+		"url": "http://localhost:5173/uploads" + filename,
 	})
 }

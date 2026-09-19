@@ -19,11 +19,17 @@ import Image from "next/image";
 import Link from "next/link";
 
 const CardProducts = ({ props }: { props: Product }) => {
+  const images =
+    Array.isArray(props.images) && props.images.length > 0
+      ? props.images
+      : ["/placeholder-product.png"];
+  const prodId = props.id || props.ID;
+
   return (
     <Card>
       <Carousel className="w-full max-w-7xl mx-auto">
         <CarouselContent>
-          {props.images.map((img, index) => (
+          {images.map((img, index) => (
             <CarouselItem key={index}>
               <Image
                 src={img}
@@ -53,7 +59,7 @@ const CardProducts = ({ props }: { props: Product }) => {
           {props.rating}
         </div>
         <Button className="mt-2" asChild>
-          <Link href={`/products/${props.ID}`} className="mt-2">
+          <Link href={`/products/${prodId}`} className="mt-2">
             see more
           </Link>
         </Button>

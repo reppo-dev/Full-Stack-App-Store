@@ -14,43 +14,42 @@ import (
 )
 
 func AllOrder(c *fiber.Ctx) error {
-	page,_ := strconv.Atoi(c.Query("page","1"))
+	page, _ := strconv.Atoi(c.Query("page", "1"))
 
 	query := databases.DB.Preload("OrderItem")
 
-	return c.JSON(models.Paginate(query,&models.Order{},page))
+	return c.JSON(models.Paginate(query, &models.Order{}, page))
 }
 
-
 func GetUserOrders(c *fiber.Ctx) error {
-    cookie := c.Cookies("jwt")
-    userID, err := util.ParseJwt(cookie)
-    if err != nil {
-        return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-            "error": "Invalid or missing token",
-        })
-    }
-
-    ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-    defer cancel()
-
-	var user models.User
-
-	if err := databases.DB.WithContext(ctx).First(&user,userID).Error; err != nil{
-		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
-			"error":"User not found",
+	cookie := c.Cookies("jwt")
+	userID, err := util.ParseJwt(cookie)
+	if err != nil {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error": "Invalid or missing token",
 		})
 	}
 
-    var orders []models.Order
-    if err := databases.DB.WithContext(ctx).
-        Preload("OrderItem").Where("email = ?", user.Email).Find(&orders).Error; err != nil {
-        return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-            "error": "Failed to get orders",
-        })
-    }
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
 
-    return c.JSON(orders)
+	var user models.User
+
+	if err := databases.DB.WithContext(ctx).First(&user, userID).Error; err != nil {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"error": "User not found",
+		})
+	}
+
+	var orders []models.Order
+	if err := databases.DB.WithContext(ctx).
+		Preload("OrderItem").Where("email = ?", user.Email).Find(&orders).Error; err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Failed to get orders",
+		})
+	}
+
+	return c.JSON(orders)
 }
 
 func Export(c *fiber.Ctx) error {
@@ -63,7 +62,7 @@ func Export(c *fiber.Ctx) error {
 	return c.Download(filePath)
 }
 func CreateFile(filePath string) error {
-	file , err := os.Create(filePath)
+	file, err := os.Create(filePath)
 
 	if err != nil {
 		return err
@@ -76,7 +75,7 @@ func CreateFile(filePath string) error {
 	defer writer.Flush()
 
 	writer.Write([]string{
-		"ID","Name","Email","Product Title","Price","Quantity",
+		"ID", "Name", "Email", "Product Title", "Price", "Quantity",
 	})
 
 	var orders []models.Order
@@ -85,7 +84,7 @@ func CreateFile(filePath string) error {
 
 	for _, order := range orders {
 		data := []string{
-			strconv.Itoa(int(order.ID)),order.FirstName+ " "+order.LastName , order.Email,"","","",
+			strconv.Itoa(int(order.ID)), order.FirstName + " " + order.LastName, order.Email, "", "", "",
 		}
 		err := writer.Write(data)
 		if err != nil {
@@ -93,11 +92,11 @@ func CreateFile(filePath string) error {
 		}
 
 		for _, orderItem := range order.OrderItem {
-			data:= []string{
-				"","","",orderItem.ProductTitle,strconv.Itoa(int(orderItem.Price)),strconv.Itoa(int(orderItem.Quantity)),
+			data := []string{
+				"", "", "", orderItem.ProductTitle, strconv.Itoa(int(orderItem.Price)), strconv.Itoa(int(orderItem.Quantity)),
 			}
 
-			if err:= writer.Write(data); err != nil {
+			if err := writer.Write(data); err != nil {
 				return nil
 			}
 		}
@@ -107,7 +106,7 @@ func CreateFile(filePath string) error {
 }
 
 type Sales struct {
-	Date string `json:"date"`
+	Date string  `json:"date"`
 	Sum  float64 `json:"sum"`
 }
 

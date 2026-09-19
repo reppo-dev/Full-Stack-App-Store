@@ -6,10 +6,14 @@ import {
 } from "@/components/ui/sidebar";
 import HeaderDashboard from "./components/HeaderDashboard";
 import SidebarDash from "./components/SidebarDash";
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import axios from "axios";
 import getToken from "../actions/getToken";
+
+const BASE_API_URL =
+  process.env.INTERNAL_API_URL ||
+  process.env.NEXT_PUBLIC_API_URL ||
+  "http://localhost:8000";
 
 export default async function RootLayout({
   children,
@@ -17,7 +21,6 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const token = await getToken();
-  console.log(token);
 
   if (!token) {
     redirect("/login");
@@ -26,20 +29,36 @@ export default async function RootLayout({
   let userData = null;
 
   try {
-    const res = await axios.get(`http://localhost:3000/api/user`, {
-      headers: { Cookie: `jwt=${token}` },
-    });
-    userData = res.data;
+    let res;
+    try {
+      res = await axios.get(`${BASE_API_URL}/api/v1/auth/me`, {
+        headers: {
+          Cookie: `jwt=${token}`,
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    } catch {
+      res = await axios.get(`${BASE_API_URL}/api/user`, {
+        headers: {
+          Cookie: `jwt=${token}`,
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    }
+    userData = res.data?.data || res.data;
   } catch (error) {
-    console.error("Failed to fetch user:", error);
+    console.error("Failed to fetch user in dashboard guard:", error);
     redirect("/login");
   }
 
-  const isAdmin = userData?.role_id === 2;
+  const roleName =
+    userData?.role?.name || userData?.role_name || (typeof userData?.role === "string" ? userData.role : "");
+  const isAdmin = roleName === "admin" || userData?.role_id === 2;
 
   if (!isAdmin) {
     redirect("/");
   }
+
   return (
     <SidebarProvider>
       <Sidebar className="resize-none" collapsible="icon">

@@ -1,0 +1,15 @@
+# Backend Docker Ignore
+.git
+.gitignore
+.dockerignore
+tmp/
+uploads/*
+!uploads/.gitkeep
+.env*
+!.env.example
+*.exe
+*.test
+*.out
+*.log
+.vscode/
+.idea/

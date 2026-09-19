@@ -2,16 +2,50 @@
 
 import { UpdateUser } from "@/models/modles";
 import axios from "axios";
+import getToken from "./getToken";
+
+const BASE_API_URL =
+  process.env.INTERNAL_API_URL ||
+  process.env.NEXT_PUBLIC_API_URL ||
+  "http://localhost:8000";
 
 export async function allUser(page: number) {
   try {
-    const response = await axios.get(
-      `http://localhost:8000/api/users?page=${page}`,
-    );
+    const token = await getToken();
+    let response;
+    try {
+      response = await axios.get(
+        `${BASE_API_URL}/api/v1/users/?page=${page}`,
+        {
+          headers: {
+            Cookie: `jwt=${token}`,
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    } catch {
+      response = await axios.get(
+        `${BASE_API_URL}/api/users?page=${page}`,
+        {
+          headers: {
+            Cookie: `jwt=${token}`,
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    }
+
+    const payload = response.data?.data || response.data;
+    if (payload.data && payload.last_page !== undefined) {
+      return {
+        users: payload.data,
+        last_page: payload.last_page,
+      };
+    }
 
     return {
       users: response.data.data,
-      last_page: response.data.meta.last_page,
+      last_page: response.data.meta?.last_page || 1,
     };
   } catch {
     return {
@@ -23,11 +57,28 @@ export async function allUser(page: number) {
 
 export async function allusers() {
   try {
-    const response = await axios.get(`http://localhost:8000/api/user`);
+    const token = await getToken();
+    let response;
+    try {
+      response = await axios.get(`${BASE_API_URL}/api/v1/users/all`, {
+        headers: {
+          Cookie: `jwt=${token}`,
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    } catch {
+      response = await axios.get(`${BASE_API_URL}/api/user`, {
+        headers: {
+          Cookie: `jwt=${token}`,
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    }
 
+    const users = response.data?.data || response.data;
     return {
       success: true,
-      users: response.data,
+      users,
     };
   } catch {
     return {
@@ -39,11 +90,28 @@ export async function allusers() {
 
 export async function getuser(id: number) {
   try {
-    const result = await axios.get(`http://localhost:8000/api/users/${id}`);
+    const token = await getToken();
+    let result;
+    try {
+      result = await axios.get(`${BASE_API_URL}/api/v1/users/${id}`, {
+        headers: {
+          Cookie: `jwt=${token}`,
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    } catch {
+      result = await axios.get(`${BASE_API_URL}/api/users/${id}`, {
+        headers: {
+          Cookie: `jwt=${token}`,
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    }
 
+    const user = result.data?.data || result.data;
     return {
       success: true,
-      user: result.data,
+      user,
     };
   } catch {
     return {
@@ -53,23 +121,45 @@ export async function getuser(id: number) {
   }
 }
 
-export async function updatingUser(id: number, paylod: UpdateUser) {
+export async function updatingUser(id: number, payload: UpdateUser) {
   try {
-    if (!paylod.email || !paylod.user_name || !paylod.role_id) {
+    if (!payload.email || !payload.user_name || !payload.role_id) {
       return {
         success: false,
-        message: "paylod value unfind!!",
+        message: "payload values are incomplete",
       };
     }
 
-    const result = await axios.put(
-      `http://localhost:8000/api/users/${id}`,
-      paylod,
-    );
+    const token = await getToken();
+    let result;
+    try {
+      result = await axios.put(
+        `${BASE_API_URL}/api/v1/users/${id}`,
+        payload,
+        {
+          headers: {
+            Cookie: `jwt=${token}`,
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    } catch {
+      result = await axios.put(
+        `${BASE_API_URL}/api/users/${id}`,
+        payload,
+        {
+          headers: {
+            Cookie: `jwt=${token}`,
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    }
 
+    const updated = result.data?.data || result.data;
     return {
       success: true,
-      update: result.data,
+      update: updated,
     };
   } catch {
     return {
@@ -81,18 +171,38 @@ export async function updatingUser(id: number, paylod: UpdateUser) {
 
 export async function deleteUser(id: number) {
   try {
-    const response = await axios.delete(
-      `http://localhost:8000/api/users/${id}`,
-    );
+    const token = await getToken();
+    let response;
+    try {
+      response = await axios.delete(
+        `${BASE_API_URL}/api/v1/users/${id}`,
+        {
+          headers: {
+            Cookie: `jwt=${token}`,
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    } catch {
+      response = await axios.delete(
+        `${BASE_API_URL}/api/users/${id}`,
+        {
+          headers: {
+            Cookie: `jwt=${token}`,
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    }
 
     return {
       success: true,
-      deletedUser: response.data,
+      deletedUser: response.data?.data || response.data,
     };
   } catch {
     return {
       success: false,
-      message: "failed to delet user",
+      message: "failed to delete user",
     };
   }
 }

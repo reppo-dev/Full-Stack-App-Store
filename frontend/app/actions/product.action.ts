@@ -1,31 +1,30 @@
 import { Product, UpdateProdut } from "@/models/modles";
-import axios from "axios";
+import { productsApi } from "@/lib/api/products";
 
 export async function getPermitionProducts(page: number) {
   try {
-    const result = await axios.get(
-      `http://localhost:8000/api/products?page=${page}`,
-    );
-
+    const res = await productsApi.list({ page, limit: 15 });
     return {
-      product: result.data,
+      product: {
+        data: res.data,
+        meta: res.meta,
+      },
       success: true,
     };
   } catch {
-    return { success: false, message: "we can`t get your product in server" };
+    return { success: false, message: "we can't get your product in server" };
   }
 }
 
 export async function getProducts() {
   try {
-    const result = await axios.get(`http://localhost:8000/api/productss`);
-
+    const products = await productsApi.listAll();
     return {
-      product: result.data,
+      product: products,
       success: true,
     };
   } catch {
-    return { success: false, message: "we can`t get your product in server" };
+    return { success: false, message: "we can't get your product in server" };
   }
 }
 
@@ -42,14 +41,10 @@ export async function createProduct(payload: Product) {
         message: "required",
       };
     }
-    const result = await axios.post(
-      `http://localhost:8000/api/products`,
-      payload,
-    );
-
+    const created = await productsApi.create(payload);
     return {
       success: true,
-      data: result.data,
+      data: created,
     };
   } catch {
     return {
@@ -72,14 +67,10 @@ export async function updateProduct(id: number, payload: UpdateProdut) {
         message: "required",
       };
     }
-    const result = await axios.put(
-      `http://localhost:8000/api/products/${id}`,
-      payload,
-    );
-
+    const updated = await productsApi.update(id, payload);
     return {
       success: true,
-      data: result.data,
+      data: updated,
     };
   } catch {
     return {
@@ -91,10 +82,9 @@ export async function updateProduct(id: number, payload: UpdateProdut) {
 
 export async function getDetailsProduct(id: number) {
   try {
-    const result = await axios.get(`http://localhost:8000/api/products/${id}`);
-
+    const product = await productsApi.getById(id);
     return {
-      data: result.data,
+      data: product,
       success: true,
     };
   } catch {
@@ -107,12 +97,8 @@ export async function getDetailsProduct(id: number) {
 
 export async function deleteProduct(id: number) {
   try {
-    const result = await axios.delete(
-      `http://localhost:8000/api/products/${id}`,
-    );
-
+    await productsApi.delete(id);
     return {
-      date: result.data,
       success: true,
     };
   } catch {

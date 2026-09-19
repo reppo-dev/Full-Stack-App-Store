@@ -3,6 +3,10 @@ export interface UserRegister {
   email: string;
   password: string;
   password_confirm: string;
+  first_name?: string;
+  last_name?: string;
+  image?: string;
+  phone_number?: string;
 }
 
 export interface UserLogin {
@@ -22,6 +26,8 @@ export interface Category {
   parent_id?: number;
   parent?: Category;
   children?: Category[];
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface Tag {
@@ -32,21 +38,29 @@ export interface Tag {
 
 export interface Product {
   ID: number;
+  id?: number;
   title: string;
   slug: string;
   description: string;
+  Description?: string;
   price: number;
   stock: number;
+  Stock?: number;
   rating: number;
   images: string[];
-  colors: string[];
-  attributes: Record<string, string>;
-  category_id: number;
-  category: Category;
-  tags: Tag[];
-  sku: string;
-  is_active: boolean;
-  created_at: string;
+  colors?: string[];
+  attributes?: Record<string, string>;
+  category_id?: number;
+  categoryId?: number;
+  CategoryID?: number;
+  category_name?: string;
+  category?: Category;
+  tags?: Tag[];
+  sku?: string;
+  SKU?: string;
+  is_active?: boolean;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface UpdateProdut {

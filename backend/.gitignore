@@ -1,0 +1,16 @@
+# Backend Git Ignore
+
+# Local Environment Files
+.env
+.env.*
+!.env.example
+
+# Temporary and Build Artifacts
+/tmp/
+*.exe
+*.test
+*.out
+
+# Uploads directory (retain structure, ignore uploaded files)
+/uploads/*
+!/uploads/.gitkeep

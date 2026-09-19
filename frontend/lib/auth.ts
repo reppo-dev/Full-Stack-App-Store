@@ -1,10 +1,6 @@
-import { PrismaClient } from "@/app/generated/prisma/client";
-import { betterAuth } from "better-auth";
-import { prismaAdapter } from "better-auth/adapters/prisma";
+// Better-Auth placeholder (deferred - backend authentication is handled via Go Fiber JWT)
+// import { PrismaClient } from "@/app/generated/prisma/client";
+// import { betterAuth } from "better-auth";
+// import { prismaAdapter } from "better-auth/adapters/prisma";
 
-const prisma = new PrismaClient();
-export const auth = betterAuth({
-  database: prismaAdapter(prisma, {
-    provider: "sqlite", // or "mysql", "postgresql", ...etc
-  }),
-});
+export const auth = null;

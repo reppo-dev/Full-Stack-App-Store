@@ -9,6 +9,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
+import { toast } from "sonner";
 
 const createUserSchama = z.object({
   image: z.string(),
@@ -29,20 +30,22 @@ const Contact = () => {
     handleSubmit,
     formState: { errors },
     setError,
+    reset,
   } = useForm<SchamaCreate>({ resolver: zodResolver(createUserSchama) });
 
   async function onSubmit(data: SchamaCreate) {
     setLoading(true);
 
     try {
-      const res = await axios.post("/api/users", data, {
+      await axios.post("/api/users", data, {
         withCredentials: true,
       });
-
-      console.log(res);
+      toast.success("User created successfully");
+      reset();
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         const message =
+          error.response.data?.error?.message ||
           error.response.data?.message ||
           error.response.data?.error ||
           "Create user failed";
