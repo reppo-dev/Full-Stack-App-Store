@@ -18,9 +18,21 @@ export interface PaginatedProductsResponse {
   };
 }
 
-export function normalizeProduct(raw: any): Product {
-  if (!raw) return raw;
-  const id = raw.id ?? raw.ID ?? 0;
+export interface RawProduct {
+  id?: number | string;
+  ID?: number | string;
+  images?: string | string[];
+  colors?: string[];
+  price?: number | string;
+  rating?: number | string;
+  stock?: number | string;
+  is_active?: boolean;
+  [key: string]: unknown;
+}
+
+export function normalizeProduct(raw: RawProduct | null | undefined): Product {
+  if (!raw) return raw as unknown as Product;
+  const id = Number(raw.id ?? raw.ID ?? 0);
   return {
     ...raw,
     id,
@@ -34,17 +46,17 @@ export function normalizeProduct(raw: any): Product {
     price:
       typeof raw.price === "number"
         ? raw.price
-        : parseFloat(raw.price || "0") || 0,
+        : parseFloat(String(raw.price) || "0") || 0,
     rating:
       typeof raw.rating === "number"
         ? raw.rating
-        : parseFloat(raw.rating || "0") || 0,
+        : parseFloat(String(raw.rating) || "0") || 0,
     stock:
       typeof raw.stock === "number"
         ? raw.stock
-        : parseInt(raw.stock || "0", 10) || 0,
+        : parseInt(String(raw.stock) || "0", 10) || 0,
     is_active: raw.is_active ?? true,
-  };
+  } as Product;
 }
 
 export const productsApi = {

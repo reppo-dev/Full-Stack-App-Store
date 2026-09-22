@@ -71,7 +71,7 @@ export async function registerAction(payload: UserRegister) {
   } catch (err: unknown) {
     if (axios.isAxiosError(err) && err.response) {
       const msg =
-        err.response.data?.error?.message ||
+        err.response.data?.(err as Error)?.message ||
         err.response.data?.message ||
         "Registration failed.";
       return { success: false, message: msg };
@@ -132,7 +132,7 @@ export const loginAction = async (payload: UserLogin) => {
   } catch (err: unknown) {
     if (axios.isAxiosError(err) && err.response) {
       const msg =
-        err.response.data?.error?.message ||
+        err.response.data?.(err as Error)?.message ||
         err.response.data?.message ||
         "Invalid email or password.";
       return { success: false, message: msg };

@@ -43,7 +43,7 @@ const CreateUserPage = () => {
       reset();
     } catch (error) {
       if (error instanceof ApiError) {
-        setError("root", { message: error.message });
+        setError("root", { message: (error as Error)?.message });
       } else {
         setError("root", { message: "Connection error" });
       }

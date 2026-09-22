@@ -9,7 +9,7 @@ import {
   XAxis,
   YAxis,
   CartesianGrid,
-  Tooltip,
+  Tooltip, TooltipProps,
   ResponsiveContainer,
 } from "recharts";
 import { Layers } from "lucide-react";
@@ -25,7 +25,7 @@ export default function TopCategoriesBarChart({ data }: TopCategoriesBarChartPro
     setIsMounted(true);
   }, []);
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>) => {
     if (active && payload && payload.length) {
       const p = payload[0].payload as TopCategory;
       return (

@@ -43,10 +43,10 @@ export default function MyOrdersPage() {
       if (res.data.length > 0 && targetPage === 1) {
         setExpandedOrders(new Set([res.data[0].id || res.data[0].ID]));
       }
-    } catch (err: any) {
+    } catch (err) {
       console.error("Failed to fetch customer orders:", err);
       setError(
-        err.message || "Unable to retrieve your orders. Please try again."
+        (err as Error)?.message || "Unable to retrieve your orders. Please try again."
       );
     } finally {
       setIsLoading(false);

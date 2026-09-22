@@ -143,8 +143,8 @@ export default function BoxMessage({ folder = "inbox" }: BoxMessageProps) {
 
       await fetchTickets();
       setSelectedTicketId(created.id);
-    } catch (err: any) {
-      alert(err?.message || "Failed to create support ticket");
+    } catch (err) {
+      alert((err as Error)?.message || "Failed to create support ticket");
     } finally {
       setIsCreatingTicket(false);
     }

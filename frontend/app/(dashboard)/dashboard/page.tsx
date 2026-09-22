@@ -29,9 +29,9 @@ export default function DashboardPage() {
     try {
       const data = await dashboardApi.getMetrics(timeframe);
       setMetrics(data);
-    } catch (err: any) {
+    } catch (err) {
       setError(
-        err?.message ||
+        (err as Error)?.message ||
           "Failed to load dashboard metrics. Ensure you are signed in with administrative privileges."
       );
     } finally {

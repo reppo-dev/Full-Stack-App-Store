@@ -103,7 +103,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
               <FormField
                 control={form.control}
                 name="user_name"
-                render={({ field }: any) => (
+                render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-base font-semibold text-primary">
                       User Name
@@ -123,7 +123,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
               <FormField
                 control={form.control}
                 name="password"
-                render={({ field }: any) => (
+                render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-base font-semibold text-primary">
                       Password
@@ -139,7 +139,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
               <FormField
                 control={form.control}
                 name="password_confirm"
-                render={({ field }: any) => (
+                render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-base font-semibold text-primary">
                       Password Confirm

@@ -80,8 +80,8 @@ export default function TicketConversationThread({
     try {
       const data = await ticketsApi.getTicketById(ticketId);
       setTicket(data);
-    } catch (err: any) {
-      setError(err?.message || "Failed to load ticket details");
+    } catch (err) {
+      setError((err as Error)?.message || "Failed to load ticket details");
     } finally {
       setIsLoading(false);
     }
@@ -111,8 +111,8 @@ export default function TicketConversationThread({
       setIsInternal(false);
       await loadTicket();
       onTicketUpdated?.();
-    } catch (err: any) {
-      alert(err?.message || "Failed to send reply");
+    } catch (err) {
+      alert((err as Error)?.message || "Failed to send reply");
     } finally {
       setIsSubmitting(false);
     }
@@ -125,8 +125,8 @@ export default function TicketConversationThread({
       const updated = await ticketsApi.updateStatus(ticket.id, newStatus);
       setTicket((prev) => (prev ? { ...prev, status: updated.status } : updated));
       onTicketUpdated?.();
-    } catch (err: any) {
-      alert(err?.message || "Failed to update ticket status");
+    } catch (err) {
+      alert((err as Error)?.message || "Failed to update ticket status");
     } finally {
       setIsUpdatingStatus(false);
     }

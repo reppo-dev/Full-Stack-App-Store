@@ -9,7 +9,7 @@ import {
   XAxis,
   YAxis,
   CartesianGrid,
-  Tooltip,
+  Tooltip, TooltipProps,
   ResponsiveContainer,
 } from "recharts";
 import { TrendingUp, Calendar } from "lucide-react";
@@ -36,7 +36,7 @@ export default function RevenueAnalyticsChart({ data }: RevenueAnalyticsChartPro
     }).format(val);
   };
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>) => {
     if (active && payload && payload.length) {
       const p = payload[0].payload as DailyRevenue;
       return (

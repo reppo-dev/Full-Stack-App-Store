@@ -32,10 +32,10 @@ export default function FavoritesPage() {
     try {
       const data = await favoritesApi.list();
       setFavorites(data);
-    } catch (err: any) {
+    } catch (err) {
       console.error("Failed to load favorites:", err);
       setError(
-        err.message || "Failed to load your wishlist. Please try again."
+        (err as Error)?.message || "Failed to load your wishlist. Please try again."
       );
     } finally {
       setIsLoading(false);
@@ -55,9 +55,9 @@ export default function FavoritesPage() {
         )
       );
       toast.success(`Removed "${title}" from wishlist`);
-    } catch (err: any) {
+    } catch (err) {
       console.error("Remove failed:", err);
-      toast.error(err.message || "Failed to remove item");
+      toast.error((err as Error)?.message || "Failed to remove item");
     }
   };
 

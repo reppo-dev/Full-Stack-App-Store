@@ -127,9 +127,9 @@ export default function CartDrawer() {
       dispatch(clearCart());
       dispatch(closeCart());
       router.push("/orderlist");
-    } catch (err: any) {
+    } catch (err) {
       console.error("Checkout failed:", err);
-      toast.error(err.message || "Failed to process checkout. Please try again.");
+      toast.error((err as Error)?.message || "Failed to process checkout. Please try again.");
     } finally {
       setIsSubmitting(false);
     }

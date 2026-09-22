@@ -75,7 +75,7 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
               <FormField
                 control={form.control}
                 name="email"
-                render={({ field }: any) => (
+                render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-base font-semibold text-primary">
                       email

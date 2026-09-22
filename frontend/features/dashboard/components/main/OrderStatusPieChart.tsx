@@ -7,7 +7,7 @@ import {
   PieChart,
   Pie,
   Cell,
-  Tooltip,
+  Tooltip, TooltipProps,
   ResponsiveContainer,
   Legend,
 } from "recharts";
@@ -45,7 +45,7 @@ export default function OrderStatusPieChart({ data }: OrderStatusPieChartProps) 
     color: STATUS_COLORS[item.status.toLowerCase()] || DEFAULT_COLOR,
   }));
 
-  const CustomTooltip = ({ active, payload }: any) => {
+  const CustomTooltip = ({ active, payload }: TooltipProps<number, string>) => {
     if (active && payload && payload.length) {
       const p = payload[0].payload;
       const percentage = totalOrders > 0 ? ((p.value / totalOrders) * 100).toFixed(1) : "0";

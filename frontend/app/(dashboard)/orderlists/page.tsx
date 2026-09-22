@@ -32,9 +32,9 @@ export default function AdminOrderListPage() {
       setOrders(res.data);
       setLastPage(res.meta.last_page || 1);
       setTotalCount(res.meta.total || res.data.length);
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error fetching admin orders:", error);
-      toast.error(error.message || "Failed to load orders");
+      toast.error((error as Error)?.message || "Failed to load orders");
     } finally {
       setIsLoading(false);
     }
@@ -57,9 +57,9 @@ export default function AdminOrderListPage() {
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
       toast.success("Orders CSV exported successfully!");
-    } catch (err: any) {
+    } catch (err) {
       console.error("Export CSV failed:", err);
-      toast.error(err.message || "Failed to export CSV");
+      toast.error((err as Error)?.message || "Failed to export CSV");
     } finally {
       setIsExporting(false);
     }

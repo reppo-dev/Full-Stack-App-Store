@@ -64,15 +64,15 @@ export default function FavoriteButton({
           onToggle?.(true);
           toast.success("Added to wishlist");
         }
-      } catch (err: any) {
+      } catch (err) {
         // If 409 conflict on add, it's already a favorite
-        if (err?.statusCode === 409) {
+        if ((err as { statusCode?: number })?.statusCode === 409) {
           setFavorite(true);
           onToggle?.(true);
           return;
         }
         // If 404 on remove, it's already removed
-        if (err?.statusCode === 404 && previousState) {
+        if ((err as { statusCode?: number })?.statusCode === 404 && previousState) {
           setFavorite(false);
           onToggle?.(false);
           return;
@@ -81,7 +81,7 @@ export default function FavoriteButton({
         // Revert on unexpected failure
         setFavorite(previousState);
         onToggle?.(previousState);
-        toast.error(err?.message || "Failed to update wishlist");
+        toast.error((err as Error)?.message || "Failed to update wishlist");
       }
     });
   };

@@ -81,8 +81,8 @@ export default function BannersPage() {
     try {
       const data = await bannersApi.listAllAdmin();
       setBanners(data);
-    } catch (err: any) {
-      toast.error(err.message || "Failed to load banners");
+    } catch (err) {
+      toast.error((err as Error)?.message || "Failed to load banners");
     } finally {
       setLoading(false);
     }
@@ -141,8 +141,8 @@ export default function BannersPage() {
       }
       setIsDialogOpen(false);
       fetchBanners();
-    } catch (err: any) {
-      toast.error(err.message || "Failed to save banner");
+    } catch (err) {
+      toast.error((err as Error)?.message || "Failed to save banner");
     } finally {
       setSubmitting(false);
     }
@@ -156,7 +156,7 @@ export default function BannersPage() {
         prev.map((b) => (b.id === banner.id ? { ...b, is_active: updatedStatus } : b))
       );
       toast.success(`Banner ${updatedStatus ? "activated" : "deactivated"}`);
-    } catch (err: any) {
+    } catch (err) {
       toast.error("Failed to toggle banner status");
     }
   };
@@ -167,8 +167,8 @@ export default function BannersPage() {
       toast.success("Banner deleted successfully");
       setDeleteConfirmId(null);
       fetchBanners();
-    } catch (err: any) {
-      toast.error(err.message || "Failed to delete banner");
+    } catch (err) {
+      toast.error((err as Error)?.message || "Failed to delete banner");
     }
   };
 

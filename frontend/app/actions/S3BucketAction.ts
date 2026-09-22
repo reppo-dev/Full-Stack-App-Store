@@ -26,7 +26,7 @@ export async function s3UploadAction(data: FormData) {
     console.error("Upload error:", error);
     return {
       success: false as const,
-      error: error instanceof Error ? error.message : "Upload failed",
+      error: error instanceof Error ? (error as Error)?.message : "Upload failed",
     };
   }
 }

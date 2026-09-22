@@ -1,6 +1,6 @@
 import { apiClient } from '@/lib/api/client';
 import { Product } from "@/models/modles";
-import { normalizeProduct } from '@/features/products/api/products.client';
+import { normalizeProduct, RawProduct } from '@/features/products/api/products.client';
 
 export interface FavoriteItem {
   id: number;
@@ -14,10 +14,25 @@ export interface FavoriteItem {
   created_at?: string;
 }
 
-export function normalizeFavorite(raw: any): FavoriteItem {
-  const id = raw.id ?? raw.ID ?? 0;
-  const userId = raw.user_id ?? raw.UserID ?? 0;
-  const productId = raw.product_id ?? raw.ProductID ?? (raw.product?.id ?? raw.Product?.ID ?? 0);
+export interface RawFavorite {
+  id?: number | string;
+  ID?: number | string;
+  user_id?: number | string;
+  UserID?: number | string;
+  product_id?: number | string;
+  ProductID?: number | string;
+  product?: RawProduct;
+  Product?: RawProduct;
+  created_at?: string;
+  CreatedAt?: string;
+  [key: string]: unknown;
+}
+
+export function normalizeFavorite(raw: RawFavorite | null | undefined): FavoriteItem {
+  if (!raw) return raw as unknown as FavoriteItem;
+  const id = Number(raw.id ?? raw.ID ?? 0);
+  const userId = Number(raw.user_id ?? raw.UserID ?? 0);
+  const productId = Number(raw.product_id ?? raw.ProductID ?? (raw.product?.id ?? raw.Product?.ID ?? 0));
   const normalizedProd = normalizeProduct(raw.product || raw.Product || {});
 
   return {

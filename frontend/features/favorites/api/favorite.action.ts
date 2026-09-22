@@ -30,8 +30,8 @@ export async function addToFavorites(productId: number) {
     revalidatePath("/favorite");
     revalidatePath(`/products/${productId}`);
     return { success: true };
-  } catch (error: any) {
-    if (error?.statusCode === 409 || error?.message?.includes("already")) {
+  } catch (error) {
+    if ((error as { statusCode?: number })?.statusCode === 409 || (error as Error)?.message?.includes("already")) {
       return {
         success: false,
         error: "This product has already been added to favorites",
@@ -51,14 +51,11 @@ export async function removeFromFavorites(productId: number) {
     revalidatePath("/favorite");
     revalidatePath(`/products/${productId}`);
     return { success: true };
-  } catch (error: any) {
-    if (error?.statusCode === 404) {
-      return {
-        success: false,
-        error: "This product was not found in the wishlist",
-      };
+  } catch (error) {
+    if ((error as { statusCode?: number })?.statusCode === 404) {
+      return { success: false, error: "Favorite not found" };
     }
-    return { success: false, error: "Error removing from favorites" };
+    return { success: false, error: "Error removing favorite" };
   }
 }
 

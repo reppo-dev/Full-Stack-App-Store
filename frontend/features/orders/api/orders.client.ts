@@ -56,27 +56,73 @@ export interface PaginatedOrdersResponse {
   };
 }
 
-export function normalizeOrderItem(raw: any): OrderItem {
-  const id = raw.id ?? raw.ID ?? 0;
+export interface RawOrderItem {
+  id?: number | string;
+  ID?: number | string;
+  order_id?: number | string;
+  OrderID?: number | string;
+  product_id?: number | string;
+  ProductID?: number | string;
+  product_title?: string;
+  ProductTitle?: string;
+  price?: number | string;
+  quantity?: number | string;
+  [key: string]: unknown;
+}
+
+export function normalizeOrderItem(raw: RawOrderItem | null | undefined): OrderItem {
+  if (!raw) return raw as unknown as OrderItem;
+  const id = Number(raw.id ?? raw.ID ?? 0);
   return {
     id,
     ID: id,
-    order_id: raw.order_id ?? raw.OrderID ?? 0,
-    product_id: raw.product_id ?? raw.ProductID ?? 0,
+    order_id: Number(raw.order_id ?? raw.OrderID ?? 0),
+    product_id: Number(raw.product_id ?? raw.ProductID ?? 0),
     product_title: raw.product_title ?? raw.ProductTitle ?? "",
     price:
       typeof raw.price === "number"
         ? raw.price
-        : parseFloat(raw.price || "0") || 0,
+        : parseFloat(String(raw.price) || "0") || 0,
     quantity:
       typeof raw.quantity === "number"
         ? raw.quantity
-        : parseInt(raw.quantity || "0", 10) || 0,
-  };
+        : parseInt(String(raw.quantity) || "0", 10) || 0,
+  } as OrderItem;
 }
 
-export function normalizeOrder(raw: any): Order {
-  const id = raw.id ?? raw.ID ?? 0;
+export interface RawOrder {
+  id?: number | string;
+  ID?: number | string;
+  user_id?: number | string;
+  UserID?: number | string;
+  first_name?: string;
+  FirstName?: string;
+  last_name?: string;
+  LastName?: string;
+  name?: string;
+  Name?: string;
+  email?: string;
+  Email?: string;
+  total?: number | string;
+  status?: string;
+  Status?: string;
+  address?: string;
+  Address?: string;
+  phone_number?: string;
+  PhoneNumber?: string;
+  order_items?: RawOrderItem[];
+  OrderItems?: RawOrderItem[];
+  total_price?: number | string;
+  created_at?: string;
+  CreatedAt?: string;
+  updated_at?: string;
+  UpdatedAt?: string;
+  [key: string]: unknown;
+}
+
+export function normalizeOrder(raw: RawOrder | null | undefined): Order {
+  if (!raw) return raw as unknown as Order;
+  const id = Number(raw.id ?? raw.ID ?? 0);
   const items = Array.isArray(raw.order_items)
     ? raw.order_items
     : Array.isArray(raw.OrderItems)
@@ -92,25 +138,27 @@ export function normalizeOrder(raw: any): Order {
     raw.email ||
     "Customer";
 
+  const totalRaw = raw.total ?? raw.total_price ?? 0;
+
   return {
     id,
     ID: id,
-    user_id: raw.user_id ?? raw.UserID ?? 0,
+    user_id: Number(raw.user_id ?? raw.UserID ?? 0),
     first_name: firstName,
     last_name: lastName,
     name,
     email: raw.email || raw.Email || "",
     total:
-      typeof raw.total === "number"
-        ? raw.total
-        : parseFloat(raw.total || "0") || 0,
+      typeof totalRaw === "number"
+        ? totalRaw
+        : parseFloat(String(totalRaw) || "0") || 0,
     status: raw.status || raw.Status || "pending",
     address: raw.address || raw.Address || "",
     phone_number: raw.phone_number || raw.PhoneNumber || "",
     order_items: items.map(normalizeOrderItem),
     created_at: raw.created_at || raw.CreatedAt || "",
     updated_at: raw.updated_at || raw.UpdatedAt || "",
-  };
+  } as Order;
 }
 
 export const ordersApi = {
