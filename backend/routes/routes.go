@@ -6,7 +6,6 @@ import (
 	"github.com/reppo/go-backend/internal/infrastructure/security"
 	"github.com/reppo/go-backend/internal/transport/http/handler"
 	"github.com/reppo/go-backend/internal/transport/http/middleware"
-	"github.com/reppo/go-backend/middlewares"
 )
 
 // RouteDependencies holds injectable HTTP handlers and security managers for V1 API routes.
@@ -168,50 +167,4 @@ func Setup(app *fiber.App, optDeps ...*RouteDependencies) {
 		}
 	}
 
-	// =========================================================================
-	// 3. Legacy Endpoints (Maintained for Backward Compatibility)
-	// =========================================================================
-	// Public routes
-	app.Post("/api/register", controllers.Register)
-	app.Post("/api/login", controllers.Login)
-
-	app.Get("/api/products", controllers.AllProduct)
-	app.Get("/api/productss", controllers.AllProducts)
-	app.Get("/api/products/:id", controllers.GetProduct)
-
-	// Personal profile and authenticated routes
-	app.Get("/api/user", middlewares.IsAuthenticated, controllers.User)
-	app.Put("/api/updateinfo", middlewares.IsAuthenticated, controllers.UpdateInfo)
-	app.Put("/api/updatepassword", middlewares.IsAuthenticated, controllers.UpdatePassword)
-	app.Post("/api/logout", middlewares.IsAuthenticated, controllers.Logout)
-	app.Get("/getorderbyemail", middlewares.IsAuthenticated, controllers.GetUserOrders)
-
-	// Favorites (Owner only, guarded with IsAuthenticated; ownership verified in controller)
-	app.Get("/api/favorites/:id", middlewares.IsAuthenticated, controllers.AllFavorite)
-	app.Delete("/api/favorites", middlewares.IsAuthenticated, controllers.RemoveFavorite)
-	app.Post("/api/favorites", middlewares.IsAuthenticated, controllers.AddFavorite)
-
-	// Administrative routes (Require IsAuthenticated + RequireAdmin)
-	app.Get("/api/users", middlewares.IsAuthenticated, middlewares.RequireAdmin, controllers.AllUsers)
-	app.Get("/api/alluser", middlewares.IsAuthenticated, middlewares.RequireAdmin, controllers.AllUser)
-	app.Post("/api/users", middlewares.IsAuthenticated, middlewares.RequireAdmin, controllers.CreateUser)
-	app.Get("/api/users/:id", middlewares.IsAuthenticated, middlewares.RequireAdmin, controllers.GetUser)
-	app.Put("/api/users/:id", middlewares.IsAuthenticated, middlewares.RequireAdmin, controllers.UpdateUser)
-	app.Delete("/api/users/:id", middlewares.IsAuthenticated, middlewares.RequireAdmin, controllers.DeleteUser)
-
-	app.Get("/api/roles", middlewares.IsAuthenticated, middlewares.RequireAdmin, controllers.AllRole)
-	app.Post("/api/roles", middlewares.IsAuthenticated, middlewares.RequireAdmin, controllers.CreateRole)
-	app.Get("/api/roles/:id", middlewares.IsAuthenticated, middlewares.RequireAdmin, controllers.GetRole)
-	app.Put("/api/roles/:id", middlewares.IsAuthenticated, middlewares.RequireAdmin, controllers.UpdateRole)
-	app.Delete("/api/roles/:id", middlewares.IsAuthenticated, middlewares.RequireAdmin, controllers.DeleteRole)
-
-	app.Post("/api/products", middlewares.IsAuthenticated, middlewares.RequireAdmin, controllers.CreateProduct)
-	app.Put("/api/products/:id", middlewares.IsAuthenticated, middlewares.RequireAdmin, controllers.UpdateProduct)
-	app.Delete("/api/products/:id", middlewares.IsAuthenticated, middlewares.RequireAdmin, controllers.DeleteProduct)
-
-	app.Get("/api/orders", middlewares.IsAuthenticated, middlewares.RequireAdmin, controllers.AllOrder)
-	app.Get("/api/orders/export", middlewares.IsAuthenticated, middlewares.RequireAdmin, controllers.Export)
-	app.Get("/api/orders/chart", middlewares.IsAuthenticated, middlewares.RequireAdmin, controllers.Chart)
-
-	app.Post("/uploads", middlewares.IsAuthenticated, middlewares.RequireAdmin, controllers.Upload)
 }

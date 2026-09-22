@@ -1,46 +1,18 @@
 "use client";
 
-import axios from "axios";
 import { useEffect, useState } from "react";
-import CardProduct from "../components/product/cardProduct";
-import GetIdUser from "../../actions/GetIdUser";
-
-type ProductType = {
-  ID: number;
-  title: string;
-  price: number;
-  rating: number;
-  images: string[];
-};
-
-interface FavoriteItem {
-  ID: number;
-  product_id: number;
-  Product: ProductType;
-}
+import CardProduct from '@/features/products/components/DashboardProductCard';
+import { favoritesApi, FavoriteItem } from '@/features/favorites/api/favorites.client';
+import { Product } from "@/models/modles";
 
 const Favorites = () => {
   const [favorites, setFavorites] = useState<FavoriteItem[]>([]);
   const [favoriteIds, setFavoriteIds] = useState<Set<number>>(new Set());
-  const [userId, setUserId] = useState<number | null>(null);
 
   useEffect(() => {
-    const fetchUserId = async () => {
-      const user = await GetIdUser();
-      if (user) setUserId(user.ID);
-      console.log(user.ID);
-    };
-    fetchUserId();
-  }, []);
-
-  useEffect(() => {
-    if (!userId) return;
     const fetchFavorites = async () => {
       try {
-        const res = await axios.get(
-          `http://localhost:3000/api/favorites/${userId}`,
-        );
-        const data: FavoriteItem[] = res.data;
+        const data = await favoritesApi.list();
         setFavorites(data);
         const ids = data.map((fav) => fav.product_id);
         setFavoriteIds(new Set(ids));
@@ -49,17 +21,14 @@ const Favorites = () => {
       }
     };
     fetchFavorites();
-  }, [userId]);
+  }, []);
 
   const toggleFavorite = async (productId: number) => {
-    if (!userId) return;
     const isFav = favoriteIds.has(productId);
 
     try {
       if (isFav) {
-        await axios.delete("http://localhost:3000/api/favorites", {
-          data: { user_id: userId, product_id: productId },
-        });
+        await favoritesApi.remove(productId);
         setFavorites((prev) =>
           prev.filter((fav) => fav.product_id !== productId),
         );
@@ -69,10 +38,11 @@ const Favorites = () => {
           return next;
         });
       } else {
-        await axios.post("http://localhost:3000/api/favorites", {
-          user_id: userId,
-          product_id: productId,
-        });
+        await favoritesApi.add(productId);
+        // Note: For adding on this page, it might be out of sync if we don't refetch,
+        // but typically you wouldn't "add" from the favorites list page. 
+        // Just in case, update state locally:
+        setFavoriteIds((prev) => new Set(prev).add(productId));
       }
     } catch (err) {
       console.error("Toggle favorite failed", err);
@@ -86,7 +56,7 @@ const Favorites = () => {
         {favorites.map((fav) => (
           <CardProduct
             key={fav.Product.ID}
-            props={fav.Product}
+            props={fav.Product as unknown as Product}
             isFavorite={true}
             onToggleFavorite={() => toggleFavorite(fav.product_id)}
           />

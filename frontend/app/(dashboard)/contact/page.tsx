@@ -5,25 +5,26 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
+import { apiClient, ApiError } from "@/lib/api/client";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
 import { toast } from "sonner";
+import { UserPlus } from "lucide-react";
 
-const createUserSchama = z.object({
-  image: z.string(),
-  first_name: z.string().min(1, "firstname must 1 charackter"),
-  last_name: z.string().min(1, "Lastname must 1 charackter"),
-  user_name: z.string().min(1, "username must 1 charackter"),
-  phone_number: z.string().min(9, "phonenumber must 9 characters"),
-  email: z.string().email().min(1, "firstname must 1 charackter"),
-  password: z.string().min(1, "firstname must 1 charackter"),
+const createUserSchema = z.object({
+  image: z.string().url("Please enter a valid URL").or(z.literal("")),
+  first_name: z.string().min(1, "First name is required"),
+  last_name: z.string().min(1, "Last name is required"),
+  user_name: z.string().min(1, "Username is required"),
+  phone_number: z.string().min(9, "Phone number must be at least 9 characters"),
+  email: z.string().email("Please enter a valid email"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
-type SchamaCreate = z.infer<typeof createUserSchama>;
+type CreateUserForm = z.infer<typeof createUserSchema>;
 
-const Contact = () => {
+const CreateUserPage = () => {
   const [loading, setLoading] = useState(false);
   const {
     register,
@@ -31,25 +32,18 @@ const Contact = () => {
     formState: { errors },
     setError,
     reset,
-  } = useForm<SchamaCreate>({ resolver: zodResolver(createUserSchama) });
+  } = useForm<CreateUserForm>({ resolver: zodResolver(createUserSchema) });
 
-  async function onSubmit(data: SchamaCreate) {
+  async function onSubmit(data: CreateUserForm) {
     setLoading(true);
 
     try {
-      await axios.post("/api/users", data, {
-        withCredentials: true,
-      });
+      await apiClient.post("/api/v1/users", data);
       toast.success("User created successfully");
       reset();
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        const message =
-          error.response.data?.error?.message ||
-          error.response.data?.message ||
-          error.response.data?.error ||
-          "Create user failed";
-        setError("root", { message });
+      if (error instanceof ApiError) {
+        setError("root", { message: error.message });
       } else {
         setError("root", { message: "Connection error" });
       }
@@ -62,17 +56,20 @@ const Contact = () => {
     <div className="p-4">
       <Card>
         <CardHeader>
-          <CardTitle>Create an user</CardTitle>
+          <CardTitle className="flex items-center gap-2">
+            <UserPlus className="h-5 w-5 text-blue-600" />
+            Create User
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)}>
             <FieldGroup>
               <Field>
-                <FieldLabel htmlFor="email">Image Url</FieldLabel>
+                <FieldLabel htmlFor="image">Image URL</FieldLabel>
                 <Input
                   id="image"
                   type="text"
-                  placeholder="Image URL"
+                  placeholder="https://example.com/avatar.jpg"
                   {...register("image")}
                 />
                 {errors.image && (
@@ -82,7 +79,7 @@ const Contact = () => {
                 )}
               </Field>
               <Field>
-                <FieldLabel htmlFor="email">First Name</FieldLabel>
+                <FieldLabel htmlFor="first_name">First Name</FieldLabel>
                 <Input
                   id="first_name"
                   type="text"
@@ -96,7 +93,7 @@ const Contact = () => {
                 )}
               </Field>
               <Field>
-                <FieldLabel htmlFor="email">last_name</FieldLabel>
+                <FieldLabel htmlFor="last_name">Last Name</FieldLabel>
                 <Input
                   id="last_name"
                   type="text"
@@ -110,11 +107,11 @@ const Contact = () => {
                 )}
               </Field>
               <Field>
-                <FieldLabel htmlFor="email">User Name</FieldLabel>
+                <FieldLabel htmlFor="user_name">Username</FieldLabel>
                 <Input
                   id="user_name"
                   type="text"
-                  placeholder="User Name"
+                  placeholder="Username"
                   {...register("user_name")}
                 />
                 {errors.user_name && (
@@ -128,7 +125,7 @@ const Contact = () => {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="Email"
+                  placeholder="user@example.com"
                   {...register("email")}
                 />
                 {errors.email && (
@@ -139,7 +136,7 @@ const Contact = () => {
               </Field>
 
               <Field>
-                <FieldLabel htmlFor="user_name">Phone Number</FieldLabel>
+                <FieldLabel htmlFor="phone_number">Phone Number</FieldLabel>
                 <Input
                   id="phone_number"
                   type="tel"
@@ -175,7 +172,7 @@ const Contact = () => {
               )}
 
               <Button type="submit" disabled={loading}>
-                {loading ? "Creating..." : "Create user"}
+                {loading ? "Creating..." : "Create User"}
               </Button>
             </FieldGroup>
           </form>
@@ -185,4 +182,4 @@ const Contact = () => {
   );
 };
 
-export default Contact;
+export default CreateUserPage;

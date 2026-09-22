@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { dashboardApi, DashboardMetrics } from "@/lib/api/dashboard";
-import KPICards from "../components/dashboard/KPICards";
-import RevenueAnalyticsChart from "../components/dashboard/RevenueAnalyticsChart";
-import OrderStatusPieChart from "../components/dashboard/OrderStatusPieChart";
-import TopCategoriesBarChart from "../components/dashboard/TopCategoriesBarChart";
-import RecentActivityTables from "../components/dashboard/RecentActivityTables";
+import { dashboardApi, DashboardMetrics } from "@/features/dashboard/api/dashboard.client";
+import KPICards from "@/features/dashboard/components/main/KPICards";
+import RevenueAnalyticsChart from "@/features/dashboard/components/main/RevenueAnalyticsChart";
+import OrderStatusPieChart from "@/features/dashboard/components/main/OrderStatusPieChart";
+import TopCategoriesBarChart from "@/features/dashboard/components/main/TopCategoriesBarChart";
+import RecentActivityTables from "@/features/dashboard/components/main/RecentActivityTables";
 import { Button } from "@/components/ui/button";
 import {
   Select,

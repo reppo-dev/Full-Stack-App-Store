@@ -2,10 +2,10 @@
 
 import React, { useState, useEffect, useMemo, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { productsApi } from "@/lib/api/products";
+import { productsApi } from "@/features/products/api/products.client";
 import { Product } from "@/models/modles";
-import CardProducts from "@/components/cardProductsmain";
-import BannerProducts from "@/components/bannerProducts";
+import CardProducts from "@/features/products/components/StorefrontProductCard";
+import BannerCarousel from "@/features/banners/components/BannerCarousel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -94,7 +94,7 @@ function ProductsCatalogContent() {
   return (
     <div className="max-w-[1520px] mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
       {/* Top Hero Campaign Carousel */}
-      <BannerProducts />
+      <BannerCarousel className="mx-2" />
 
       {/* Catalog Header & Search Controls */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-4 border-b border-border/60 pb-6">

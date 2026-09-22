@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { ordersApi, Order, OrderItem } from "@/lib/api/orders";
+import { ordersApi, Order, OrderItem } from "@/features/orders/api/orders.client";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";

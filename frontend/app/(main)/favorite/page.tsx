@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { favoritesApi, FavoriteItem } from "@/lib/api/favorites";
+import { favoritesApi, FavoriteItem } from "@/features/favorites/api/favorites.client";
 import { useAppDispatch } from "@/lib/redux/store";
 import { addToCart, openCart } from "@/lib/redux/slices/cartSlice";
 import { Button } from "@/components/ui/button";

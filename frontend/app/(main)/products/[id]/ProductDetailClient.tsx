@@ -8,8 +8,8 @@ import { useAppDispatch } from "@/lib/redux/store";
 import { addToCart, openCart } from "@/lib/redux/slices/cartSlice";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import FavoriteButton from "@/components/button-favorite";
-import CardProducts from "@/components/cardProductsmain";
+import FavoriteButton from "@/features/favorites/components/button-favorite";
+import CardProducts from "@/features/products/components/StorefrontProductCard";
 import {
   Star,
   ShoppingBag,

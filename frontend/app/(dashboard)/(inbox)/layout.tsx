@@ -1,4 +1,4 @@
-import CardBox from "../components/inbox/CardBox";
+import CardBox from "@/features/tickets/components/CardBox";
 
 export default async function RootLayout({
   children,

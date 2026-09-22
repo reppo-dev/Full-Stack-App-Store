@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { ApiError, normalizeError, apiClient } from "./client";
+import { ApiError, normalizeError, apiClient } from '@/lib/api/client';
 import { AxiosError } from "axios";
 
 describe("ApiError and normalizeError", () => {

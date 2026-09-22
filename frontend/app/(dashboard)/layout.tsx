@@ -4,11 +4,11 @@ import {
   SidebarProvider,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import HeaderDashboard from "./components/HeaderDashboard";
-import SidebarDash from "./components/SidebarDash";
+import HeaderDashboard from '@/features/dashboard/components/layout/HeaderDashboard';
+import SidebarDash from '@/features/dashboard/components/layout/SidebarDash';
 import { redirect } from "next/navigation";
 import axios from "axios";
-import getToken from "../actions/getToken";
+import getToken from '@/features/auth/api/getToken';
 
 const BASE_API_URL =
   process.env.INTERNAL_API_URL ||
@@ -29,22 +29,12 @@ export default async function RootLayout({
   let userData = null;
 
   try {
-    let res;
-    try {
-      res = await axios.get(`${BASE_API_URL}/api/v1/auth/me`, {
-        headers: {
-          Cookie: `jwt=${token}`,
-          Authorization: `Bearer ${token}`,
-        },
-      });
-    } catch {
-      res = await axios.get(`${BASE_API_URL}/api/user`, {
-        headers: {
-          Cookie: `jwt=${token}`,
-          Authorization: `Bearer ${token}`,
-        },
-      });
-    }
+    const res = await axios.get(`${BASE_API_URL}/api/v1/auth/me`, {
+      headers: {
+        Cookie: `jwt=${token}`,
+        Authorization: `Bearer ${token}`,
+      },
+    });
     userData = res.data?.data || res.data;
   } catch (error) {
     console.error("Failed to fetch user in dashboard guard:", error);

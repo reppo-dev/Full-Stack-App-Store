@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { ordersApi, Order, OrderItem } from "@/lib/api/orders";
+import { ordersApi, Order, OrderItem } from "@/features/orders/api/orders.client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";

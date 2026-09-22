@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { bannersApi, CreateBannerPayload, UpdateBannerPayload } from "@/lib/api/banners";
+import { bannersApi, CreateBannerPayload, UpdateBannerPayload } from "@/features/banners/api/banners.client";
 import { Banner } from "@/models/modles";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

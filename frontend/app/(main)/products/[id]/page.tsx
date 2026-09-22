@@ -1,5 +1,5 @@
 import React from "react";
-import { productsApi } from "@/lib/api/products";
+import { productsApi } from "@/features/products/api/products.client";
 import { Product } from "@/models/modles";
 import Link from "next/link";
 import { ArrowLeft, Package } from "lucide-react";

@@ -1,16 +1,16 @@
 import React from "react";
-import { getProducts } from "@/app/actions/product.action";
-import { productsApi } from "@/lib/api/products";
+import { getProducts } from "@/features/products/api/product.action";
+import { productsApi } from "@/features/products/api/products.client";
 import { Product } from "@/models/modles";
 
-import QuickAccessStories from "@/components/landing/QuickAccessStories";
-import DigikalaHeroSlider from "@/components/landing/DigikalaHeroSlider";
-import IncredibleOffers from "@/components/landing/IncredibleOffers";
-import PromoBannerGrid from "@/components/landing/PromoBannerGrid";
-import CategoryExplorer from "@/components/landing/CategoryExplorer";
-import BestSellersSection from "@/components/landing/BestSellersSection";
-import BrandShowcase from "@/components/landing/BrandShowcase";
-import DigikalaTrustBadges from "@/components/landing/DigikalaTrustBadges";
+import QuickAccessStories from "@/features/home/components/QuickAccessStories";
+import DigikalaHeroSlider from "@/features/home/components/DigikalaHeroSlider";
+import IncredibleOffers from "@/features/home/components/IncredibleOffers";
+import PromoBannerGrid from "@/features/home/components/PromoBannerGrid";
+import CategoryExplorer from "@/features/home/components/CategoryExplorer";
+import BestSellersSection from "@/features/home/components/BestSellersSection";
+import BrandShowcase from "@/features/home/components/BrandShowcase";
+import DigikalaTrustBadges from "@/features/home/components/DigikalaTrustBadges";
 
 export const dynamic = "force-dynamic";
 

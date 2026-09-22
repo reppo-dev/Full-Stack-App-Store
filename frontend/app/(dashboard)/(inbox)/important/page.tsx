@@ -1,5 +1,5 @@
 import React from "react";
-import BoxMessage from "../../components/inbox/BoxMessage";
+import BoxMessage from "@/features/tickets/components/BoxMessage";
 
 const Important = () => {
   return (

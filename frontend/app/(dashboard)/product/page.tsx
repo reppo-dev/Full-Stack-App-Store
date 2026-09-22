@@ -1,36 +1,23 @@
 "use client";
 
-import axios from "axios";
 import { useEffect, useState } from "react";
-import BannerProduct from "../components/product/banner";
-import CardProduct from "../components/product/cardProduct";
-import GetIdUser from "../../actions/GetIdUser";
+import BannerProduct from '@/features/banners/components/DashboardBanner';
+import CardProduct from '@/features/products/components/DashboardProductCard';
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Sliders } from "lucide-react";
+import { productsApi } from "@/features/products/api/products.client";
+import { favoritesApi } from "@/features/favorites/api/favorites.client";
+import { Product } from "@/models/modles";
 
-type ProductType = {
-  ID: number;
-  title: string;
-  price: number;
-  rating: number;
-  images: string[];
-};
-
-interface FavoriteItem {
-  product_id: number;
-}
-
-const Product = () => {
-  const [products, setProducts] = useState<ProductType[]>([]);
+const ProductPage = () => {
+  const [products, setProducts] = useState<Product[]>([]);
   const [favoriteIds, setFavoriteIds] = useState<Set<number>>(new Set());
-  const [userId, setUserId] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/productss");
-        console.log("API response:", response.data);
+        const response = await productsApi.list();
         setProducts(response.data);
       } catch (err) {
         console.error(err);
@@ -40,48 +27,31 @@ const Product = () => {
   }, []);
 
   useEffect(() => {
-    const fetchUserId = async () => {
-      const user = await GetIdUser();
-      if (user) setUserId(user.ID);
-    };
-    fetchUserId();
-  }, []);
-
-  useEffect(() => {
-    if (!userId) return;
     const fetchFavorites = async () => {
       try {
-        const res = await axios.get(
-          `http://localhost:3000/api/favorites/${userId}`,
-        );
-        const ids = res.data.map((fav: FavoriteItem) => fav.product_id);
+        const res = await favoritesApi.list();
+        const ids = res.map((fav) => fav.product_id);
         setFavoriteIds(new Set(ids));
       } catch (err) {
         console.error("Failed to fetch favorites", err);
       }
     };
     fetchFavorites();
-  }, [userId]);
+  }, []);
 
   const toggleFavorite = async (productId: number) => {
-    if (!userId) return;
     const isFav = favoriteIds.has(productId);
 
     try {
       if (isFav) {
-        await axios.delete("http://localhost:3000/api/favorites", {
-          data: { user_id: userId, product_id: productId },
-        });
+        await favoritesApi.remove(productId);
         setFavoriteIds((prev) => {
           const next = new Set(prev);
           next.delete(productId);
           return next;
         });
       } else {
-        await axios.post("http://localhost:3000/api/favorites", {
-          user_id: userId,
-          product_id: productId,
-        });
+        await favoritesApi.add(productId);
         setFavoriteIds((prev) => new Set(prev).add(productId));
       }
     } catch (err) {
@@ -125,4 +95,4 @@ const Product = () => {
   );
 };
 
-export default Product;
+export default ProductPage;

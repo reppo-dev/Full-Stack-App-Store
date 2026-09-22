@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useParams, useRouter } from "next/navigation";
-import TicketConversationThread from "../../../components/inbox/TicketConversationThread";
+import TicketConversationThread from "@/features/tickets/components/TicketConversationThread";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";

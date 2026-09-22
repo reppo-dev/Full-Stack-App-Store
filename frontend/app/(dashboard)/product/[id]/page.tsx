@@ -1,6 +1,6 @@
 "use client";
 
-import { getDetailsProduct, updateProduct } from "@/app/actions/product.action";
+import { getDetailsProduct, updateProduct } from "@/features/products/api/product.action";
 import { s3UploadAction } from "@/app/actions/S3BucketAction";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";

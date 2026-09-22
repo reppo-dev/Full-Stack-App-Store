@@ -1,9 +1,9 @@
 import { Input } from "../ui/input";
 import { Search } from "lucide-react";
 import LightDarkToggle from "../light-dark";
-import { SidebarToggle } from "../sidebarToggle";
+import { SidebarToggle } from "@/features/dashboard/components/layout/sidebarToggle";
 import AuthButtons from "./AuthButtons";
-import HeaderCartButton from "../cart/HeaderCartButton";
+import HeaderCartButton from '@/features/cart/components/HeaderCartButton';
 
 const Header = () => {
   return (

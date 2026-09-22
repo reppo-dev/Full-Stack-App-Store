@@ -1,5 +1,5 @@
 // app/(dashboard)/inbox/starred/page.tsx
-import BoxMessage from "../../components/inbox/BoxMessage";
+import BoxMessage from "@/features/tickets/components/BoxMessage";
 
 const Starred = () => {
   return (
