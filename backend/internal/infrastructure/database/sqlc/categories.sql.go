@@ -12,19 +12,25 @@ import (
 )
 
 const createCategory = `-- name: CreateCategory :one
-INSERT INTO categories (name, slug, parent_id, created_at, updated_at)
-VALUES ($1, $2, $3, NOW(), NOW())
-RETURNING id, created_at, updated_at, deleted_at, name, slug, parent_id
+INSERT INTO categories (name, slug, parent_id, image_url, created_at, updated_at)
+VALUES ($1, $2, $3, $4, NOW(), NOW())
+RETURNING id, created_at, updated_at, deleted_at, name, slug, parent_id, image_url
 `
 
 type CreateCategoryParams struct {
 	Name     string      `json:"name"`
 	Slug     pgtype.Text `json:"slug"`
 	ParentID pgtype.Int8 `json:"parent_id"`
+	ImageUrl pgtype.Text `json:"image_url"`
 }
 
 func (q *Queries) CreateCategory(ctx context.Context, arg CreateCategoryParams) (Category, error) {
-	row := q.db.QueryRow(ctx, createCategory, arg.Name, arg.Slug, arg.ParentID)
+	row := q.db.QueryRow(ctx, createCategory,
+		arg.Name,
+		arg.Slug,
+		arg.ParentID,
+		arg.ImageUrl,
+	)
 	var i Category
 	err := row.Scan(
 		&i.ID,
@@ -34,6 +40,7 @@ func (q *Queries) CreateCategory(ctx context.Context, arg CreateCategoryParams) 
 		&i.Name,
 		&i.Slug,
 		&i.ParentID,
+		&i.ImageUrl,
 	)
 	return i, err
 }
@@ -50,7 +57,7 @@ func (q *Queries) DeleteCategory(ctx context.Context, id int64) error {
 }
 
 const getCategoryByID = `-- name: GetCategoryByID :one
-SELECT id, created_at, updated_at, deleted_at, name, slug, parent_id
+SELECT id, created_at, updated_at, deleted_at, name, slug, parent_id, image_url
 FROM categories
 WHERE id = $1 AND deleted_at IS NULL
 `
@@ -66,12 +73,13 @@ func (q *Queries) GetCategoryByID(ctx context.Context, id int64) (Category, erro
 		&i.Name,
 		&i.Slug,
 		&i.ParentID,
+		&i.ImageUrl,
 	)
 	return i, err
 }
 
 const getCategoryBySlug = `-- name: GetCategoryBySlug :one
-SELECT id, created_at, updated_at, deleted_at, name, slug, parent_id
+SELECT id, created_at, updated_at, deleted_at, name, slug, parent_id, image_url
 FROM categories
 WHERE slug = $1 AND deleted_at IS NULL
 `
@@ -87,6 +95,7 @@ func (q *Queries) GetCategoryBySlug(ctx context.Context, slug pgtype.Text) (Cate
 		&i.Name,
 		&i.Slug,
 		&i.ParentID,
+		&i.ImageUrl,
 	)
 	return i, err
 }
@@ -102,7 +111,7 @@ func (q *Queries) HardDeleteCategory(ctx context.Context, id int64) error {
 }
 
 const listCategories = `-- name: ListCategories :many
-SELECT id, created_at, updated_at, deleted_at, name, slug, parent_id
+SELECT id, created_at, updated_at, deleted_at, name, slug, parent_id, image_url
 FROM categories
 WHERE deleted_at IS NULL
 ORDER BY id ASC
@@ -125,6 +134,7 @@ func (q *Queries) ListCategories(ctx context.Context) ([]Category, error) {
 			&i.Name,
 			&i.Slug,
 			&i.ParentID,
+			&i.ImageUrl,
 		); err != nil {
 			return nil, err
 		}
@@ -137,7 +147,7 @@ func (q *Queries) ListCategories(ctx context.Context) ([]Category, error) {
 }
 
 const listRootCategories = `-- name: ListRootCategories :many
-SELECT id, created_at, updated_at, deleted_at, name, slug, parent_id
+SELECT id, created_at, updated_at, deleted_at, name, slug, parent_id, image_url
 FROM categories
 WHERE parent_id IS NULL AND deleted_at IS NULL
 ORDER BY id ASC
@@ -160,6 +170,7 @@ func (q *Queries) ListRootCategories(ctx context.Context) ([]Category, error) {
 			&i.Name,
 			&i.Slug,
 			&i.ParentID,
+			&i.ImageUrl,
 		); err != nil {
 			return nil, err
 		}
@@ -172,7 +183,7 @@ func (q *Queries) ListRootCategories(ctx context.Context) ([]Category, error) {
 }
 
 const listSubcategories = `-- name: ListSubcategories :many
-SELECT id, created_at, updated_at, deleted_at, name, slug, parent_id
+SELECT id, created_at, updated_at, deleted_at, name, slug, parent_id, image_url
 FROM categories
 WHERE parent_id = $1 AND deleted_at IS NULL
 ORDER BY id ASC
@@ -195,6 +206,7 @@ func (q *Queries) ListSubcategories(ctx context.Context, parentID pgtype.Int8) (
 			&i.Name,
 			&i.Slug,
 			&i.ParentID,
+			&i.ImageUrl,
 		); err != nil {
 			return nil, err
 		}
@@ -212,9 +224,10 @@ SET
     name = $2,
     slug = $3,
     parent_id = $4,
+    image_url = $5,
     updated_at = NOW()
 WHERE id = $1 AND deleted_at IS NULL
-RETURNING id, created_at, updated_at, deleted_at, name, slug, parent_id
+RETURNING id, created_at, updated_at, deleted_at, name, slug, parent_id, image_url
 `
 
 type UpdateCategoryParams struct {
@@ -222,6 +235,7 @@ type UpdateCategoryParams struct {
 	Name     string      `json:"name"`
 	Slug     pgtype.Text `json:"slug"`
 	ParentID pgtype.Int8 `json:"parent_id"`
+	ImageUrl pgtype.Text `json:"image_url"`
 }
 
 func (q *Queries) UpdateCategory(ctx context.Context, arg UpdateCategoryParams) (Category, error) {
@@ -230,6 +244,7 @@ func (q *Queries) UpdateCategory(ctx context.Context, arg UpdateCategoryParams) 
 		arg.Name,
 		arg.Slug,
 		arg.ParentID,
+		arg.ImageUrl,
 	)
 	var i Category
 	err := row.Scan(
@@ -240,6 +255,7 @@ func (q *Queries) UpdateCategory(ctx context.Context, arg UpdateCategoryParams) 
 		&i.Name,
 		&i.Slug,
 		&i.ParentID,
+		&i.ImageUrl,
 	)
 	return i, err
 }

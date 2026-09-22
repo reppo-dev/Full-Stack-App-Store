@@ -8,60 +8,9 @@ import { ChevronLeft, ChevronRight, Sparkles, ArrowRight } from "lucide-react";
 import { bannersApi } from "@/features/banners/api/banners.client";
 import { Banner } from "@/models/modles";
 
-const fallbackSlides: Banner[] = [
-  {
-    id: 1,
-    title: "Apple iPhone 16 Pro Max",
-    subtitle: "Aerospace-grade titanium, breakthrough A18 Pro chip, and pro camera system with 5x optical telephoto.",
-    badge: "Flagship Launch",
-    cta_text: "Shop iPhone 16 Pro",
-    cta_link: "/products/apple-iphone-16-pro-max-256gb",
-    link_url: "/products/apple-iphone-16-pro-max-256gb",
-    image_url: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=1200&q=80",
-    type: "hero",
-    position: 0,
-    is_active: true,
-  },
-  {
-    id: 2,
-    title: "MacBook Pro 16-inch M3 Max",
-    subtitle: "Astronomical performance for 3D rendering and machine learning with Liquid Retina XDR and up to 22h battery.",
-    badge: "Pro Choice",
-    cta_text: "Explore MacBook",
-    cta_link: "/products/macbook-pro-16-inch-m3-max",
-    link_url: "/products/macbook-pro-16-inch-m3-max",
-    image_url: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1200&q=80",
-    type: "hero",
-    position: 1,
-    is_active: true,
-  },
-  {
-    id: 3,
-    title: "Premium Hi-Fi Audio Festival",
-    subtitle: "Immersive acoustic perfection with Sony WH-1000XM5 and Bose QuietComfort Ultra noise-canceling headphones.",
-    badge: "Up to 25% OFF",
-    cta_text: "Discover Audio",
-    cta_link: "/products?category_id=3",
-    link_url: "/products?category_id=3",
-    image_url: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1200&q=80",
-    type: "hero",
-    position: 2,
-    is_active: true,
-  },
-  {
-    id: 4,
-    title: "PlayStation 5 Pro & Elite Gaming",
-    subtitle: "Ultra-high-definition 4K 120Hz gaming, PlayStation Spectral Super Resolution (PSSR), and lightning-fast 2TB SSD.",
-    badge: "Next-Gen Gaming",
-    cta_text: "Order PS5 Pro",
-    cta_link: "/products/sony-playstation-5-pro-console",
-    link_url: "/products/sony-playstation-5-pro-console",
-    image_url: "https://images.unsplash.com/photo-1606813907291-d86efa9b94db?auto=format&fit=crop&w=1200&q=80",
-    type: "hero",
-    position: 3,
-    is_active: true,
-  },
-];
+interface DigikalaHeroSliderProps {
+  banners?: Banner[];
+}
 
 const accentGradients = [
   "from-slate-950 via-zinc-950 to-neutral-900",
@@ -70,23 +19,9 @@ const accentGradients = [
   "from-purple-950 via-indigo-950 to-neutral-950",
 ];
 
-export default function DigikalaHeroSlider() {
-  const [slides, setSlides] = useState<Banner[]>(fallbackSlides);
+export default function DigikalaHeroSlider({ banners = [] }: DigikalaHeroSliderProps) {
+  const slides = banners.filter(b => b.type === 'hero').sort((a, b) => a.position - b.position);
   const [current, setCurrent] = useState(0);
-
-  useEffect(() => {
-    const fetchHeroBanners = async () => {
-      try {
-        const liveBanners = await bannersApi.listActive("hero");
-        if (liveBanners && liveBanners.length > 0) {
-          setSlides(liveBanners);
-        }
-      } catch (err) {
-        console.warn("Using fallback hero banners due to API error", err);
-      }
-    };
-    fetchHeroBanners();
-  }, []);
 
   useEffect(() => {
     if (slides.length <= 1) return;

@@ -11,121 +11,17 @@ import {
   Gamepad2,
   Gift,
 } from "lucide-react";
-import StoryViewerModal, { StoryData } from "./StoryViewerModal";
+import StoryViewerModal from "./StoryViewerModal";
+import { Story } from "@/features/ui/api/ui.client";
 
-interface StoryItem extends StoryData {
-  icon: React.ComponentType<{ className?: string }>;
+interface QuickAccessStoriesProps {
+  stories?: Story[];
 }
 
-const storiesData: StoryItem[] = [
-  {
-    id: "express",
-    title: "Superfast Same-Day Delivery",
-    subtitle: "Order before 2:00 PM and receive your favorite electronics at your doorstep today with priority dispatch.",
-    badge: "EXPRESS",
-    category: "Express Shipping",
-    image: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1000&q=80",
-    link: "/products",
-    buttonText: "Shop Same-Day Items",
-    gradient: "from-amber-400 to-orange-500",
-    icon: Zap,
-    featuredPrice: "Free on $50+",
-  },
-  {
-    id: "incredible",
-    title: "Today's Incredible Offers",
-    subtitle: "Huge price drops on flagship smartphones, ultrabooks, and studio wireless headphones.",
-    badge: "FLASH DEAL",
-    category: "Incredible Deals",
-    image: "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=1000&q=80",
-    link: "#incredible-offers",
-    buttonText: "See Flash Deals",
-    gradient: "from-rose-500 to-red-600",
-    icon: Tag,
-    featuredPrice: "Up to 45% OFF",
-  },
-  {
-    id: "mobiles",
-    title: "Next-Gen Mobile Flagships",
-    subtitle: "Explore iPhone 16 Pro Max, Samsung Galaxy S24 Ultra, and iPad Pro M4 with cutting-edge AI.",
-    badge: "AI POWERED",
-    category: "Smartphones & Tablets",
-    image: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=1000&q=80",
-    link: "/products?category_id=1",
-    buttonText: "Shop Smartphones",
-    gradient: "from-blue-500 to-indigo-600",
-    icon: Smartphone,
-    featuredPrice: "$1,199",
-  },
-  {
-    id: "laptops",
-    title: "Unrivaled Computing Performance",
-    subtitle: "Conquer heavy workflows with MacBook Pro M3 Max and Dell XPS 15 OLED workstation laptops.",
-    badge: "M3 MAX",
-    category: "Laptops & PCs",
-    image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1000&q=80",
-    link: "/products?category_id=2",
-    buttonText: "Explore Laptops",
-    gradient: "from-purple-500 to-violet-600",
-    icon: Laptop,
-    featuredPrice: "$2,299",
-  },
-  {
-    id: "audio",
-    title: "Pure Studio Acoustic Euphoria",
-    subtitle: "Industry-leading active noise cancellation with Sony WH-1000XM5 and Bose QuietComfort Ultra.",
-    badge: "HI-RES",
-    category: "Audio & Headphones",
-    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1000&q=80",
-    link: "/products?category_id=3",
-    buttonText: "Explore Hi-Fi Audio",
-    gradient: "from-emerald-400 to-teal-600",
-    icon: Headphones,
-    featuredPrice: "$299",
-  },
-  {
-    id: "wearables",
-    title: "Rugged Endurance & Health",
-    subtitle: "Precision dual-frequency GPS, depth gauges, and vital metric sensors crafted in titanium.",
-    badge: "TITANIUM",
-    category: "Smart Watches",
-    image: "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?auto=format&fit=crop&w=1000&q=80",
-    link: "/products?category_id=4",
-    buttonText: "Shop Wearables",
-    gradient: "from-sky-400 to-cyan-600",
-    icon: Watch,
-    featuredPrice: "$799",
-  },
-  {
-    id: "gaming",
-    title: "PlayStation 5 Pro & Elite Gaming",
-    subtitle: "Experience 4K 120Hz ray tracing with PS5 Pro and custom mechanical keyboards for competitive play.",
-    badge: "PS5 PRO",
-    category: "Gaming & Esports",
-    image: "https://images.unsplash.com/photo-1606813907291-d86efa9b94db?auto=format&fit=crop&w=1000&q=80",
-    link: "/products?category_id=5",
-    buttonText: "Level Up Rig",
-    gradient: "from-fuchsia-500 to-pink-600",
-    icon: Gamepad2,
-    featuredPrice: "$699",
-  },
-  {
-    id: "deals",
-    title: "Weekly Clearance & Rewards",
-    subtitle: "Exclusive bundle savings, member cashback, and limited-stock promotional accessories.",
-    badge: "SPECIAL",
-    category: "Member Perks",
-    image: "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&w=1000&q=80",
-    link: "/products",
-    buttonText: "View Clearance",
-    gradient: "from-yellow-400 to-amber-600",
-    icon: Gift,
-    featuredPrice: "From $19",
-  },
-];
-
-export default function QuickAccessStories() {
+export default function QuickAccessStories({ stories = [] }: QuickAccessStoriesProps) {
   const [selectedStoryIndex, setSelectedStoryIndex] = useState<number | null>(null);
+
+  if (stories.length === 0) return null;
 
   const handleOpenStory = (index: number) => {
     setSelectedStoryIndex(index);
@@ -135,11 +31,41 @@ export default function QuickAccessStories() {
     setSelectedStoryIndex(null);
   };
 
+  const getIcon = (name: string | null) => {
+    switch (name) {
+      case "Tag": return Tag;
+      case "Smartphone": return Smartphone;
+      case "Laptop": return Laptop;
+      case "Headphones": return Headphones;
+      case "Watch": return Watch;
+      case "Gamepad2": return Gamepad2;
+      case "Gift": return Gift;
+      case "Zap":
+      default:
+        return Zap;
+    }
+  };
+
+  // Convert DB Story to StoryItem format for Modal
+  const mappedStories = stories.map(story => ({
+    id: story.id.toString(),
+    title: story.title,
+    subtitle: story.subtitle || "",
+    badge: story.badge || undefined,
+    category: story.category || "",
+    image: story.image_url,
+    link: story.link_url || "/products",
+    buttonText: story.button_text || "Shop Now",
+    gradient: story.gradient_class || "from-amber-400 to-orange-500",
+    icon: getIcon(story.icon_name),
+    featuredPrice: story.featured_price || undefined,
+  }));
+
   return (
     <>
       <section className="w-full py-5 overflow-x-auto scrollbar-none">
         <div className="flex items-center justify-between sm:justify-center gap-4 sm:gap-7 min-w-max px-4">
-          {storiesData.map((story, index) => {
+          {mappedStories.map((story, index) => {
             const Icon = story.icon;
             return (
               <button
@@ -180,7 +106,7 @@ export default function QuickAccessStories() {
 
       {/* Interactive Story Viewer Modal */}
       <StoryViewerModal
-        stories={storiesData}
+        stories={mappedStories}
         initialIndex={selectedStoryIndex ?? 0}
         isOpen={selectedStoryIndex !== null}
         onClose={handleCloseStory}

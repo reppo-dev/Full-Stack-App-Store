@@ -24,6 +24,17 @@ type Banner struct {
 	IsActive  bool               `json:"is_active"`
 }
 
+type Brand struct {
+	ID        int64              `json:"id"`
+	CreatedAt pgtype.Timestamptz `json:"created_at"`
+	UpdatedAt pgtype.Timestamptz `json:"updated_at"`
+	DeletedAt pgtype.Timestamptz `json:"deleted_at"`
+	Name      string             `json:"name"`
+	Category  pgtype.Text        `json:"category"`
+	Href      pgtype.Text        `json:"href"`
+	IsActive  bool               `json:"is_active"`
+}
+
 type Category struct {
 	ID        int64              `json:"id"`
 	CreatedAt pgtype.Timestamptz `json:"created_at"`
@@ -32,6 +43,7 @@ type Category struct {
 	Name      string             `json:"name"`
 	Slug      pgtype.Text        `json:"slug"`
 	ParentID  pgtype.Int8        `json:"parent_id"`
+	ImageUrl  pgtype.Text        `json:"image_url"`
 }
 
 type Color struct {
@@ -169,6 +181,23 @@ type Role struct {
 type RolePermission struct {
 	RoleID       int64 `json:"role_id"`
 	PermissionID int64 `json:"permission_id"`
+}
+
+type Story struct {
+	ID            int64              `json:"id"`
+	CreatedAt     pgtype.Timestamptz `json:"created_at"`
+	UpdatedAt     pgtype.Timestamptz `json:"updated_at"`
+	Title         string             `json:"title"`
+	Subtitle      pgtype.Text        `json:"subtitle"`
+	Badge         pgtype.Text        `json:"badge"`
+	Category      pgtype.Text        `json:"category"`
+	ImageUrl      string             `json:"image_url"`
+	LinkUrl       pgtype.Text        `json:"link_url"`
+	ButtonText    pgtype.Text        `json:"button_text"`
+	GradientClass pgtype.Text        `json:"gradient_class"`
+	IconName      pgtype.Text        `json:"icon_name"`
+	FeaturedPrice pgtype.Text        `json:"featured_price"`
+	IsActive      pgtype.Bool        `json:"is_active"`
 }
 
 type Tag struct {

@@ -89,6 +89,9 @@ func main() {
 		dashboardSvc := service.NewDashboardService(dashboardRepo)
 		bannerSvc := service.NewBannerService(bannerRepo)
 
+		dynamicUIRepo := repository.NewDynamicUIRepository(querier)
+		dynamicUISvc := service.NewDynamicUIService(dynamicUIRepo)
+
 		routeDeps = &routes.RouteDependencies{
 			AuthHandler:      handler.NewAuthHandler(authSvc),
 			UserHandler:      handler.NewUserHandler(userSvc),
@@ -100,6 +103,7 @@ func main() {
 			TicketHandler:    handler.NewTicketHandler(ticketSvc),
 			DashboardHandler: handler.NewDashboardHandler(dashboardSvc),
 			BannerHandler:    handler.NewBannerHandler(bannerSvc),
+			DynamicUIHandler: handler.NewDynamicUIHandler(dynamicUISvc),
 			TokenManager:     tokenManager,
 		}
 		logger.Info("SQLC repositories and Application services initialized cleanly")

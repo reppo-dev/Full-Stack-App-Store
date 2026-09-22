@@ -7,60 +7,9 @@ import { ArrowRight } from "lucide-react";
 import { bannersApi } from "@/features/banners/api/banners.client";
 import { Banner } from "@/models/modles";
 
-const fallbackPromoBanners: Banner[] = [
-  {
-    id: 5,
-    title: "Apple Ecosystem",
-    subtitle: "iPhone 16 Pro, MacBook Pro M3 & Ultra 2",
-    badge: "Special Cashback",
-    link_url: "/products?category_id=1",
-    cta_text: "Explore Apple",
-    cta_link: "/products?category_id=1",
-    image_url: "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=600&q=80",
-    type: "promo",
-    position: 0,
-    is_active: true,
-  },
-  {
-    id: 6,
-    title: "Galaxy AI Era",
-    subtitle: "Galaxy S24 Ultra with intelligent S Pen",
-    badge: "Free Express",
-    link_url: "/products?category_id=1",
-    cta_text: "Shop Galaxy AI",
-    cta_link: "/products?category_id=1",
-    image_url: "https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?auto=format&fit=crop&w=600&q=80",
-    type: "promo",
-    position: 1,
-    is_active: true,
-  },
-  {
-    id: 7,
-    title: "Pro Gaming Battlestation",
-    subtitle: "PlayStation 5 Pro & Keychron Wireless",
-    badge: "Gold Warranty",
-    link_url: "/products?category_id=5",
-    cta_text: "Game On",
-    cta_link: "/products?category_id=5",
-    image_url: "https://images.unsplash.com/photo-1606813907291-d86efa9b94db?auto=format&fit=crop&w=600&q=80",
-    type: "promo",
-    position: 2,
-    is_active: true,
-  },
-  {
-    id: 8,
-    title: "Studio Sound Experience",
-    subtitle: "Sony & Bose active noise cancellation",
-    badge: "Original Hi-Fi",
-    link_url: "/products?category_id=3",
-    cta_text: "Listen Now",
-    cta_link: "/products?category_id=3",
-    image_url: "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&w=600&q=80",
-    type: "promo",
-    position: 3,
-    is_active: true,
-  },
-];
+interface PromoBannerGridProps {
+  banners?: Banner[];
+}
 
 const gradients = [
   "from-slate-900/90 to-zinc-900/40",
@@ -69,22 +18,10 @@ const gradients = [
   "from-emerald-950/90 to-teal-950/40",
 ];
 
-export default function PromoBannerGrid() {
-  const [promoBanners, setPromoBanners] = useState<Banner[]>(fallbackPromoBanners);
+export default function PromoBannerGrid({ banners = [] }: PromoBannerGridProps) {
+  const promoBanners = banners.filter(b => b.type === 'promo').sort((a, b) => a.position - b.position);
 
-  useEffect(() => {
-    const fetchPromos = async () => {
-      try {
-        const live = await bannersApi.listActive("promo");
-        if (live && live.length > 0) {
-          setPromoBanners(live);
-        }
-      } catch (err) {
-        console.warn("Using fallback promo banners", err);
-      }
-    };
-    fetchPromos();
-  }, []);
+  if (promoBanners.length === 0) return null;
 
   return (
     <section className="w-full my-6">

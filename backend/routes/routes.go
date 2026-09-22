@@ -19,8 +19,9 @@ type RouteDependencies struct {
 	FavoriteHandler *handler.FavoriteHandler
 	TicketHandler   *handler.TicketHandler
 	DashboardHandler *handler.DashboardHandler
-	BannerHandler   *handler.BannerHandler
-	TokenManager    security.TokenManager
+	BannerHandler    *handler.BannerHandler
+	DynamicUIHandler *handler.DynamicUIHandler
+	TokenManager     security.TokenManager
 }
 
 // Setup registers both legacy API endpoints and modular V1 API endpoints into the Fiber application.
@@ -164,6 +165,12 @@ func Setup(app *fiber.App, optDeps ...*RouteDependencies) {
 				bannerGroup.Put("/:id", authGuard, adminGuard, deps.BannerHandler.UpdateBanner)
 				bannerGroup.Delete("/:id", authGuard, adminGuard, deps.BannerHandler.DeleteBanner)
 			}
+		}
+
+		if deps.DynamicUIHandler != nil {
+			uiGroup := v1.Group("/ui")
+			uiGroup.Get("/brands", deps.DynamicUIHandler.GetBrands)
+			uiGroup.Get("/stories", deps.DynamicUIHandler.GetStories)
 		}
 	}
 

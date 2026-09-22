@@ -8,50 +8,20 @@ import { ChevronRight } from "lucide-react";
 interface CategoryCard {
   id: number;
   name: string;
-  countText: string;
-  href: string;
-  imageUrl: string;
+  slug?: string;
+  image_url?: string;
 }
 
-const categories: CategoryCard[] = [
-  {
-    id: 1,
-    name: "Smartphones & Tablets",
-    countText: "30+ Products",
-    href: "/products?category_id=1",
-    imageUrl: "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=400&q=80",
-  },
-  {
-    id: 2,
-    name: "Laptops & Computers",
-    countText: "20+ Products",
-    href: "/products?category_id=2",
-    imageUrl: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=400&q=80",
-  },
-  {
-    id: 3,
-    name: "Audio & Headphones",
-    countText: "15+ Products",
-    href: "/products?category_id=3",
-    imageUrl: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=400&q=80",
-  },
-  {
-    id: 4,
-    name: "Wearable Tech",
-    countText: "10+ Products",
-    href: "/products?category_id=4",
-    imageUrl: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=400&q=80",
-  },
-  {
-    id: 5,
-    name: "Gaming & Consoles",
-    countText: "25+ Products",
-    href: "/products?category_id=5",
-    imageUrl: "https://images.unsplash.com/photo-1606813907291-d86efa9b94db?auto=format&fit=crop&w=400&q=80",
-  },
-];
+interface CategoryExplorerProps {
+  categories?: any[];
+}
 
-export default function CategoryExplorer() {
+export default function CategoryExplorer({ categories = [] }: CategoryExplorerProps) {
+  // Take top 6 categories or whatever is available, defaulting to empty if none
+  const displayCategories = categories.slice(0, 6);
+
+  if (displayCategories.length === 0) return null;
+
   return (
     <section className="w-full my-8">
       {/* Section Header */}
@@ -66,35 +36,37 @@ export default function CategoryExplorer() {
           href="/products"
           className="text-xs font-semibold text-primary hover:text-primary/80 flex items-center gap-1 group"
         >
-          <span>View All Departments</span>
+          <span>View All</span>
           <ChevronRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
         </Link>
       </div>
 
-      {/* Categories Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-        {categories.map((cat) => (
+      {/* Grid Layout */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        {displayCategories.map((cat, idx) => (
           <Link
-            key={cat.id}
-            href={cat.href}
-            className="bg-card hover:bg-muted/40 border border-border/60 rounded-2xl p-4 flex flex-col items-center text-center group transition-all duration-300 hover:shadow-md hover:-translate-y-1"
+            key={cat.id || idx}
+            href={`/products?category_id=${cat.id}`}
+            className="group relative flex flex-col items-center justify-center p-6 bg-card border border-border/60 hover:border-border rounded-3xl transition-all duration-300 hover:shadow-sm overflow-hidden"
           >
-            <div className="relative w-24 h-24 sm:w-28 sm:h-28 mb-3 rounded-full overflow-hidden p-2 bg-muted/30 group-hover:scale-105 transition-transform duration-300">
+            {/* Hover Gradient Background */}
+            <div className="absolute inset-0 bg-gradient-to-br from-muted/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+
+            <div className="relative w-24 h-24 mb-4 transition-transform duration-500 group-hover:scale-110">
               <Image
-                src={cat.imageUrl}
+                src={cat.image_url || "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=400&q=80"}
                 alt={cat.name}
                 fill
-                sizes="120px"
-                className="object-cover rounded-full p-1"
-                unoptimized
+                className="object-contain drop-shadow-sm"
               />
             </div>
-            <h3 className="text-xs sm:text-sm font-bold text-foreground mb-1 group-hover:text-primary transition-colors">
+            
+            <h3 className="text-sm font-bold text-foreground text-center line-clamp-1 group-hover:text-red-600 transition-colors">
               {cat.name}
             </h3>
-            <span className="text-[11px] text-muted-foreground">
-              {cat.countText}
-            </span>
+            <p className="text-[11px] text-muted-foreground mt-1 font-medium">
+              Explore Products
+            </p>
           </Link>
         ))}
       </div>

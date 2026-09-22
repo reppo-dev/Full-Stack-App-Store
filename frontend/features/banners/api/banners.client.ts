@@ -29,7 +29,7 @@ export interface UpdateBannerPayload {
 
 export const bannersApi = {
   async listActive(type?: string): Promise<Banner[]> {
-    const url = type ? `/api/v1/banners?type=${encodeURIComponent(type)}` : "/api/v1/banners";
+    const url = type ? `/api/v1/banners/active?type=${encodeURIComponent(type)}` : "/api/v1/banners/active";
     const res = await apiClient.get(url);
     const items = res.data.data !== undefined ? res.data.data : res.data;
     return items || [];

@@ -4,24 +4,15 @@ import React from "react";
 import Link from "next/link";
 import { Award, ChevronRight } from "lucide-react";
 
-interface BrandItem {
-  name: string;
-  category: string;
-  href: string;
+import { Brand } from "@/features/ui/api/ui.client";
+
+interface BrandShowcaseProps {
+  brands?: Brand[];
 }
 
-const brands: BrandItem[] = [
-  { name: "Apple", category: "iOS & Mac", href: "/products?search=Apple" },
-  { name: "Samsung", category: "Galaxy & AI", href: "/products?search=Samsung" },
-  { name: "Sony", category: "Audio & PS5", href: "/products?search=Sony" },
-  { name: "Bose", category: "Acoustics", href: "/products?search=Bose" },
-  { name: "Dell", category: "XPS Laptops", href: "/products?search=Dell" },
-  { name: "Logitech", category: "Peripherals", href: "/products?search=Logitech" },
-  { name: "Keychron", category: "Keyboards", href: "/products?search=Keychron" },
-  { name: "Nintendo", category: "Consoles", href: "/products?search=Nintendo" },
-];
+export default function BrandShowcase({ brands = [] }: BrandShowcaseProps) {
+  if (brands.length === 0) return null;
 
-export default function BrandShowcase() {
   return (
     <section className="w-full my-8 bg-card border border-border/60 rounded-3xl p-6 shadow-xs">
       <div className="flex items-center justify-between mb-6">
@@ -43,15 +34,15 @@ export default function BrandShowcase() {
       <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
         {brands.map((b) => (
           <Link
-            key={b.name}
-            href={b.href}
+            key={b.id || b.name}
+            href={b.href || `/products?search=${b.name}`}
             className="flex flex-col items-center justify-center p-4 rounded-2xl bg-muted/30 hover:bg-muted/70 border border-border/40 hover:border-border transition-all duration-200 group text-center"
           >
             <span className="text-base font-extrabold tracking-wider text-foreground group-hover:text-red-600 transition-colors">
               {b.name}
             </span>
             <span className="text-[11px] text-muted-foreground mt-0.5 font-medium">
-              {b.category}
+              {b.category || "General"}
             </span>
           </Link>
         ))}
