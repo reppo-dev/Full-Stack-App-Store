@@ -75,6 +75,64 @@ The application follows a **Modular Monolith** pattern designed for 1,000,000+ a
   - **Category Sales**: Bar chart showcasing revenue contribution by product category.
 - **Recent Feeds**: Live transaction tables for recent checkouts and incoming customer inquiries.
 
+### 6. 🎨 Dynamic Content & Marketing Banners
+- **Banner Engine (`/dashboard/banners`)**: Admin management for hero carousels, promo cards, and flash sales.
+- **Dynamic Homepage Modules**: Live Digikala-inspired Incredible Offers, Brand Showcase, Quick Access Stories, and Story Viewer modal.
+- **Customer Pricing (`/pricing`)**: Tiered subscription plans with interactive billing switches and feature comparisons.
+
+---
+
+## 📸 Platform Gallery
+
+| Storefront & Offers | Product Discovery & Detail |
+| :---: | :---: |
+| ![Home](screenshots/home.png) | ![Product Detail](screenshots/product1.png) |
+
+| Executive Dashboard | Analytics & Real-Time Metrics |
+| :---: | :---: |
+| ![Dashboard Overview](screenshots/dashboard1.png) | ![Dashboard Analytics](screenshots/dashboard2.png) |
+
+| Support Inbox & Ticketing | Wishlist & Saved Items |
+| :---: | :---: |
+| ![Support Inbox](screenshots/inbox.png) | ![Customer Wishlist](screenshots/favorit.png) |
+
+| Customer Orders | User Provisioning & Administration |
+| :---: | :---: |
+| ![Order History](screenshots/order.png) | ![User Management](screenshots/contact.png) |
+
+---
+
+## 🏗️ Architecture & Project Structure
+
+### Frontend Feature-Sliced Architecture (`frontend/features/`)
+```
+frontend/
+├── app/                              # Next.js App Router (Routing & Pages)
+│   ├── (auth)/                       # Login, Signup
+│   ├── (dashboard)/                  # Protected Admin Management & Analytics
+│   │   ├── dashboard/                # Main Dashboard & Banners Management
+│   │   ├── invoice/                  # Invoicing Overview
+│   │   ├── orderlists/               # Full Order Records
+│   │   ├── productstock/             # Inventory & Stock Levels
+│   │   ├── settings/                 # System Configurations
+│   │   ├── table/                    # Data Tables
+│   │   ├── team/                     # Team & Member Access
+│   │   └── todo/                     # Task Management
+│   └── (main)/                       # Customer Storefront (Home, Products, Cart, Pricing, Wishlist)
+└── features/                         # Modular Feature Slices
+    ├── auth/                         # Authentication, Session Guards, UserDropdown
+    ├── banners/                      # Promotional Banner Client & Dashboard Editor
+    ├── cart/                         # Redux Cart Drawer & Quantity Controls
+    ├── categories/                   # Category Tree & Catalog Filters
+    ├── dashboard/                    # KPI Metrics & Recharts Visualizations
+    ├── favorites/                    # Customer Wishlist with Optimistic Updates
+    ├── home/                         # Hero Sliders, Incredible Offers, Stories
+    ├── orders/                       # Order Placement & Tracking
+    ├── products/                     # Product Grid, Detail Client & Cards
+    ├── tickets/                      # Multi-pane Support Inbox & Notes
+    └── users/                        # User Administration & Profile Forms
+```
+
 ---
 
 ## 🛠 Tech Stack
@@ -82,10 +140,11 @@ The application follows a **Modular Monolith** pattern designed for 1,000,000+ a
 | Layer | Technologies |
 | :--- | :--- |
 | **Frontend Framework** | [Next.js 16.1.6](https://nextjs.org/) (App Router, Turbopack, React 19) |
+| **Architecture Pattern** | Feature-Sliced Design (FSD) with Strict Modular Boundaries |
 | **Frontend State** | [Redux Toolkit](https://redux-toolkit.js.org/) (UI State) & [TanStack Query v5](https://tanstack.com/query) (Server State) |
 | **Styling & UI** | [Tailwind CSS v4](https://tailwindcss.com/), [Shadcn UI](https://ui.shadcn.com/), [Lucide Icons](https://lucide.dev/) |
 | **Data Visualization**| [Recharts 2.15](https://recharts.org/) |
-| **Backend Framework** | [Golang 1.25+](https://go.dev/) & [Fiber v2](https://gofiber.io/) |
+| **Backend Framework** | [Golang 1.25+](https://go.dev/) & [Fiber v2](https://gofiber.io/) Clean Architecture |
 | **Database Access** | [SQLC](https://sqlc.dev/) (Type-Safe Compiled Raw SQL) & [pgx/v5](https://github.com/jackc/pgx) |
 | **Migrations** | [Goose](https://github.com/pressly/goose) Versioned SQL Migrations |
 | **Databases** | [PostgreSQL 16](https://www.postgresql.org/) & [Redis 7](https://redis.io/) |
