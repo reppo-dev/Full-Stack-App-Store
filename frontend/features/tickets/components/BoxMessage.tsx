@@ -22,6 +22,12 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -427,6 +433,29 @@ export default function BoxMessage({ folder = "inbox" }: BoxMessageProps) {
           )}
         </div>
       </div>
+
+      {/* Mobile / Tablet Ticket Conversation Sheet */}
+      <Sheet
+        open={Boolean(selectedTicketId)}
+        onOpenChange={(open) => {
+          if (!open) setSelectedTicketId(null);
+        }}
+      >
+        <SheetContent side="right" className="w-full sm:max-w-xl p-0 flex flex-col lg:hidden z-50">
+          <SheetHeader className="sr-only">
+            <SheetTitle>Ticket Discussion</SheetTitle>
+          </SheetHeader>
+          {selectedTicketId && (
+            <div className="flex-1 min-h-0 h-full">
+              <TicketConversationThread
+                ticketId={selectedTicketId}
+                onClose={() => setSelectedTicketId(null)}
+                onTicketUpdated={fetchTickets}
+              />
+            </div>
+          )}
+        </SheetContent>
+      </Sheet>
 
       {/* New Ticket Modal */}
       <Dialog open={isNewTicketOpen} onOpenChange={setIsNewTicketOpen}>

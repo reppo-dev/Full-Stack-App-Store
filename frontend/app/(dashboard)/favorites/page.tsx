@@ -51,17 +51,23 @@ const Favorites = () => {
 
   return (
     <div>
-      <p className="text-2xl ml-7 my-8">Favorites</p>
-      <div className="grid gap-6 grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 mx-6 my-10">
-        {favorites.map((fav) => (
-          <CardProduct
-            key={fav.Product.ID}
-            props={fav.Product as unknown as Product}
-            isFavorite={true}
-            onToggleFavorite={() => toggleFavorite(fav.product_id)}
-          />
-        ))}
-      </div>
+      <h1 className="text-2xl font-bold text-foreground mx-4 sm:mx-6 my-6">Favorites</h1>
+      {favorites.length === 0 ? (
+        <div className="border border-dashed border-border/80 rounded-2xl p-12 text-center max-w-md mx-auto my-12 bg-card">
+          <p className="text-sm text-muted-foreground">No favorite products saved yet.</p>
+        </div>
+      ) : (
+        <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 mx-4 sm:mx-6 my-6">
+          {favorites.map((fav) => (
+            <CardProduct
+              key={fav.Product?.ID || fav.product_id}
+              props={(fav.Product || fav.product) as unknown as Product}
+              isFavorite={true}
+              onToggleFavorite={() => toggleFavorite(fav.product_id)}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

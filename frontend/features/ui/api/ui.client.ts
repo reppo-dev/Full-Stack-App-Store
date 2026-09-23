@@ -25,9 +25,9 @@ export interface Story {
 
 export const uiApi = {
   getBrands: async (): Promise<{ success: boolean; data: Brand[] }> => {
-    return apiClient.get("/ui/brands");
+    return apiClient.get("/api/v1/ui/brands");
   },
   getStories: async (): Promise<{ success: boolean; data: Story[] }> => {
-    return apiClient.get("/ui/stories");
+    return apiClient.get("/api/v1/ui/stories");
   },
 };

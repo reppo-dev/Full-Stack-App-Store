@@ -1,25 +1,33 @@
-import { Input } from "../ui/input";
-import { Search } from "lucide-react";
+import Link from "next/link";
 import LightDarkToggle from "../light-dark";
 import { SidebarToggle } from "@/features/dashboard/components/layout/sidebarToggle";
 import AuthButtons from "./AuthButtons";
-import HeaderCartButton from '@/features/cart/components/HeaderCartButton';
+import HeaderCartButton from "@/features/cart/components/HeaderCartButton";
+import HeaderSearch from "./HeaderSearch";
 
 const Header = () => {
   return (
-    <header>
-      <div className="flex m-13 mt-14 items-center justify-between gap-10 ">
-        <div className="flex items-center justify-center gap-5">
+    <header className="relative w-full border-b bg-background/90 backdrop-blur-md sticky top-0 z-40 transition-colors">
+      <div className="max-w-[1520px] mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-2 sm:gap-6">
+        {/* Left: Sidebar Toggle & Brand Logo */}
+        <div className="flex items-center gap-2 sm:gap-4 shrink-0">
           <SidebarToggle />
-          <div className="items-center font-bold text-xl">
-            <span className="text-blue-600 text-xl">Dash</span>Stack
-          </div>
+          <Link
+            href="/"
+            className="flex items-center font-bold text-lg sm:text-xl tracking-tight hover:opacity-90 transition-opacity"
+          >
+            <span className="text-blue-600">Dash</span>
+            <span className="text-foreground">Stack</span>
+          </Link>
         </div>
-        <div className="relative w-[42%]">
-          <Input className="w-full p-6" placeholder="Search product, item" />
-          <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+
+        {/* Center: Search Bar */}
+        <div className="flex items-center justify-center flex-1 max-w-xl mx-2 sm:mx-4">
+          <HeaderSearch />
         </div>
-        <div className="flex items-center justify-center gap-6">
+
+        {/* Right: Actions (Cart, Theme, Auth) */}
+        <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
           <HeaderCartButton />
           <LightDarkToggle />
           <AuthButtons />
@@ -30,4 +38,3 @@ const Header = () => {
 };
 
 export default Header;
-

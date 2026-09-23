@@ -35,6 +35,20 @@ type Brand struct {
 	IsActive  bool               `json:"is_active"`
 }
 
+type CalendarEvent struct {
+	ID          int32            `json:"id"`
+	Title       string           `json:"title"`
+	Description pgtype.Text      `json:"description"`
+	StartDate   pgtype.Timestamp `json:"start_date"`
+	EndDate     pgtype.Timestamp `json:"end_date"`
+	Type        string           `json:"type"`
+	Color       string           `json:"color"`
+	Address     pgtype.Text      `json:"address"`
+	CreatedBy   pgtype.Int4      `json:"created_by"`
+	CreatedAt   pgtype.Timestamp `json:"created_at"`
+	UpdatedAt   pgtype.Timestamp `json:"updated_at"`
+}
+
 type Category struct {
 	ID        int64              `json:"id"`
 	CreatedAt pgtype.Timestamptz `json:"created_at"`

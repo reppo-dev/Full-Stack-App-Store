@@ -129,7 +129,21 @@ export default function CartDrawer() {
       router.push("/orderlist");
     } catch (err) {
       console.error("Checkout failed:", err);
-      toast.error((err as Error)?.message || "Failed to process checkout. Please try again.");
+      const status = (err as { statusCode?: number; status?: number })?.statusCode || (err as { status?: number })?.status;
+      const msg = (err as Error)?.message?.toLowerCase() || "";
+      if (status === 401 || msg.includes("unauthorized") || msg.includes("auth")) {
+        toast.error("Please sign in to complete your checkout", {
+          action: {
+            label: "Sign In",
+            onClick: () => {
+              dispatch(closeCart());
+              router.push("/login");
+            },
+          },
+        });
+      } else {
+        toast.error((err as Error)?.message || "Failed to process checkout. Please try again.");
+      }
     } finally {
       setIsSubmitting(false);
     }

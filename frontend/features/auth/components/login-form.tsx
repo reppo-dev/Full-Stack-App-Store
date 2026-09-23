@@ -52,7 +52,7 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
       if (!result?.success) {
         setServerError(result?.message);
       } else {
-        toast("Sign up success");
+        toast.success("Welcome back! Logged in successfully.");
         router.push("/");
       }
     } catch {

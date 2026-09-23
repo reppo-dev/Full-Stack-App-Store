@@ -38,3 +38,5 @@ pnpm-debug.log*
 *.dylib
 *.bin
 *.out
+__pycache__/
+*.py[cod]

@@ -21,6 +21,7 @@ type RouteDependencies struct {
 	DashboardHandler *handler.DashboardHandler
 	BannerHandler    *handler.BannerHandler
 	DynamicUIHandler *handler.DynamicUIHandler
+	CalendarHandler  *handler.CalendarHandler
 	TokenManager     security.TokenManager
 }
 
@@ -158,19 +159,35 @@ func Setup(app *fiber.App, optDeps ...*RouteDependencies) {
 		if deps.BannerHandler != nil {
 			bannerGroup := v1.Group("/banners")
 			bannerGroup.Get("/", deps.BannerHandler.ListActiveBanners)
-			bannerGroup.Get("/:id", deps.BannerHandler.GetBannerByID)
+
 			if authGuard != nil && adminGuard != nil {
-				bannerGroup.Get("/admin/all", authGuard, adminGuard, deps.BannerHandler.ListAllBanners)
-				bannerGroup.Post("/", authGuard, adminGuard, deps.BannerHandler.CreateBanner)
-				bannerGroup.Put("/:id", authGuard, adminGuard, deps.BannerHandler.UpdateBanner)
-				bannerGroup.Delete("/:id", authGuard, adminGuard, deps.BannerHandler.DeleteBanner)
+				adminBannerGroup := bannerGroup.Group("/admin", authGuard, adminGuard)
+				adminBannerGroup.Get("/", deps.BannerHandler.ListAllBanners)
+				adminBannerGroup.Post("/", deps.BannerHandler.CreateBanner)
+				adminBannerGroup.Put("/:id", deps.BannerHandler.UpdateBanner)
+				adminBannerGroup.Delete("/:id", deps.BannerHandler.DeleteBanner)
 			}
+			
+			// Must be registered after /admin to not intercept it
+			bannerGroup.Get("/:id", deps.BannerHandler.GetBannerByID)
 		}
 
 		if deps.DynamicUIHandler != nil {
 			uiGroup := v1.Group("/ui")
 			uiGroup.Get("/brands", deps.DynamicUIHandler.GetBrands)
 			uiGroup.Get("/stories", deps.DynamicUIHandler.GetStories)
+		}
+
+		if deps.CalendarHandler != nil {
+			calGroup := v1.Group("/calendar")
+			calGroup.Get("/", deps.CalendarHandler.ListEvents)
+			calGroup.Get("/:id", deps.CalendarHandler.GetEvent)
+
+			if authGuard != nil && adminGuard != nil {
+				calGroup.Post("/", authGuard, adminGuard, deps.CalendarHandler.CreateEvent)
+				calGroup.Put("/:id", authGuard, adminGuard, deps.CalendarHandler.UpdateEvent)
+				calGroup.Delete("/:id", authGuard, adminGuard, deps.CalendarHandler.DeleteEvent)
+			}
 		}
 	}
 

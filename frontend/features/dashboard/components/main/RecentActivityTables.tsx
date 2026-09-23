@@ -74,7 +74,7 @@ export default function RecentActivityTables({
               Latest transactions processed through the checkout pipeline
             </CardDescription>
           </div>
-          <Link href="/orders">
+          <Link href="/orderlists">
             <Button variant="ghost" size="sm" className="text-xs text-muted-foreground hover:text-foreground">
               View All <ArrowRight className="w-3 h-3 ml-1" />
             </Button>

@@ -21,7 +21,6 @@ import {
   ListOrdered,
   BarChart3,
   DollarSign,
-  Calendar,
   ClipboardList,
   Phone,
   FileText,
@@ -31,6 +30,7 @@ import {
   Settings,
   LogOut,
   Sliders,
+  UserPlus,
 } from "lucide-react";
 import Logout from "@/features/auth/components/logout";
 
@@ -46,9 +46,8 @@ const menuItems = [
 
 const bodySide = [
   { title: "Pricing", url: "/pricing", icon: DollarSign },
-  { title: "Calendar", url: "/calendar", icon: Calendar },
   { title: "To‑Do", url: "/todo", icon: ClipboardList },
-  { title: "Create User", url: "/contact", icon: Phone },
+  { title: "Create User", url: "/create-user", icon: UserPlus },
   { title: "Invoice", url: "/invoice", icon: FileText },
   { title: "UI Elements", url: "/uiElements", icon: Puzzle },
   { title: "Team", url: "/team", icon: Users },

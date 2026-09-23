@@ -81,7 +81,21 @@ export default function FavoriteButton({
         // Revert on unexpected failure
         setFavorite(previousState);
         onToggle?.(previousState);
-        toast.error((err as Error)?.message || "Failed to update wishlist");
+
+        const status = (err as { statusCode?: number; status?: number })?.statusCode || (err as { status?: number })?.status;
+        const msg = (err as Error)?.message?.toLowerCase() || "";
+        if (status === 401 || msg.includes("unauthorized") || msg.includes("auth")) {
+          toast.error("Please sign in to add items to your wishlist", {
+            action: {
+              label: "Sign In",
+              onClick: () => {
+                window.location.href = "/login";
+              },
+            },
+          });
+        } else {
+          toast.error((err as Error)?.message || "Failed to update wishlist");
+        }
       }
     });
   };

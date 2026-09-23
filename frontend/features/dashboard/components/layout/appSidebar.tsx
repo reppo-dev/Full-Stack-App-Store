@@ -16,7 +16,6 @@ import {
   Heart,
   ShoppingCart,
   CreditCard,
-  Calendar,
   Settings,
 } from "lucide-react";
 import Link from "next/link";
@@ -35,8 +34,7 @@ const menuItems = [
     requiresAuth: true,
   },
   { title: "Pricing", url: "/pricing", icon: CreditCard, requiresAuth: false },
-  { title: "Calendar", url: "/calendar", icon: Calendar, requiresAuth: true },
-  { title: "Settings", url: "/settings", icon: Settings, requiresAuth: true },
+  { title: "Settings", url: "/settings", icon: Settings, requiresAuth: true, requiresAdmin: true },
 ];
 
 const AppSidebar = async () => {
@@ -50,9 +48,11 @@ const AppSidebar = async () => {
     isAdmin = userData.user.role_id === 2;
   }
 
-  const filteredMenuItems = isLogedin
-    ? menuItems
-    : menuItems.filter((item) => !item.requiresAuth);
+  const filteredMenuItems = menuItems.filter((item) => {
+    if (item.requiresAdmin && !isAdmin) return false;
+    if (item.requiresAuth && !isLogedin) return false;
+    return true;
+  });
 
   return (
     <Sidebar>

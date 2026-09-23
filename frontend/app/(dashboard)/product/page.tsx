@@ -81,7 +81,7 @@ const ProductPage = () => {
       <div className="mx-5">
         <BannerProduct />
       </div>
-      <div className="grid gap-6 grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 mx-6 my-10">
+      <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 mx-4 sm:mx-6 my-8">
         {products.map((p) => (
           <CardProduct
             key={p.ID}

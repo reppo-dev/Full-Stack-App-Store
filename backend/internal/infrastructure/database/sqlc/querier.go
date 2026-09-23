@@ -23,6 +23,7 @@ type Querier interface {
 	CountUnresolvedTickets(ctx context.Context) (int64, error)
 	CountUsers(ctx context.Context) (int64, error)
 	CreateBanner(ctx context.Context, arg CreateBannerParams) (Banner, error)
+	CreateCalendarEvent(ctx context.Context, arg CreateCalendarEventParams) (CalendarEvent, error)
 	CreateCategory(ctx context.Context, arg CreateCategoryParams) (Category, error)
 	CreateOrder(ctx context.Context, arg CreateOrderParams) (CreateOrderRow, error)
 	CreateOrderItem(ctx context.Context, arg CreateOrderItemParams) (CreateOrderItemRow, error)
@@ -34,12 +35,14 @@ type Querier interface {
 	DailySalesChart(ctx context.Context) ([]DailySalesChartRow, error)
 	DecrementProductStock(ctx context.Context, arg DecrementProductStockParams) error
 	DeleteBanner(ctx context.Context, id int64) error
+	DeleteCalendarEvent(ctx context.Context, id int32) error
 	DeleteCategory(ctx context.Context, id int64) error
 	DeleteProduct(ctx context.Context, id int64) error
 	DeleteRole(ctx context.Context, id int64) error
 	DeleteUser(ctx context.Context, id int64) error
 	GetAllOrdersWithItemsForExport(ctx context.Context) ([]GetAllOrdersWithItemsForExportRow, error)
 	GetBannerByID(ctx context.Context, id int64) (Banner, error)
+	GetCalendarEvent(ctx context.Context, id int32) (CalendarEvent, error)
 	GetCategoryByID(ctx context.Context, id int64) (Category, error)
 	GetCategoryBySlug(ctx context.Context, slug pgtype.Text) (Category, error)
 	GetDailyRevenueSeries(ctx context.Context) ([]GetDailyRevenueSeriesRow, error)
@@ -71,6 +74,7 @@ type Querier interface {
 	ListAllTickets(ctx context.Context, arg ListAllTicketsParams) ([]ListAllTicketsRow, error)
 	ListAllUsers(ctx context.Context) ([]ListAllUsersRow, error)
 	ListBrands(ctx context.Context) ([]Brand, error)
+	ListCalendarEvents(ctx context.Context) ([]CalendarEvent, error)
 	ListCategories(ctx context.Context) ([]Category, error)
 	ListFavoritesByUserID(ctx context.Context, userID int64) ([]ListFavoritesByUserIDRow, error)
 	ListOrdersByUserID(ctx context.Context, userID pgtype.Int8) ([]ListOrdersByUserIDRow, error)
@@ -88,6 +92,7 @@ type Querier interface {
 	PingDatabase(ctx context.Context) (int32, error)
 	RemoveFavorite(ctx context.Context, arg RemoveFavoriteParams) error
 	UpdateBanner(ctx context.Context, arg UpdateBannerParams) (Banner, error)
+	UpdateCalendarEvent(ctx context.Context, arg UpdateCalendarEventParams) (CalendarEvent, error)
 	UpdateCategory(ctx context.Context, arg UpdateCategoryParams) (Category, error)
 	UpdateOrderStatus(ctx context.Context, arg UpdateOrderStatusParams) (UpdateOrderStatusRow, error)
 	UpdateProduct(ctx context.Context, arg UpdateProductParams) (Product, error)
