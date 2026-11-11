@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 	"time"
 
@@ -124,7 +125,18 @@ func main() {
 	app.Use(middleware.Recover())
 
 	app.Use(cors.New(cors.Config{
-		AllowOrigins:     cfg.ClientURL,
+		AllowOriginsFunc: func(origin string) bool {
+			if strings.HasSuffix(origin, ".vercel.app") ||
+				strings.HasPrefix(origin, "http://localhost:") ||
+				origin == "http://localhost" ||
+				origin == "http://127.0.0.1" {
+				return true
+			}
+			if cfg.ClientURL != "" && (origin == cfg.ClientURL || strings.Contains(cfg.ClientURL, origin)) {
+				return true
+			}
+			return false
+		},
 		AllowCredentials: true,
 		AllowHeaders:     "Origin, Content-Type, Accept, Cookie, Authorization, X-Request-ID",
 		ExposeHeaders:    "X-Request-ID",
